@@ -8,11 +8,15 @@ signal combo_lost()
 @export_group("Launch Power", "launch_")
 @export var launch_multiplier: float = 7.0 #发射力度
 @export var kill_threshold: float = 1000.0 #击杀速度
-@export var max_speed: float = 4000.0 #最大主角移动速度
+@export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
 @export var energy_per_kill: float = 30.0   # 击杀敌人增加的能量
 @export var energy_per_bounce: float = 10.0 # 反弹墙壁增加的能量
+@export_group("Combo System")
+@export var combo_max_bounces: int = 2       # 最大反弹容忍次数
+@export var combo_speed_bonus: float = 10.0  # 每次连击成功，速度上限增加值
+@export var combo_energy_bonus: float = 10.0 # 每次连击成功，额外能量奖励
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
@@ -21,6 +25,10 @@ var is_aiming: bool = false
 var current_energy: float = 300.0 # 初始能量为满
 var drag_start_position_screen: Vector2 = Vector2.ZERO
 var velocity_before_impact: Vector2 = Vector2.ZERO
+var current_combo: int = 0
+var bounces_since_last_kill: int = 0
+var has_killed_in_combo: bool = false
+var current_max_speed: float = 0.0
 
 
 func _ready() -> void:
@@ -30,6 +38,7 @@ func _ready() -> void:
 	# 连接两个信号，分别处理不同逻辑
 	kill_area.area_entered.connect(_on_kill_area_entered)
 	body_entered.connect(_on_body_entered)
+	current_max_speed = default_max_speed
 
 
 func _input(event: InputEvent) -> void:
@@ -53,6 +62,8 @@ func _input(event: InputEvent) -> void:
 				is_aiming = false # --- 如果能量足够，执行后续操作 ---
 				Engine.time_scale = 1.0
 				line_2d.clear_points()
+				bounces_since_last_kill = 0
+				has_killed_in_combo = false
 				
 				_update_energy(current_energy - 100.0) #消耗能量
 
@@ -81,8 +92,8 @@ func _physics_process(delta: float) -> void:
 	if not is_aiming and linear_velocity.length_squared() < 1.0:
 		if not get_collision_mask_value(2):
 			set_collision_mask_value(2, true)
-	if linear_velocity.length() > max_speed:
-		linear_velocity = linear_velocity.normalized() * max_speed
+	if linear_velocity.length() > current_max_speed:
+		linear_velocity = linear_velocity.normalized() * current_max_speed
 	# 当速度慢下来时，恢复物理碰撞能力
 	if not is_aiming and linear_velocity.length_squared() < 1.0:
 		if not get_collision_mask_value(2): # 第2层是 enemies_solid
@@ -107,6 +118,7 @@ func _on_kill_area_entered(area: Area2D) -> void:
 			var impact_direction = velocity_before_impact.normalized()
 			enemy_body.die(impact_direction)
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
+			has_killed_in_combo = true
 			_update_energy(current_energy + energy_per_kill) #增加击杀能量
 
 
@@ -114,13 +126,57 @@ func _on_kill_area_entered(area: Area2D) -> void:
 func _on_body_entered(body: Node) -> void:
 	# 这个函数只在物理碰撞开启时（即低速时）才会被调用
 	if body.is_in_group("enemy"):
+
 		# 我们在这里再次检查速度，以防万一
 		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
 			print("速度不足，玩家死亡！")
 			queue_free()
+			lose_combo()
+			return
+			
+	if body.is_in_group("bouncing_enemy"):
+		return
+			# --- 如果撞到的是墙壁 (或其他非敌人、非弹射物体) ---
+	bounces_since_last_kill += 1
+	
+	# 增加反弹能量
+	_update_energy(current_energy + energy_per_bounce)
+	
+	# --- 检查连击是否成立 ---
+	if has_killed_in_combo:
+		print("连击成功!")
+		current_combo += 1
+		combo_updated.emit(current_combo)
+		
+		# 给予奖励
+		current_max_speed += combo_speed_bonus
+		_update_energy(current_energy + combo_energy_bonus)
+		
+		# 重置计数，准备下一次发射后的连击判定
+		bounces_since_last_kill = 0
+		has_killed_in_combo = false
+		
+	# --- 检查连击是否中断 ---
+	elif bounces_since_last_kill >= combo_max_bounces:
+		print("连击中断!")
+		lose_combo()
 	#如果撞到的不是敌人（可以认为是墙壁等）
 	else:
 		_update_energy(current_energy + energy_per_bounce) #增加反弹能量
+
+
+func lose_combo():
+	if current_combo > 0: # 只有在有连击数时才触发“中断”
+		current_combo = 0
+		combo_updated.emit(current_combo)
+		combo_lost.emit() # 发出“连击已中断”的信号
+		
+		# 重置速度上限
+		current_max_speed = default_max_speed
+	
+	# 重置计数器
+	bounces_since_last_kill = 0
+	has_killed_in_combo = false
 
 
 func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float = 0.2):
