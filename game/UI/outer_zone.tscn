@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx6atr8b6pw7l"]
+
+[ext_resource type="Texture2D" uid="uid://l70w5juoy0n1" path="res://assets/UI/Background/Rectangular Background.png" id="1_nllyb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gi8co"]
+size = Vector2(1919.42, 129.174)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_alikj"]
+size = Vector2(161.274, 862.907)
+
+[node name="Outer_Zone" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nllyb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.0382385, -475.035)
+shape = SubResource("RectangleShape2D_gi8co")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(-0.182037, 474.867)
+shape = SubResource("RectangleShape2D_gi8co")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(-879.149, -0.453705)
+shape = SubResource("RectangleShape2D_alikj")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="."]
+position = Vector2(879.221, -0.519531)
+shape = SubResource("RectangleShape2D_alikj")

@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://dxb2ihg5s7iiy"]
+
+[ext_resource type="Script" uid="uid://djg3frqlupki3" path="res://Script/UI/game_ui.gd" id="1_wevqw"]
+[ext_resource type="PackedScene" uid="uid://b2w2xgarrueib" path="res://game/UI/energy_bar1.tscn" id="2_igryo"]
+[ext_resource type="PackedScene" uid="uid://b1ocj2ah3u560" path="res://game/UI/energy_bar2.tscn" id="3_x2aio"]
+[ext_resource type="PackedScene" uid="uid://bmhu42hm1acrr" path="res://game/UI/energy_bar3.tscn" id="4_hedtu"]
+
+[node name="GameUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 143.0
+offset_bottom = 50.0
+script = ExtResource("1_wevqw")
+
+[node name="BoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1022.0
+offset_right = 1920.0
+offset_bottom = 1084.0
+alignment = 1
+
+[node name="EnergyBar" parent="BoxContainer" instance=ExtResource("2_igryo")]
+layout_mode = 2
+
+[node name="EnergyBar2" parent="BoxContainer" instance=ExtResource("3_x2aio")]
+layout_mode = 2
+
+[node name="EnergyBar3" parent="BoxContainer" instance=ExtResource("4_hedtu")]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 31
+text = "Speed:"

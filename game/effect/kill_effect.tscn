@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://da3smf7ntnkov"]
+
+[ext_resource type="Texture2D" uid="uid://cbxd0pboybn5g" path="res://assets/SpecialEffects/sha/sha1.png" id="1_j6k40"]
+[ext_resource type="Texture2D" uid="uid://t11ycajjqhfd" path="res://assets/SpecialEffects/sha/sha2.png" id="2_jui5m"]
+[ext_resource type="Texture2D" uid="uid://b7u0vboy2jnkg" path="res://assets/SpecialEffects/sha/sha3.png" id="3_jio3g"]
+[ext_resource type="Texture2D" uid="uid://bccmvksscii0o" path="res://assets/SpecialEffects/sha/sha4.png" id="4_vx8gb"]
+[ext_resource type="Script" uid="uid://s7xkbfwaxylu" path="res://Script/effect/kill_effect.gd" id="5_b3cbc"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6s5gk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_j6k40")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jui5m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_jio3g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_vx8gb")
+}],
+"loop": false,
+"name": &"default",
+"speed": 14.0
+}]
+
+[node name="KillEffect" type="AnimatedSprite2D"]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_6s5gk")
+frame = 3
+frame_progress = 1.0
+script = ExtResource("5_b3cbc")

@@ -1,0 +1,54 @@
+[gd_scene load_steps=9 format=3 uid="uid://cbus8chf27tph"]
+
+[ext_resource type="Script" uid="uid://c2fcoufi6yji7" path="res://Script/actors/player/PlayerBall.gd" id="1_46ku3"]
+[ext_resource type="Texture2D" uid="uid://vayigwwgodbh" path="res://assets/actor/player2.png" id="2_5d0wo"]
+[ext_resource type="Script" uid="uid://b72hdcmnfo6yx" path="res://Script/actors/player/trailwith_line_2d.gd" id="3_5d0wo"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_46ku3"]
+bounce = 0.7
+
+[sub_resource type="Curve" id="Curve_5d0wo"]
+_data = [Vector2(0.045, 0), 0.0, 0.990006, 0, 0, Vector2(0.995, 1), 0.324479, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_5d0wo"]
+colors = PackedColorArray(0, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_46ku3"]
+blend_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sk8k3"]
+radius = 26.0
+
+[node name="PlayerBall" type="RigidBody2D"]
+collision_mask = 6
+physics_material_override = SubResource("PhysicsMaterial_46ku3")
+gravity_scale = 0.0
+script = ExtResource("1_46ku3")
+
+[node name="TrailwithLine2D" type="Line2D" parent="."]
+top_level = true
+width = 50.0
+width_curve = SubResource("Curve_5d0wo")
+gradient = SubResource("Gradient_5d0wo")
+script = ExtResource("3_5d0wo")
+isSpawn = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("CanvasItemMaterial_46ku3")
+position = Vector2(0, -3)
+texture = ExtResource("2_5d0wo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_sk8k3")
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_sk8k3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

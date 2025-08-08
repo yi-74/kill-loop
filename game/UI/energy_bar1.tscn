@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2w2xgarrueib"]
+
+[ext_resource type="Script" uid="uid://bo3weeishta7w" path="res://Script/UI/energy_bar.gd" id="1_hqh5g"]
+[ext_resource type="Texture2D" uid="uid://tdsem4v4dtmn" path="res://assets/UI/Energy Bar/Energy Bar Border.png" id="1_twkwh"]
+[ext_resource type="Texture2D" uid="uid://e54kf6jv0p6c" path="res://assets/UI/Energy Bar/Energy Progress Bar1.png" id="2_c8ilb"]
+
+[node name="EnergyBar" type="TextureProgressBar"]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+texture_over = ExtResource("1_twkwh")
+texture_progress = ExtResource("2_c8ilb")
+texture_progress_offset = Vector2(0.635, 2.81)
+script = ExtResource("1_hqh5g")
