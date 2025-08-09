@@ -41,6 +41,7 @@ func _ready() -> void:
 	current_max_speed = default_max_speed
 
 
+
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
@@ -80,11 +81,13 @@ func _input(event: InputEvent) -> void:
 					set_collision_mask_value(2, true)
 
 
+
 func _process(delta: float) -> void:
 	if is_aiming:
 		var mouse_world_pos = get_global_mouse_position()
 		var local_mouse_pos = to_local(mouse_world_pos)
 		line_2d.set_point_position(1, local_mouse_pos)
+
 
 
 func _physics_process(delta: float) -> void:
@@ -102,6 +105,7 @@ func _physics_process(delta: float) -> void:
 	speed_updated.emit(int(linear_velocity.length()))
 
 
+
 func _update_energy(new_energy: float):
 	# 将能量限制在 0 到 300 之间
 	current_energy = clamp(new_energy, 0.0, 300.0)
@@ -109,60 +113,63 @@ func _update_energy(new_energy: float):
 	energy_updated.emit(current_energy)
 
 
-# --- 高速击杀逻辑 (由 Area2D 触发) ---
-func _on_kill_area_entered(area: Area2D) -> void:
+
+# 在 PlayerBall.gd 的 _on_kill_area_entered 函数中
+
+# 请用这个完整的版本，替换您现有的 _on_kill_area_entered 函数
+
+func _on_kill_area_entered(area: Area2D):
 	var enemy_body = area.owner
-	# 只有在高速时，这个逻辑才应该生效
 	if velocity_before_impact.length_squared() > kill_threshold * kill_threshold:
 		if enemy_body.has_method("die"):
+			# 1. 计算撞击方向
 			var impact_direction = velocity_before_impact.normalized()
+			# 2. 命令敌人死亡，并传递方向
 			enemy_body.die(impact_direction)
+			# 3. 触发击杀慢动作
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
-			has_killed_in_combo = true
-			_update_energy(current_energy + energy_per_kill) #增加击杀能量
-
-
-# --- 低速碰撞逻辑 (由 RigidBody2D 触发) ---
-func _on_body_entered(body: Node) -> void:
-	# 这个函数只在物理碰撞开启时（即低速时）才会被调用
-	if body.is_in_group("enemy"):
-
-		# 我们在这里再次检查速度，以防万一
-		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
-			print("速度不足，玩家死亡！")
-			queue_free()
-			lose_combo()
-			return
 			
+			# 标记本次发射已造成击杀
+			has_killed_in_combo = true
+
+			# 每次击杀，都直接增加 Combo，并给予奖励
+			print("连击成功! Combo +1")
+			current_combo += 1
+			combo_updated.emit(current_combo)
+			
+			# 给予奖励
+			current_max_speed += combo_speed_bonus
+			_update_energy(current_energy + combo_energy_bonus)
+			
+			# 增加基础的击杀能量
+			_update_energy(current_energy + energy_per_kill)
+
+
+
+func _on_body_entered(body: Node):
+	# 低速撞敌人的逻辑保持不变
+	if body.is_in_group("enemy"):
+		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
+			lose_combo()
+		return
+
+	# 撞弹射敌人的逻辑保持不变
 	if body.is_in_group("bouncing_enemy"):
 		return
-			# --- 如果撞到的是墙壁 (或其他非敌人、非弹射物体) ---
-	bounces_since_last_kill += 1
+			
+	# --- 如果撞到的是墙壁 ---
 	
-	# 增加反弹能量
+	# 只有在本次发射还【没有】击杀过任何敌人的情况下，撞墙才会计数
+	if not has_killed_in_combo:
+		bounces_since_last_kill += 1
+		
+		# 检查连击是否因为“连续撞墙”而中断
+		if bounces_since_last_kill >= combo_max_bounces:
+			lose_combo()
+	
+	# 增加反弹能量 (无论如何都应该增加)
 	_update_energy(current_energy + energy_per_bounce)
-	
-	# --- 检查连击是否成立 ---
-	if has_killed_in_combo:
-		print("连击成功!")
-		current_combo += 1
-		combo_updated.emit(current_combo)
-		
-		# 给予奖励
-		current_max_speed += combo_speed_bonus
-		_update_energy(current_energy + combo_energy_bonus)
-		
-		# 重置计数，准备下一次发射后的连击判定
-		bounces_since_last_kill = 0
-		has_killed_in_combo = false
-		
-	# --- 检查连击是否中断 ---
-	elif bounces_since_last_kill >= combo_max_bounces:
-		print("连击中断!")
-		lose_combo()
-	#如果撞到的不是敌人（可以认为是墙壁等）
-	else:
-		_update_energy(current_energy + energy_per_bounce) #增加反弹能量
+
 
 
 func lose_combo():
@@ -177,6 +184,7 @@ func lose_combo():
 	# 重置计数器
 	bounces_since_last_kill = 0
 	has_killed_in_combo = false
+
 
 
 func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float = 0.2):
