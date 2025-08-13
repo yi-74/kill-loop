@@ -7,7 +7,7 @@ signal combo_lost()
 
 @export_group("Launch Power", "launch_")
 @export var launch_multiplier: float = 7.0 #发射力度
-@export var kill_threshold: float = 1000.0 #击杀速度
+@export var kill_threshold: float = 2000.0 #击杀速度
 @export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
@@ -120,11 +120,9 @@ func _on_kill_area_entered(area: Area2D):
 			enemy_body.die(impact_direction)
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
 			# 1. 每次成功击杀，都重置“撞墙计数器”
-			#    这意味着“厄运”被终结了，重新开始计数
 			bounces_since_last_kill = 0
 			
 			# 2. 增加 Combo 并给予奖励
-			print("连击成功! Combo +1")
 			current_combo += 1
 			combo_updated.emit(current_combo)
 			
@@ -160,7 +158,6 @@ func _on_body_entered(body: Node):
 
 func lose_combo():
 	if current_combo > 0:
-		print("连击中断!")
 		current_combo = 0
 		combo_updated.emit(current_combo)
 		combo_lost.emit()
