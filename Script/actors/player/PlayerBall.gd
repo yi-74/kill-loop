@@ -20,7 +20,9 @@ signal combo_lost()
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
+@onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
 
+var is_dead: bool = false
 var is_aiming: bool = false
 var current_energy: float = 300.0 # 初始能量为满
 var drag_start_position_screen: Vector2 = Vector2.ZERO
@@ -135,24 +137,24 @@ func _on_kill_area_entered(area: Area2D):
 
 
 func _on_body_entered(body: Node):
-	# 低速撞敌人的逻辑：中断连击
+	# 只有在【低速】撞到敌人时，才会触发死亡
 	if body.is_in_group("enemy"):
 		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
-			lose_combo()
+			print("速度不足，玩家死亡！")
+			# 【核心修正】不再是 queue_free()，而是调用我们的死亡演出
+			_player_death_sequence()
 		return
 
-	# 撞弹射敌人的逻辑：忽略
 	if body.is_in_group("bouncing_enemy"):
 		return
 			
-	# --- 如果撞到的是墙壁 ---
-	bounces_since_last_kill += 1 # 1. 增加“撞墙计数器”
-	print("撞墙! 当前连续反弹次数: ", bounces_since_last_kill)
+	# 如果撞到的是墙壁，处理连击逻辑
+	if not has_killed_in_combo:
+		bounces_since_last_kill += 1
+		if bounces_since_last_kill >= combo_max_bounces:
+			lose_combo()
 	
-	if bounces_since_last_kill >= combo_max_bounces: # 2. 检查连击是否因为“连续撞墙”而中断
-		lose_combo()
-	
-	_update_energy(current_energy + energy_per_bounce) # 3. 增加反弹能量
+	_update_energy(current_energy + energy_per_bounce)
 
 
 
@@ -176,3 +178,48 @@ func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float 
 		Engine.time_scale = slow_mo_scale
 	else:
 		Engine.time_scale = 1.0
+
+
+
+func _player_death_sequence():
+	# 1. 安全检查
+	if is_dead:
+		return
+	is_dead = true
+	lose_combo()
+
+	# --- 2. 立即暂停游戏！这是第一步 ---
+	get_tree().paused = true
+	
+	# --- 3. 创建一个可以在暂停时运行的 Tween ---
+	var tween = create_tween()
+	# 【核心】将 Tween 的处理模式绑定到“暂停”模式
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_trans(Tween.TRANS_SINE) # 使用平滑的正弦曲线
+
+	# --- 4. 编排死亡动画序列 ---
+	# a) 首先，用 0.3 秒的时间将滤镜【淡入】
+	tween.tween_property(death_effect, "modulate:a", 1.0, 0.3)
+	
+	# b) 在淡入动画【之后】，让画面停留 0.4 秒
+	tween.tween_interval(0.4)
+	
+	# c) 最后，再用 0.3 秒的时间将滤镜【淡出】
+	tween.tween_property(death_effect, "modulate:a", 0.0, 0.3)
+	
+	# 立即显示滤镜节点，否则动画无法播放
+	death_effect.show()
+
+	# --- 5. 等待整个动画序列播放完毕 ---
+	# (整个过程大约是 0.3 + 0.4 + 0.3 = 1.0 秒)
+	await tween.finished
+	
+	# --- 6. 恢复与重启 ---
+	# 隐藏滤镜，恢复其默认状态
+	death_effect.hide()
+	
+	# 恢复游戏时间
+	get_tree().paused = false
+	
+	# 立即重新开始游戏
+	get_tree().reload_current_scene()
