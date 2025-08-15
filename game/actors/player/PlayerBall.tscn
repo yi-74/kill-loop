@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b72hdcmnfo6yx" path="res://Script/actors/player/trailwith_line_2d.gd" id="3_5d0wo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_46ku3"]
-bounce = 0.7
+bounce = 0.65
 
 [sub_resource type="Curve" id="Curve_5d0wo"]
 _data = [Vector2(0.045, 0), 0.0, 0.990006, 0, 0, Vector2(0.995, 1), 0.324479, 0.0, 0, 0]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=11 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bx6atr8b6pw7l" path="res://game/UI/outer_zone.tscn" id="4_0n0co"]
 [ext_resource type="PackedScene" uid="uid://hxyhbrbe2li5" path="res://game/actors/enemy/enemy_tracker.tscn" id="6_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
+[ext_resource type="PackedScene" uid="uid://c26xl7m63xw7" path="res://game/actors/enemy/enemy_patrol.tscn" id="9_a6a44"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
 shader = ExtResource("7_ql5uw")
@@ -54,6 +55,8 @@ position = Vector2(1570, 724)
 
 [node name="EnemyTracker" parent="." instance=ExtResource("6_ohpoc")]
 position = Vector2(521, 432)
+
+[node name="EnemyPatrol" parent="." instance=ExtResource("9_a6a44")]
 
 [node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
 offset_right = 0.0
