@@ -115,23 +115,30 @@ func _update_energy(new_energy: float):
 
 
 func _on_kill_area_entered(area: Area2D):
+	if is_dead: return
 	var enemy_body = area.owner
 	if velocity_before_impact.length_squared() > kill_threshold * kill_threshold:
 		if enemy_body.has_method("die"):
 			var impact_direction = velocity_before_impact.normalized()
 			enemy_body.die(impact_direction)
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
-			# 1. 每次成功击杀，都重置“撞墙计数器”
+			
+			# --- 每次成功击杀，都重置“撞墙计数器” ---
 			bounces_since_last_kill = 0
 			
-			# 2. 增加 Combo 并给予奖励
+			# --- 增加 Combo ---
 			current_combo += 1
+			print("连击成功! 当前 Combo: ", current_combo)
 			combo_updated.emit(current_combo)
-			
-			current_max_speed += combo_speed_bonus
+
+			current_max_speed = default_max_speed + (current_combo * combo_speed_bonus)
+			print("速度上限提升! 新上限: ", current_max_speed)
+			# -----------------------------------------------------------------
+
+			# 给予能量奖励 (这个逻辑可以保持不变，也可以同样做成累积的)
 			_update_energy(current_energy + combo_energy_bonus)
 			
-			# 3. 增加基础的击杀能量
+			# 增加基础的击杀能量
 			_update_energy(current_energy + energy_per_kill)
 
 

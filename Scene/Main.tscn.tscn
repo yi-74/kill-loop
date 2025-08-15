@@ -29,7 +29,7 @@ position = Vector2(960, 540)
 position = Vector2(1452, 324)
 
 [node name="EnemyNormal6" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(443, 478)
+position = Vector2(345, 787)
 
 [node name="EnemyNormal5" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(1140, 549)
@@ -53,7 +53,7 @@ position = Vector2(678, 309)
 position = Vector2(1570, 724)
 
 [node name="EnemyTracker" parent="." instance=ExtResource("6_ohpoc")]
-position = Vector2(802, 570)
+position = Vector2(521, 432)
 
 [node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
 offset_right = 0.0
