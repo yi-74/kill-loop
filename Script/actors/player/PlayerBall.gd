@@ -14,8 +14,8 @@ signal combo_lost()
 @export var energy_per_kill: float = 20.0   # 击杀敌人增加的能量
 @export var energy_per_bounce: float = 30.0 # 反弹墙壁增加的能量
 @export_group("Combo System")
-@export var combo_max_bounces: int = 3       # 最大反弹容忍次数
-@export var combo_speed_bonus: float = 20.0  # 每次连击成功，速度上限增加值
+@export var combo_max_bounces: int = 4       # 最大反弹容忍次数
+@export var combo_speed_bonus: float = 300.0  # 每次连击成功，速度上限增加值
 @export var combo_energy_bonus: float = 10.0 # 每次连击成功，额外能量奖励
 
 @onready var line_2d: Line2D = $Line2D
@@ -182,44 +182,34 @@ func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float 
 
 
 func _player_death_sequence():
-	# 1. 安全检查
+	# 1. 安全检查 (保持不变)
 	if is_dead:
 		return
 	is_dead = true
+	
 	lose_combo()
 
-	# --- 2. 立即暂停游戏！这是第一步 ---
+	Engine.time_scale = 1.0
+	
+	# 2. 立即暂停游戏
 	get_tree().paused = true
 	
-	# --- 3. 创建一个可以在暂停时运行的 Tween ---
+	# 3. 创建一个可以在暂停时运行的 Tween
 	var tween = create_tween()
-	# 【核心】将 Tween 的处理模式绑定到“暂停”模式
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.set_trans(Tween.TRANS_SINE) # 使用平滑的正弦曲线
+	tween.set_trans(Tween.TRANS_SINE)
 
-	# --- 4. 编排死亡动画序列 ---
-	# a) 首先，用 0.3 秒的时间将滤镜【淡入】
+	# 4. 编排死亡动画序列
 	tween.tween_property(death_effect, "modulate:a", 1.0, 0.3)
-	
-	# b) 在淡入动画【之后】，让画面停留 0.4 秒
 	tween.tween_interval(0.4)
-	
-	# c) 最后，再用 0.3 秒的时间将滤镜【淡出】
 	tween.tween_property(death_effect, "modulate:a", 0.0, 0.3)
 	
-	# 立即显示滤镜节点，否则动画无法播放
 	death_effect.show()
 
-	# --- 5. 等待整个动画序列播放完毕 ---
-	# (整个过程大约是 0.3 + 0.4 + 0.3 = 1.0 秒)
+	# 5. 等待整个动画序列播放完毕
 	await tween.finished
 	
-	# --- 6. 恢复与重启 ---
-	# 隐藏滤镜，恢复其默认状态
+	# 6. 恢复与重启
 	death_effect.hide()
-	
-	# 恢复游戏时间
 	get_tree().paused = false
-	
-	# 立即重新开始游戏
 	get_tree().reload_current_scene()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=10 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dxb2ihg5s7iiy" path="res://game/UI/game_ui.tscn" id="2_ql5uw"]
 [ext_resource type="PackedScene" uid="uid://b8c3khyey3y88" path="res://game/actors/enemy/enemy_normal.tscn" id="3_1hats"]
 [ext_resource type="PackedScene" uid="uid://bx6atr8b6pw7l" path="res://game/UI/outer_zone.tscn" id="4_0n0co"]
+[ext_resource type="PackedScene" uid="uid://hxyhbrbe2li5" path="res://game/actors/enemy/enemy_tracker.tscn" id="6_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
@@ -36,11 +37,23 @@ position = Vector2(1140, 549)
 [node name="EnemyNormal4" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(1161, 384)
 
+[node name="EnemyNormal8" parent="." instance=ExtResource("3_1hats")]
+position = Vector2(1037, 740)
+
+[node name="EnemyNormal7" parent="." instance=ExtResource("3_1hats")]
+position = Vector2(602, 661)
+
 [node name="EnemyNormal3" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(1356, 618)
 
 [node name="EnemyNormal" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(678, 309)
+
+[node name="EnemyTracker2" parent="." instance=ExtResource("6_ohpoc")]
+position = Vector2(1570, 724)
+
+[node name="EnemyTracker" parent="." instance=ExtResource("6_ohpoc")]
+position = Vector2(802, 570)
 
 [node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
 offset_right = 0.0
