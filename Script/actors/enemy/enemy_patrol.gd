@@ -1,56 +1,62 @@
+# ===================================================================
+# EnemyPatrol.gd - V2.0 (路径外部指定版)
+# ===================================================================
 extends RigidBody2D
 
 # --- 可在编辑器中调整的参数 ---
-@export var move_speed: float = 150.0    # 巡逻速度
-@export var turn_rate: float = 5.0       # 转向平滑度
+@export var move_speed: float = 150.0
+@export var turn_rate: float = 5.0
 
-# --- 节点引用 ---
-@onready var path: Path2D = $Path2D # 获取路径节点
+# --- 【核心修改】导出一个 NodePath 变量，用来在编辑器里指定路径 ---
+@export var patrol_path: NodePath
 
 # --- 内部变量 ---
-var path_points: PackedVector2Array # 用来存储路径上的所有点
-var current_target_index: int = 1  # 当前的目标点索引
+var path_points: PackedVector2Array
+var current_target_index: int = 1
 var move_direction: Vector2 = Vector2.ZERO
 
-
 func _ready() -> void:
-	# 获取 Path2D 中曲线的所有顶点
-	path_points = path.curve.get_baked_points()
+	# 安全检查：检查路径是否被指定
+	if patrol_path.is_empty():
+		set_physics_process(false)
+		return
+
+	# 通过路径获取 Path2D 节点
+	var path_node = get_node(patrol_path)
+	if not path_node is Path2D:
+		set_physics_process(false)
+		return
+
+	# 【核心修改】路径点现在是【世界坐标】，因为路径在主场景中
+	path_points = path_node.curve.get_baked_points()
 	
-	# 安全检查：如果路径上的点少于2个，就禁用移动
+	# 将路径的局部坐标点，转换为世界坐标点
+	var path_world_transform = path_node.global_transform
+	for i in range(path_points.size()):
+		path_points[i] = path_world_transform * path_points[i]
+
 	if path_points.size() < 2:
-		set_physics_process(false) # 关闭 _physics_process 函数
+		set_physics_process(false)
 		return
 		
-	# 将自己的初始位置，设置为路径的第一个点的位置
-	# 注意：Path2D 的点是局部坐标，所以我们直接设置 position
-	position = path_points[0]
-
+	# 将自己的【世界】初始位置，设置为路径的第一个点
+	global_position = path_points[0]
 
 func _physics_process(delta: float) -> void:
-	# 1. 获取当前的目标点
 	var target_position = path_points[current_target_index]
 	
-	# 2. 计算朝向目标点的方向
-	move_direction = (target_position - position).normalized()
+	# 【核心修改】现在所有的位置计算，都使用世界坐标
+	move_direction = (target_position - global_position).normalized()
 	
-	# 3. 朝目标方向移动
 	linear_velocity = move_direction * move_speed
 	
-	# 4. 平滑地旋转朝向
 	var target_angle = move_direction.angle()
 	rotation = lerp_angle(rotation, target_angle + PI/2.0, delta * turn_rate)
 	
-	# 5. 检查是否已接近目标点
-	if position.distance_to(target_position) < 10.0: # 10像素的容差
-		# 如果接近了，就更新目标点到下一个
+	if global_position.distance_to(target_position) < 10.0:
 		current_target_index += 1
-		
-		# 如果已经到达路径的终点，就反向
 		if current_target_index >= path_points.size():
-			# 反转路径点的顺序
 			path_points.reverse()
-			# 目标重置为第二个点（因为第一个点已经是当前位置了）
 			current_target_index = 1
 
 

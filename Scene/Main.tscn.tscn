@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=16 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -8,7 +8,29 @@
 [ext_resource type="PackedScene" uid="uid://bx6atr8b6pw7l" path="res://game/UI/outer_zone.tscn" id="4_0n0co"]
 [ext_resource type="PackedScene" uid="uid://hxyhbrbe2li5" path="res://game/actors/enemy/enemy_tracker.tscn" id="6_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
+[ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/enemy_spawner.gd" id="8_5t6br"]
 [ext_resource type="PackedScene" uid="uid://c26xl7m63xw7" path="res://game/actors/enemy/enemy_patrol.tscn" id="9_a6a44"]
+
+[sub_resource type="Curve2D" id="Curve2D_5t6br"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1534, 311, 0, 0, 0, 0, 1232, 723)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_a6a44"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 452, 331, 0, 0, 0, 0, 706, 725)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_pff3i"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 429, 540, 0, 0, 0, 0, 1518, 548)
+}
+point_count = 2
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pff3i"]
+size = Vector2(1430, 694.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
 shader = ExtResource("7_ql5uw")
@@ -26,26 +48,19 @@ position = Vector2(979, 555)
 [node name="Outer_Zone" parent="." instance=ExtResource("4_0n0co")]
 position = Vector2(960, 540)
 
+[node name="PatrolPaths" type="Node" parent="."]
+
+[node name="Path2D2" type="Path2D" parent="PatrolPaths"]
+curve = SubResource("Curve2D_5t6br")
+
+[node name="Path2D" type="Path2D" parent="PatrolPaths"]
+curve = SubResource("Curve2D_a6a44")
+
+[node name="Path2D3" type="Path2D" parent="PatrolPaths"]
+curve = SubResource("Curve2D_pff3i")
+
 [node name="EnemyNormal2" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(1452, 324)
-
-[node name="EnemyNormal6" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(345, 787)
-
-[node name="EnemyNormal5" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(1140, 549)
-
-[node name="EnemyNormal4" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(1161, 384)
-
-[node name="EnemyNormal8" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(1037, 740)
-
-[node name="EnemyNormal7" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(602, 661)
-
-[node name="EnemyNormal3" parent="." instance=ExtResource("3_1hats")]
-position = Vector2(1356, 618)
 
 [node name="EnemyNormal" parent="." instance=ExtResource("3_1hats")]
 position = Vector2(678, 309)
@@ -57,6 +72,19 @@ position = Vector2(1570, 724)
 position = Vector2(521, 432)
 
 [node name="EnemyPatrol" parent="." instance=ExtResource("9_a6a44")]
+patrol_path = NodePath("../PatrolPaths/Path2D")
+
+[node name="SpawnZone" type="Area2D" parent="."]
+position = Vector2(960, 540)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnZone"]
+shape = SubResource("RectangleShape2D_pff3i")
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("8_5t6br")
+spawn_zone_path = NodePath("../SpawnZone")
+
+[node name="SpawnTimer" type="Timer" parent="EnemySpawner"]
 
 [node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
 offset_right = 0.0

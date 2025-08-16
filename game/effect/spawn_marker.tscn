@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdfpt7wsmtbpq"]
+
+[ext_resource type="Script" uid="uid://bjknvnqs0nstb" path="res://Script/effect/spawn_marker.gd" id="1_v6kvi"]
+[ext_resource type="Texture2D" uid="uid://dairwooa3fi0k" path="res://assets/actor/32ball.png" id="2_eyrq1"]
+
+[node name="SpawnMarker" type="Node2D"]
+script = ExtResource("1_v6kvi")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_eyrq1")
