@@ -2,8 +2,8 @@
   "waves": [
     {
       "start_time": 0,
-      "end_time": 30,
-      "min_interval": 0.8,
+      "end_time": 15,
+      "min_interval": 0.5,
       "max_interval": 1.0,
       "min_enemies": 5,
       "max_enemies": 10,
@@ -12,10 +12,10 @@
       }
     },
     {
-      "start_time": 30,
-      "end_time": 60,
-      "min_interval": 0.8,
-      "max_interval": 1.0,
+      "start_time": 15,
+      "end_time": 30,
+      "min_interval": 0.5,
+      "max_interval": 0.8,
       "min_enemies": 6,
       "max_enemies": 12,
       "enemy_pool": {
@@ -24,10 +24,10 @@
       }
     },
     {
-      "start_time": 60,
-      "end_time": 90,
-      "min_interval": 0.8,
-      "max_interval": 1.0,
+      "start_time": 30,
+      "end_time": 60,
+      "min_interval": 0.3,
+      "max_interval": 0.8,
       "min_enemies": 8,
       "max_enemies": 15,
       "enemy_pool": {

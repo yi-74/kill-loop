@@ -45,16 +45,18 @@ position = Vector2(979, 555)
 [node name="Outer_Zone" parent="." instance=ExtResource("4_0n0co")]
 position = Vector2(960, 540)
 
-[node name="PatrolPaths" type="Node" parent="."]
+[node name="PathManager" type="Node" parent="."]
 
-[node name="Path2D2" type="Path2D" parent="PatrolPaths"]
+[node name="Path2D2" type="Path2D" parent="PathManager"]
 curve = SubResource("Curve2D_5t6br")
 
-[node name="Path2D" type="Path2D" parent="PatrolPaths"]
+[node name="Path2D" type="Path2D" parent="PathManager"]
 curve = SubResource("Curve2D_a6a44")
 
-[node name="Path2D3" type="Path2D" parent="PatrolPaths"]
+[node name="Path2D3" type="Path2D" parent="PathManager"]
 curve = SubResource("Curve2D_pff3i")
+
+[node name="PatrolPaths" type="Node" parent="."]
 
 [node name="SpawnZone" type="Area2D" parent="."]
 position = Vector2(960, 540)
