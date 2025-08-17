@@ -27,12 +27,12 @@ gravity_scale = 0.0
 script = ExtResource("1_46ku3")
 
 [node name="TrailwithLine2D" type="Line2D" parent="."]
-process_mode = 3
-top_level = true
 width = 50.0
 width_curve = SubResource("Curve_5d0wo")
 gradient = SubResource("Gradient_5d0wo")
 script = ExtResource("3_5d0wo")
+point_count = null
+is_enabled = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("CanvasItemMaterial_46ku3")
