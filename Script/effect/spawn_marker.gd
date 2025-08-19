@@ -4,6 +4,8 @@ extends Node2D
 var spawn_duration: float = 1.0
 var enemy_scene: PackedScene # 要生成的敌人场景
 var spawn_position: Vector2
+var patrol_path_to_assign: Path2D = null
+var path_manager_ref = null
 
 func _ready() -> void:
 	# 初始时完全透明
@@ -19,11 +21,14 @@ func _ready() -> void:
 	
 	# 等待动画完成
 	await tween.finished
-	
-	# --- 动画完成后，生成敌人 ---
 	var enemy_instance = enemy_scene.instantiate()
 	get_parent().add_child(enemy_instance)
-	enemy_instance.global_position = spawn_position
 	
-	# 自己消失
+	# 如果是巡逻敌人，就调用它的初始化函数
+	if enemy_instance.has_method("initialize"):
+		enemy_instance.initialize(patrol_path_to_assign, path_manager_ref)
+	else:
+		# 其他敌人，正常设置位置
+		enemy_instance.global_position = spawn_position
+	
 	queue_free()

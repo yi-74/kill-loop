@@ -7,6 +7,7 @@ extends Node
 @export var spawn_prep_time: float = 1.0
 
 # --- 节点引用 ---
+@onready var path_manager = $"/root/Main_tscn/PathManager" # 使用绝对路径获取
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var spawn_zone: Area2D = get_node(spawn_zone_path)
 @onready var spawn_zone_shape: CollisionShape2D = spawn_zone.get_child(0)
@@ -85,22 +86,39 @@ func _on_spawn_timer_timeout() -> void:
 	# 1. 选择要生成的敌人类型
 	var enemy_to_spawn_name = _pick_enemy_from_pool()
 	var enemy_scene = enemy_scenes[enemy_to_spawn_name]
-	
+	# --- 【核心修改】如果是巡逻敌人，需要先请求路径 ---
+	var patrol_path_for_enemy: Path2D = null
+	if enemy_to_spawn_name == "EnemyPatrol":
+		patrol_path_for_enemy = path_manager.request_free_path()
+		# 如果没有可用的路径，就取消本次生成
+		if not patrol_path_for_enemy:
+			print("无法生成巡逻敌人：没有可用的路径。")
+			return # 或者可以改成生成一个普通敌人作为替代
+			
 	# 2. 寻找一个安全的生成位置
-	var spawn_pos = _find_safe_spawn_position()
-	if spawn_pos == Vector2.INF: # 如果找不到安全位置
-		print("找不到安全的生成位置，稍后重试。")
-		spawn_timer.start() # 立即重新开始计时
+	#    对于巡逻敌人，它的出生位置就是路径的起点，不再需要随机
+	var spawn_pos: Vector2
+	if patrol_path_for_enemy:
+		spawn_pos = patrol_path_for_enemy.global_position # 路径节点的全局位置
+	else:
+		spawn_pos = _find_safe_spawn_position()
+	
+	if spawn_pos == Vector2.INF:
+		# 如果是巡逻敌人，我们把它占用的路径再释放掉
+		if patrol_path_for_enemy: path_manager.release_path(patrol_path_for_enemy)
 		return
 
-	# 3. 生成“出生标记”
+	# 3. 生成“出生标记”，并传递额外参数
 	var marker = SpawnMarker.instantiate()
 	get_parent().add_child(marker)
 	marker.global_position = spawn_pos
-	# 将参数传递给标记
+	
 	marker.spawn_duration = spawn_prep_time
 	marker.enemy_scene = enemy_scene
 	marker.spawn_position = spawn_pos
+	# 【新增】将路径和管理器也传递给标记，标记再传给敌人
+	marker.patrol_path_to_assign = patrol_path_for_enemy
+	marker.path_manager_ref = path_manager
 
 
 func _pick_enemy_from_pool() -> String:

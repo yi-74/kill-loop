@@ -7,40 +7,36 @@ extends RigidBody2D
 @export var move_speed: float = 150.0
 @export var turn_rate: float = 5.0
 
-# --- 【核心修改】导出一个 NodePath 变量，用来在编辑器里指定路径 ---
-@export var patrol_path: NodePath
-
-# --- 内部变量 ---
+var assigned_path: Path2D = null # 用来存储被分配的路径
+var path_manager = null # 用来存储对路径管理器的引用
 var path_points: PackedVector2Array
 var current_target_index: int = 1
 var move_direction: Vector2 = Vector2.ZERO
 
-func _ready() -> void:
-	# 安全检查：检查路径是否被指定
-	if patrol_path.is_empty():
-		set_physics_process(false)
-		return
 
-	# 通过路径获取 Path2D 节点
-	var path_node = get_node(patrol_path)
-	if not path_node is Path2D:
-		set_physics_process(false)
-		return
 
-	# 【核心修改】路径点现在是【世界坐标】，因为路径在主场景中
-	path_points = path_node.curve.get_baked_points()
+func initialize(path: Path2D, manager):
+	assigned_path = path
+	path_manager = manager
 	
-	# 将路径的局部坐标点，转换为世界坐标点
-	var path_world_transform = path_node.global_transform
-	for i in range(path_points.size()):
-		path_points[i] = path_world_transform * path_points[i]
-
+	# 将 _ready() 中的逻辑移动到这里
+	if not is_instance_valid(assigned_path):
+		print("Patrol enemy initialized without a valid path. Disabling.")
+		set_physics_process(false)
+		return
+		
+	var path_points_local = assigned_path.curve.get_baked_points()
+	var path_world_transform = assigned_path.global_transform
+	for p in path_points_local:
+		path_points.append(path_world_transform * p)
+		
 	if path_points.size() < 2:
 		set_physics_process(false)
 		return
 		
-	# 将自己的【世界】初始位置，设置为路径的第一个点
 	global_position = path_points[0]
+
+
 
 func _physics_process(delta: float) -> void:
 	var target_position = path_points[current_target_index]
@@ -64,6 +60,8 @@ func _physics_process(delta: float) -> void:
 const KillEffect = preload("res://game/effect/kill_effect.tscn")
 
 func die(impact_direction: Vector2) -> void:
+	if is_instance_valid(path_manager):
+		path_manager.release_path(assigned_path)
 	var effect_instance = KillEffect.instantiate()
 	
 	effect_instance.rotation = impact_direction.angle() + PI / 2.0

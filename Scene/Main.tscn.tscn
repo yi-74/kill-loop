@@ -1,30 +1,49 @@
-[gd_scene load_steps=13 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=17 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
 [ext_resource type="Texture2D" uid="uid://6ifiu5e3bnln" path="res://assets/UI/Background/Inner Background.png" id="2_0n0co"]
 [ext_resource type="PackedScene" uid="uid://dxb2ihg5s7iiy" path="res://game/UI/game_ui.tscn" id="2_ql5uw"]
 [ext_resource type="PackedScene" uid="uid://bx6atr8b6pw7l" path="res://game/UI/outer_zone.tscn" id="4_0n0co"]
+[ext_resource type="Script" uid="uid://dujfd3c07p3ab" path="res://Script/Other/path_manager.gd" id="5_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
-[ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/enemy_spawner.gd" id="8_5t6br"]
-
-[sub_resource type="Curve2D" id="Curve2D_5t6br"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1534, 311, 0, 0, 0, 0, 1232, 723)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_a6a44"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 452, 331, 0, 0, 0, 0, 706, 725)
-}
-point_count = 2
+[ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/Other/enemy_spawner.gd" id="8_5t6br"]
 
 [sub_resource type="Curve2D" id="Curve2D_pff3i"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 429, 540, 0, 0, 0, 0, 1518, 548)
 }
 point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_5t6br"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 1533, 318, 0, 0, 0, 0, 1188, 783)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_a6a44"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 419, 321, 0, 0, 0, 0, 720, 788)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_ksvd0"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 417, 786, 0, 0, 0, 0, 1515, 785)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_ohpoc"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 421, 320, 0, 0, 0, 0, 1533, 320)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_e0lk5"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 413, 787, 0, 0, 0, 0, 975, 321, 0, 0, 0, 0, 1515, 785)
+}
+point_count = 3
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pff3i"]
 size = Vector2(1430, 694.5)
@@ -46,6 +65,10 @@ position = Vector2(979, 555)
 position = Vector2(960, 540)
 
 [node name="PathManager" type="Node" parent="."]
+script = ExtResource("5_ohpoc")
+
+[node name="Path2D3" type="Path2D" parent="PathManager"]
+curve = SubResource("Curve2D_pff3i")
 
 [node name="Path2D2" type="Path2D" parent="PathManager"]
 curve = SubResource("Curve2D_5t6br")
@@ -53,8 +76,14 @@ curve = SubResource("Curve2D_5t6br")
 [node name="Path2D" type="Path2D" parent="PathManager"]
 curve = SubResource("Curve2D_a6a44")
 
-[node name="Path2D3" type="Path2D" parent="PathManager"]
-curve = SubResource("Curve2D_pff3i")
+[node name="Path2D4" type="Path2D" parent="PathManager"]
+curve = SubResource("Curve2D_ksvd0")
+
+[node name="Path2D5" type="Path2D" parent="PathManager"]
+curve = SubResource("Curve2D_ohpoc")
+
+[node name="Path2D6" type="Path2D" parent="PathManager"]
+curve = SubResource("Curve2D_e0lk5")
 
 [node name="PatrolPaths" type="Node" parent="."]
 
