@@ -1,40 +1,53 @@
 {
-  "waves": [
-    {
-      "start_time": 0,
-      "end_time": 15,
-      "min_interval": 0.5,
-      "max_interval": 1.0,
-      "min_enemies": 5,
-      "max_enemies": 10,
-      "enemy_pool": {
-        "EnemyNormal": 1.0
-      }
-    },
-    {
-      "start_time": 15,
-      "end_time": 30,
-      "min_interval": 0.5,
-      "max_interval": 0.8,
-      "min_enemies": 6,
-      "max_enemies": 12,
-      "enemy_pool": {
-        "EnemyNormal": 0.6,
-        "EnemyTracker": 0.4
-      }
-    },
-    {
-      "start_time": 30,
-      "end_time": 60,
-      "min_interval": 0.3,
-      "max_interval": 0.8,
-      "min_enemies": 8,
-      "max_enemies": 15,
-      "enemy_pool": {
-        "EnemyNormal": 0.5,
-        "EnemyTracker": 0.3,
-        "EnemyPatrol": 0.2
-      }
-    }
-  ]
+    "waves": [
+        {
+            "start_time": 0,
+            "end_time": 15,
+            "min_interval": 0.5,
+            "max_interval": 1.0,
+            "min_enemies": 5,
+            "max_enemies": 10,
+            "enemy_pool": {
+                "EnemyNormal": 1.0
+            }
+        },
+        {
+            "start_time": 15,
+            "end_time": 30,
+            "min_interval": 0.4,
+            "max_interval": 0.8,
+            "min_enemies": 6,
+            "max_enemies": 12,
+            "enemy_pool": {
+                "EnemyNormal": 0.6,
+                "EnemyTracker": 0.4
+            }
+        },
+        {
+            "start_time": 30,
+            "end_time": 45,
+            "min_interval": 0.3,
+            "max_interval": 0.7,
+            "min_enemies": 8,
+            "max_enemies": 15,
+            "enemy_pool": {
+                "EnemyNormal": 0.5,
+                "EnemyTracker": 0.3,
+                "EnemyPatrol": 0.2
+            }
+        },
+        {
+            "start_time": 45,
+            "end_time": 60,
+            "min_interval": 0.2,
+            "max_interval": 0.5,
+            "min_enemies": 10,
+            "max_enemies": 15,
+            "enemy_pool": {
+                "EnemyNormal": 0.2,
+                "EnemyTracker": 0.4,
+                "EnemyPatrol": 0.4
+            }
+        }
+    ]
 }

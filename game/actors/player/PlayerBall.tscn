@@ -25,6 +25,7 @@ z_index = 1
 collision_mask = 6
 physics_material_override = SubResource("PhysicsMaterial_46ku3")
 gravity_scale = 0.0
+continuous_cd = 2
 script = ExtResource("1_46ku3")
 
 [node name="TrailwithLine2D" type="Line2D" parent="."]

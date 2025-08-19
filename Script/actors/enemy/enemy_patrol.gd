@@ -4,7 +4,7 @@
 extends RigidBody2D
 
 # --- 可在编辑器中调整的参数 ---
-@export var move_speed: float = 150.0
+@export var move_speed: float = 300.0
 @export var turn_rate: float = 5.0
 
 var assigned_path: Path2D = null # 用来存储被分配的路径

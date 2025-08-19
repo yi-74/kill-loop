@@ -46,3 +46,7 @@ fullscreen_toggle={
 2d_physics/layer_3="world"
 2d_physics/layer_4="playerKill"
 2d_physics/layer_5="EnemyKill"
+
+[physics]
+
+common/physics_ticks_per_second=120
