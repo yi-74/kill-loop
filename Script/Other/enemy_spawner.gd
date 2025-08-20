@@ -4,7 +4,6 @@ extends Node
 # --- 【新增】定义一个新的信号，用来广播格式化后的时间字符串 ---
 signal game_time_updated(time_float: float)
 signal score_updated(new_score: int)
-signal high_score_broken() # 当打破最高分时发出
 
 # --- 可在编辑器中指定的参数 ---
 @export var spawn_zone_path: NodePath
@@ -76,7 +75,6 @@ func add_score(base_score: int, combo: int, position: Vector2):
 	# 3. 检查是否打破最高分
 	if current_score > DataManager.high_score and old_score <= DataManager.high_score:
 		print("准备发出 high_score_broken 信号！") # <-- 添加这行
-		high_score_broken.emit()
 		print("打破最高分记录！")
 	
 	# 4. 更新并保存最高分

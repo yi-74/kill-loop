@@ -23,30 +23,23 @@ func _ready():
 
 
 
-# --- 接收分数更新的函数 ---
 func on_score_updated(new_score: int):
-	# 创建一个 Tween 来实现数字滚动动画
-	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
-	
-	# .tween_method(callable, from, to, duration)
-	# 调用 score_label 的 set_text 方法，但只传递数字部分
-	# 我们需要一个中间函数来格式化
-	# 为了简化，我们先直接设置文本
+	# 1. 更新当前分数的显示
 	score_label.text = str(new_score)
 	
-	# 根据是否超过最高分，改变颜色
-	if is_high_score_broken:
-		score_label.add_theme_color_override("font_color", Color.from_string("#00ffff", Color.WHITE)) # 青色
+	# 2. 获取最新的历史最高分
+	var current_high_score = DataManager.high_score
+	
+	# 3. 更新历史最高分的显示
+	high_score_label.text = "HI: " + str(current_high_score)
+	
+	# 4. 根据当前分数和历史最高分的关系，来决定颜色
+	if new_score >= current_high_score:
+		# 如果当前分数已经达到或超过最高分，就用青色
+		score_label.add_theme_color_override("font_color", Color("00ffff")) # 青色
 	else:
-		score_label.add_theme_color_override("font_color", Color.from_string("#ff3b30", Color.WHITE)) # 红色
-
-# --- 接收打破最高分记录的函数 ---
-func on_high_score_broken():
-	is_high_score_broken = true
-	# 立即更新历史最高分显示
-	high_score_label.text = "HI: " + str(DataManager.high_score)
-	# 在这里可以播放“突破！”的动画或音效
-	# $BreakRecordAnimationPlayer.play("play")
+		# 否则，用红色
+		score_label.add_theme_color_override("font_color", Color("ff3b30")) # 红色
 
 
 
