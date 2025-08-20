@@ -4,6 +4,7 @@
 extends RigidBody2D
 
 # --- 可在编辑器中调整的参数 ---
+@export var base_score_value: int = 125
 @export var move_speed: float = 200.0     # 敌人的移动速度
 @export var turn_rate: float = 5.0       # 敌人转向的平滑度，值越大转得越快
 

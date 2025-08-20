@@ -3,6 +3,8 @@ extends Node
 
 # --- 【新增】定义一个新的信号，用来广播格式化后的时间字符串 ---
 signal game_time_updated(time_float: float)
+signal score_updated(new_score: int)
+signal high_score_broken() # 当打破最高分时发出
 
 # --- 可在编辑器中指定的参数 ---
 @export var spawn_zone_path: NodePath
@@ -16,6 +18,7 @@ signal game_time_updated(time_float: float)
 @onready var spawn_zone_shape: CollisionShape2D = spawn_zone.get_child(0)
 
 # --- 内部变量 ---
+var current_score: int = 0
 var game_time: float = 0.0
 var wave_data: Array = []
 var current_wave: Dictionary
@@ -25,6 +28,7 @@ var enemy_scenes: Dictionary = {
 	"EnemyPatrol": preload("res://game/actors/enemy/enemy_patrol.tscn")
 }
 const SpawnMarker = preload("res://game/effect/spawn_marker.tscn")
+const FloatingText = preload("res://game/effect/floating_text.tscn")
 
 
 
@@ -56,6 +60,38 @@ func _process(delta: float) -> void:
 		
 	# 3. 检查是否需要补充敌人
 	_check_and_spawn()
+
+
+
+# --- 【新增】添加分数的函数 ---
+func add_score(base_score: int, combo: int, position: Vector2):
+	# 1. 计算连击加成
+	var combo_multiplier = 1.0 + min(0.05 * combo, 1.0) # min(..., 1.0) 实现了 x2 的软上限
+	var final_score = int(base_score * combo_multiplier)
+	
+	# 2. 更新当前总分
+	var old_score = current_score
+	current_score += final_score
+	
+	# 3. 检查是否打破最高分
+	if current_score > DataManager.high_score and old_score <= DataManager.high_score:
+		print("准备发出 high_score_broken 信号！") # <-- 添加这行
+		high_score_broken.emit()
+		print("打破最高分记录！")
+	
+	# 4. 更新并保存最高分
+	DataManager.report_new_score(current_score)
+	
+	# 5. 发出分数更新信号，通知 UI
+	score_updated.emit(current_score)
+	
+	# 6. 生成飘字
+	var ft = FloatingText.instantiate()
+	get_parent().add_child(ft) # 添加到主场景
+	ft.global_position = position
+	ft.setup(final_score)
+
+
 
 func _update_wave() -> void:
 	if wave_data.is_empty():

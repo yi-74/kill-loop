@@ -14,3 +14,5 @@ func _ready() -> void:
 	player.combo_updated.connect(game_ui.on_combo_updated)
 	player.combo_lost.connect(game_ui.on_combo_lost)
 	spawner.game_time_updated.connect(game_ui.update_game_timer)
+	spawner.score_updated.connect(game_ui.on_score_updated)
+	spawner.high_score_broken.connect(game_ui.on_high_score_broken)

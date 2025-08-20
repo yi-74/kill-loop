@@ -21,6 +21,7 @@ signal combo_lost()
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
 @onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
+@onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -140,6 +141,10 @@ func _on_kill_area_entered(area: Area2D):
 			
 			# 增加基础的击杀能量
 			_update_energy(current_energy + energy_per_kill)
+			
+		# 【核心修改】通知 Spawner 加分
+			spawner.add_score(enemy_body.base_score_value, current_combo, enemy_body.global_position)
+			enemy_body.die(impact_direction)
 
 
 

@@ -1,6 +1,7 @@
 # enemy_normal.gd
 extends RigidBody2D
 
+@export var base_score_value: int = 100
 
 # 在脚本顶部预加载特效场景
 const KillEffect = preload("res://game/effect/kill_effect.tscn")

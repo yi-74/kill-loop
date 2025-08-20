@@ -1,5 +1,7 @@
 extends Control
 
+@onready var score_label: Label = $ScoreLabel
+@onready var high_score_label: Label = $HighScoreLabel
 # 获取 Label 节点的引用
 @onready var speed_label: Label = $SpeedLabel
 @onready var combo_lost_anim: AnimationPlayer = $ComboLostAnimationPlayer
@@ -11,11 +13,41 @@ extends Control
 @onready var combo_label: Label = $ComboLabel
 @onready var game_timer_label: Label = $GameTimerLabel
 
+var is_high_score_broken: bool = false
+
 
 func _ready():
-	# 初始时隐藏 "Combo Lost" 提示
-	#combo_lost_anim.play("RESET")
+	# 游戏开始时，显示历史最高分
+	high_score_label.text = "HI: " + str(DataManager.high_score)
 	return
+
+
+
+# --- 接收分数更新的函数 ---
+func on_score_updated(new_score: int):
+	# 创建一个 Tween 来实现数字滚动动画
+	var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
+	
+	# .tween_method(callable, from, to, duration)
+	# 调用 score_label 的 set_text 方法，但只传递数字部分
+	# 我们需要一个中间函数来格式化
+	# 为了简化，我们先直接设置文本
+	score_label.text = str(new_score)
+	
+	# 根据是否超过最高分，改变颜色
+	if is_high_score_broken:
+		score_label.add_theme_color_override("font_color", Color.from_string("#00ffff", Color.WHITE)) # 青色
+	else:
+		score_label.add_theme_color_override("font_color", Color.from_string("#ff3b30", Color.WHITE)) # 红色
+
+# --- 接收打破最高分记录的函数 ---
+func on_high_score_broken():
+	is_high_score_broken = true
+	# 立即更新历史最高分显示
+	high_score_label.text = "HI: " + str(DataManager.high_score)
+	# 在这里可以播放“突破！”的动画或音效
+	# $BreakRecordAnimationPlayer.play("play")
+
 
 
 func update_game_timer(new_time_float: float) -> void:
