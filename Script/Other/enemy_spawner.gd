@@ -74,7 +74,6 @@ func add_score(base_score: int, combo: int, position: Vector2):
 	
 	# 3. 检查是否打破最高分
 	if current_score > DataManager.high_score and old_score <= DataManager.high_score:
-		print("准备发出 high_score_broken 信号！") # <-- 添加这行
 		print("打破最高分记录！")
 	
 	# 4. 更新并保存最高分
@@ -120,43 +119,67 @@ func _check_and_spawn() -> void:
 func _on_spawn_timer_timeout() -> void:
 	var current_enemy_count = get_tree().get_nodes_in_group("enemy").size()
 	if current_enemy_count >= current_wave.max_enemies:
-		return # 如果在等待期间敌人数量已满，则此次不生成
+		return
 
 	# 1. 选择要生成的敌人类型
 	var enemy_to_spawn_name = _pick_enemy_from_pool()
 	var enemy_scene = enemy_scenes[enemy_to_spawn_name]
-	# --- 【核心修改】如果是巡逻敌人，需要先请求路径 ---
+	
+	# --- 【核心修正】统一所有敌人的生成前逻辑 ---
+	
+	var spawn_pos: Vector2
 	var patrol_path_for_enemy: Path2D = null
+
 	if enemy_to_spawn_name == "EnemyPatrol":
 		patrol_path_for_enemy = path_manager.request_free_path()
-		# 如果没有可用的路径，就取消本次生成
 		if not patrol_path_for_enemy:
-			return # 或者可以改成生成一个普通敌人作为替代
+			# 降级处理：如果没路径，就改成生成普通敌人
+			enemy_to_spawn_name = "EnemyNormal"
+			enemy_scene = enemy_scenes["EnemyNormal"]
+			spawn_pos = _find_safe_spawn_position()
+		else:
+			# 巡逻敌人的出生点，就是其路径的第一个点（世界坐标）
+			spawn_pos = patrol_path_for_enemy.curve.get_point_position(0)
+			spawn_pos = patrol_path_for_enemy.to_global(spawn_pos)
 			
-	# 2. 寻找一个安全的生成位置
-	#    对于巡逻敌人，它的出生位置就是路径的起点，不再需要随机
-	var spawn_pos: Vector2
-	if patrol_path_for_enemy:
-		spawn_pos = patrol_path_for_enemy.global_position # 路径节点的全局位置
+			# 我们依然要检查这个出生点是否安全！
+			if not _is_position_safe(spawn_pos):
+				path_manager.release_path(patrol_path_for_enemy) # 释放占用的路径
+				return
 	else:
+		# 对于其他敌人，正常寻找随机安全位置
 		spawn_pos = _find_safe_spawn_position()
-	
+
+	# 如果最终都找不到安全位置，则取消本次生成
 	if spawn_pos == Vector2.INF:
-		# 如果是巡逻敌人，我们把它占用的路径再释放掉
-		if patrol_path_for_enemy: path_manager.release_path(patrol_path_for_enemy)
+		# 如果之前为巡逻敌人预定了路径，要记得释放掉
+		if patrol_path_for_enemy:
+			path_manager.release_path(patrol_path_for_enemy)
 		return
 
-	# 3. 生成“出生标记”，并传递额外参数
+	# --- 3. 统一使用“出生标记”来生成 ---
 	var marker = SpawnMarker.instantiate()
 	get_parent().add_child(marker)
 	marker.global_position = spawn_pos
 	
+	# 将所有需要的参数都传递给标记
 	marker.spawn_duration = spawn_prep_time
 	marker.enemy_scene = enemy_scene
 	marker.spawn_position = spawn_pos
-	# 【新增】将路径和管理器也传递给标记，标记再传给敌人
-	marker.patrol_path_to_assign = patrol_path_for_enemy
-	marker.path_manager_ref = path_manager
+	
+	# 如果是巡逻敌人，则额外传递路径信息
+	if patrol_path_for_enemy:
+		marker.patrol_path_to_assign = patrol_path_for_enemy
+		marker.path_manager_ref = path_manager
+
+
+
+func _is_position_safe(pos_to_check: Vector2) -> bool:
+	var enemies = get_tree().get_nodes_in_group("enemy")
+	for enemy in enemies:
+		if enemy.global_position.distance_to(pos_to_check) < min_spawn_distance:
+			return false # 不安全
+	return true # 安全
 
 
 
@@ -172,38 +195,35 @@ func _pick_enemy_from_pool() -> String:
 
 
 func _find_safe_spawn_position() -> Vector2:
-	# --- 1. 获取生成区域的矩形资源 ---
-	#    这通常是一个 RectangleShape2D
+	
+	# 1. 获取生成区域碰撞体（CollisionShape2D）的形状资源（Shape）
+	#    这个形状资源（比如 RectangleShape2D）内部，才存储着真正的尺寸信息。
 	var spawn_shape_resource = spawn_zone_shape.shape
-	if not spawn_shape_resource is RectangleShape2D:
-		return Vector2.INF
-
-	var spawn_rect_local: Rect2 = spawn_shape_resource.get_rect()
 	
-	# --- 2. 计算生成区域在世界中的位置和大小 ---
-	#    矩形的原点 (position) 是它的中心点
-	var spawn_rect_world_center = spawn_zone.global_position
-	var spawn_rect_world_size = spawn_rect_local.size * spawn_zone.global_scale
-
-	#    计算出矩形在世界坐标系中的左上角 (top-left corner)
-	var spawn_rect_world_origin = spawn_rect_world_center - spawn_rect_world_size / 2.0
+	# 2. 获取这个形状资源的【局部】矩形范围。
+	#    例如，一个大小为 (1920, 1080) 的矩形，它的 get_rect() 结果
+	#    通常是 Rect2( -960, -540, 1920, 1080 )，
+	#    因为它的大小是从中心点向两边延伸的。
+	var local_rect = spawn_shape_resource.get_rect()
 	
-	# 尝试最多 10 次来寻找一个好位置
-	for i in range(10):
-		# 在世界坐标范围内生成一个随机点
-		var rand_pos = Vector2(
-			randf_range(spawn_rect_world_origin.x, spawn_rect_world_origin.x + spawn_rect_world_size.x),
-			randf_range(spawn_rect_world_origin.y, spawn_rect_world_origin.y + spawn_rect_world_size.y)
-		)
-
-		var is_safe = true
-		var enemies = get_tree().get_nodes_in_group("enemy")
-		for enemy in enemies:
-			if enemy.global_position.distance_to(rand_pos) < min_spawn_distance:
-				is_safe = false
-				break
+	# 3. 我们进行多次尝试（比如 20 次），以提高找到安全位置的几率。
+	for i in range(20):
 		
-		if is_safe:
-			return rand_pos
-
-	return Vector2.INF # 代表失败
+		# 4. 在这个【局部】矩形的范围内，生成一个随机的【局部】点。
+		#    randf_range() 会在两个数之间取一个随机浮点数。
+		var random_local_pos = Vector2(
+			randf_range(local_rect.position.x, local_rect.end.x),
+			randf_range(local_rect.position.y, local_rect.end.y)
+		)
+		
+		# 5. 将这个【局部】点，转换为【世界】坐标。
+		#    to_global() 是最关键的函数，它会自动处理所有偏移和缩放。
+		var random_world_pos = spawn_zone.to_global(random_local_pos)
+		
+		# 6. 调用我们的辅助函数，检查这个新生成的随机世界坐标是否“安全”。
+		if _is_position_safe(random_world_pos):
+			# a) 如果安全，太好了！我们立刻返回这个有效的位置，并结束函数。
+			return random_world_pos
+			
+	# 7. 如果循环了 20 次，都没有找到一个安全的位置（通常是因为场上敌人太密集了）
+	return Vector2.INF
