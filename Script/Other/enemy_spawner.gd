@@ -1,6 +1,9 @@
 # enemy_spawner.gd
 extends Node
 
+# --- 【新增】定义一个新的信号，用来广播格式化后的时间字符串 ---
+signal game_time_updated(time_float: float)
+
 # --- 可在编辑器中指定的参数 ---
 @export var spawn_zone_path: NodePath
 @export var min_spawn_distance: float = 200.0
@@ -24,6 +27,7 @@ var enemy_scenes: Dictionary = {
 const SpawnMarker = preload("res://game/effect/spawn_marker.tscn")
 
 
+
 func _ready() -> void:
 	# 1. 加载并解析 JSON 数据
 	var file = FileAccess.open("res://spawn_waves.json", FileAccess.READ)
@@ -38,9 +42,12 @@ func _ready() -> void:
 	_update_wave()
 
 
+
 func _process(delta: float) -> void:
 	# 1. 更新游戏时间
 	game_time += delta
+		# --- 【新增】格式化时间并发出信号 ---
+	game_time_updated.emit(game_time)
 	
 	# 2. 检查是否需要切换到下一波
 	if game_time > current_wave.end_time and wave_data.size() > 1:
@@ -50,17 +57,15 @@ func _process(delta: float) -> void:
 	# 3. 检查是否需要补充敌人
 	_check_and_spawn()
 
-
 func _update_wave() -> void:
 	if wave_data.is_empty():
-		print("所有波次已结束!")
 		set_process(false) # 停止生成器
 		return
 		
 	current_wave = wave_data[0]
-	print("进入新波次! 时间: ", current_wave.start_time, "s")
 	# 立即触发一次生成检查
 	_check_and_spawn()
+
 
 
 func _check_and_spawn() -> void:
@@ -92,7 +97,6 @@ func _on_spawn_timer_timeout() -> void:
 		patrol_path_for_enemy = path_manager.request_free_path()
 		# 如果没有可用的路径，就取消本次生成
 		if not patrol_path_for_enemy:
-			print("无法生成巡逻敌人：没有可用的路径。")
 			return # 或者可以改成生成一个普通敌人作为替代
 			
 	# 2. 寻找一个安全的生成位置
@@ -121,6 +125,7 @@ func _on_spawn_timer_timeout() -> void:
 	marker.path_manager_ref = path_manager
 
 
+
 func _pick_enemy_from_pool() -> String:
 	var rand_val = randf()
 	var cumulative = 0.0
@@ -131,12 +136,12 @@ func _pick_enemy_from_pool() -> String:
 	return ""
 
 
+
 func _find_safe_spawn_position() -> Vector2:
 	# --- 1. 获取生成区域的矩形资源 ---
 	#    这通常是一个 RectangleShape2D
 	var spawn_shape_resource = spawn_zone_shape.shape
 	if not spawn_shape_resource is RectangleShape2D:
-		print("SpawnZone's CollisionShape2D is not a RectangleShape2D!")
 		return Vector2.INF
 
 	var spawn_rect_local: Rect2 = spawn_shape_resource.get_rect()
@@ -148,14 +153,6 @@ func _find_safe_spawn_position() -> Vector2:
 
 	#    计算出矩形在世界坐标系中的左上角 (top-left corner)
 	var spawn_rect_world_origin = spawn_rect_world_center - spawn_rect_world_size / 2.0
-
-	# --- 【新增 Print 调试语句】 ---
-	print("---------- 生成位置诊断 ----------")
-	print("SpawnZone (Area2D) 的世界中心位置: ", spawn_rect_world_center)
-	print("SpawnZone 矩形资源的局部大小: ", spawn_rect_local.size)
-	print("SpawnZone 的全局缩放: ", spawn_zone.global_scale)
-	print("计算出的世界大小: ", spawn_rect_world_size)
-	print("计算出的世界左上角 (Origin): ", spawn_rect_world_origin)
 	
 	# 尝试最多 10 次来寻找一个好位置
 	for i in range(10):
@@ -164,8 +161,6 @@ func _find_safe_spawn_position() -> Vector2:
 			randf_range(spawn_rect_world_origin.x, spawn_rect_world_origin.x + spawn_rect_world_size.x),
 			randf_range(spawn_rect_world_origin.y, spawn_rect_world_origin.y + spawn_rect_world_size.y)
 		)
-		
-		print("尝试第 ", i+1, " 次, 随机位置: ", rand_pos)
 
 		var is_safe = true
 		var enemies = get_tree().get_nodes_in_group("enemy")
@@ -175,10 +170,6 @@ func _find_safe_spawn_position() -> Vector2:
 				break
 		
 		if is_safe:
-			print("成功找到安全位置: ", rand_pos)
-			print("------------------------------")
 			return rand_pos
-			
-	print("尝试10次后，仍未找到安全位置。")
-	print("------------------------------")
+
 	return Vector2.INF # 代表失败

@@ -21,7 +21,6 @@ func initialize(path: Path2D, manager):
 	
 	# 将 _ready() 中的逻辑移动到这里
 	if not is_instance_valid(assigned_path):
-		print("Patrol enemy initialized without a valid path. Disabling.")
 		set_physics_process(false)
 		return
 		

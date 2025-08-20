@@ -3,6 +3,8 @@ extends Node
 # 用 @onready 获取节点引用
 @onready var player: RigidBody2D = $PlayerBall
 @onready var game_ui: Control = $GameUI
+@onready var spawner: Node = $EnemySpawner
+
 
 func _ready() -> void:
 	# 连接信号！
@@ -11,3 +13,4 @@ func _ready() -> void:
 	player.energy_updated.connect(game_ui.update_energy_display)
 	player.combo_updated.connect(game_ui.on_combo_updated)
 	player.combo_lost.connect(game_ui.on_combo_lost)
+	spawner.game_time_updated.connect(game_ui.update_game_timer)

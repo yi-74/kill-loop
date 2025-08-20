@@ -9,6 +9,7 @@ extends Control
 @onready var energy_bar_3: TextureProgressBar = $BoxContainer/EnergyBar3
 # 注意：为了能正确获取，您可能需要手动给场景树里的三个能量条改名
 @onready var combo_label: Label = $ComboLabel
+@onready var game_timer_label: Label = $GameTimerLabel
 
 
 func _ready():
@@ -16,7 +17,27 @@ func _ready():
 	#combo_lost_anim.play("RESET")
 	return
 
-# 这个函数会接收从 PlayerBall 广播过来的速度值
+
+func update_game_timer(new_time_float: float) -> void:
+	# --- 1. 手动截断，保留两位小数 ---
+	# a) 将秒数乘以 100，例如 83.518 -> 8351.8
+	var multiplied = new_time_float * 100.0
+	# b) 取整数部分，砍掉所有多余的小数，得到 8351
+	var truncated_int = int(multiplied)
+	# c) 再除以 100.0，得到精确截断后的浮点数 83.51
+	var truncated_float = truncated_int / 100.0
+	
+	# --- 2. 使用字符串格式化，强制显示两位小数 ---
+	#    "%.2f" 会强制让数字以保留两位小数的形式显示
+	#    如果数字本身只有一位小数（如 2.6），它会自动在末尾补一个 0，变成 "2.60"
+	#    如果数字是整数（如 27.0），它会自动补上 ".00"，变成 "27.00"
+	var formatted_string = "%.2f" % truncated_float
+	
+	# 3. 更新 Label 的文本
+	game_timer_label.text = formatted_string
+
+
+
 func update_speed_label(new_speed: float) -> void:
 	var scaled_speed = new_speed / 10.0  # 1. 将浮点数速度值除以 10
 	var final_speed_int = int(scaled_speed)  # 2. 使用 int() 函数将结果转换为整数（它会自动去掉所有小数）
@@ -34,6 +55,7 @@ func update_energy_display(total_energy: float):
 # --- 新增：接收连击更新的函数 ---
 func on_combo_updated(combo_count: int):
 	combo_label.text = str(combo_count)
+
 
 # --- 新增：接收连击中断的函数 ---
 func on_combo_lost():

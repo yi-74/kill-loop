@@ -13,7 +13,6 @@ func _ready() -> void:
 				"path_node": child,
 				"is_occupied": false
 			})
-	print("路径管理器：已成功登记 ", patrol_paths.size(), " 条巡逻路径。")
 
 # --- 提供给 EnemySpawner 调用的函数 ---
 func request_free_path() -> Path2D:
@@ -21,11 +20,9 @@ func request_free_path() -> Path2D:
 	for path_info in patrol_paths:
 		if not path_info.is_occupied:
 			path_info.is_occupied = true # 标记为“已占用”
-			print("路径管理器：已分配路径 ", path_info.path_node.name)
 			return path_info.path_node # 返回这条路径节点
 			
 	# 如果没有找到任何空闲路径，返回 null
-	print("路径管理器：警告！所有巡逻路径都在使用中！")
 	return null
 
 # --- 用来接收敌人死亡信号的函数 ---
@@ -34,5 +31,4 @@ func release_path(path_node_to_release: Path2D):
 	for path_info in patrol_paths:
 		if path_info.path_node == path_node_to_release:
 			path_info.is_occupied = false # 重新标记为“未占用”
-			print("路径管理器：已回收路径 ", path_info.path_node.name)
 			return
