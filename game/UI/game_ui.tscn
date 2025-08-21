@@ -31,10 +31,11 @@ layout_mode = 2
 
 [node name="SpeedLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 6.0
-offset_right = 167.0
-offset_bottom = 69.0
-theme_override_font_sizes/font_size = 50
+offset_left = 75.0
+offset_top = 36.0
+offset_right = 243.0
+offset_bottom = 94.0
+theme_override_font_sizes/font_size = 40
 text = "Speed:"
 
 [node name="ComboLabel" type="Label" parent="."]
@@ -51,11 +52,11 @@ vertical_alignment = 1
 
 [node name="GameTimerLabel" type="Label" parent="."]
 layout_mode = 0
-offset_left = 1672.0
-offset_top = -1.0
-offset_right = 1914.0
-offset_bottom = 68.0
-theme_override_font_sizes/font_size = 50
+offset_left = 1584.0
+offset_top = 40.0
+offset_right = 1848.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 40
 text = "00:00"
 horizontal_alignment = 2
 

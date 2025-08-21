@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=20 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://dujfd3c07p3ab" path="res://Script/Other/path_manager.gd" id="5_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
 [ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/Other/enemy_spawner.gd" id="8_5t6br"]
+[ext_resource type="Shader" uid="uid://bcime6o6emfsa" path="res://Script/shader/CanvasLayer.gdshader" id="10_5t6br"]
 
 [sub_resource type="Curve2D" id="Curve2D_pff3i"]
 _data = {
@@ -51,6 +52,14 @@ size = Vector2(1430, 694.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
 shader = ExtResource("7_ql5uw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5t6br"]
+shader = ExtResource("10_5t6br")
+shader_parameter/scanline_intensity = 0.03
+shader_parameter/barrel_distortion = 0.1
+shader_parameter/chromatic_abberation = 0.002
+shader_parameter/noise_intensity = 0.2
+shader_parameter/scanline_count = 420.0
 
 [node name="Main_tscn" type="Node"]
 script = ExtResource("1_0n0co")
@@ -120,6 +129,17 @@ offset_bottom = 0.0
 visible = false
 modulate = Color(1, 1, 1, 0)
 material = SubResource("ShaderMaterial_ohpoc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_5t6br")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
