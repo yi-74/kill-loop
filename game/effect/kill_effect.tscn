@@ -1,34 +1,46 @@
-[gd_scene load_steps=7 format=3 uid="uid://da3smf7ntnkov"]
+[gd_scene load_steps=10 format=3 uid="uid://da3smf7ntnkov"]
 
-[ext_resource type="Texture2D" uid="uid://cbxd0pboybn5g" path="res://assets/SpecialEffects/sha/sha1.png" id="1_j6k40"]
-[ext_resource type="Texture2D" uid="uid://t11ycajjqhfd" path="res://assets/SpecialEffects/sha/sha2.png" id="2_jui5m"]
-[ext_resource type="Texture2D" uid="uid://b7u0vboy2jnkg" path="res://assets/SpecialEffects/sha/sha3.png" id="3_jio3g"]
-[ext_resource type="Texture2D" uid="uid://bccmvksscii0o" path="res://assets/SpecialEffects/sha/sha4.png" id="4_vx8gb"]
+[ext_resource type="Texture2D" uid="uid://uj8ghc1iw0dh" path="res://assets/SpecialEffects/sha/1.png" id="1_vx8gb"]
+[ext_resource type="Texture2D" uid="uid://dincj24ihiolb" path="res://assets/SpecialEffects/sha/2.png" id="2_b3cbc"]
+[ext_resource type="Texture2D" uid="uid://cjdtqaejftp06" path="res://assets/SpecialEffects/sha/3.png" id="3_6s5gk"]
+[ext_resource type="Texture2D" uid="uid://b0j1ia547167m" path="res://assets/SpecialEffects/sha/4.png" id="4_ua7aa"]
 [ext_resource type="Script" uid="uid://s7xkbfwaxylu" path="res://Script/effect/kill_effect.gd" id="5_b3cbc"]
+[ext_resource type="Texture2D" uid="uid://teci0omdimsw" path="res://assets/SpecialEffects/sha/5.png" id="5_iohwt"]
+[ext_resource type="Texture2D" uid="uid://djnx7yd8xct0r" path="res://assets/SpecialEffects/sha/6.png" id="6_r0jll"]
+[ext_resource type="Texture2D" uid="uid://7nwrcwfjcstp" path="res://assets/SpecialEffects/sha/7.png" id="7_curro"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6s5gk"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_j6k40")
+"texture": ExtResource("1_vx8gb")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_jui5m")
+"texture": ExtResource("2_b3cbc")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_jio3g")
+"texture": ExtResource("3_6s5gk")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_vx8gb")
+"texture": ExtResource("4_ua7aa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_iohwt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_r0jll")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_curro")
 }],
 "loop": false,
 "name": &"default",
-"speed": 14.0
+"speed": 20.0
 }]
 
 [node name="KillEffect" type="AnimatedSprite2D"]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_6s5gk")
-frame = 3
+frame = 6
 frame_progress = 1.0
 script = ExtResource("5_b3cbc")
