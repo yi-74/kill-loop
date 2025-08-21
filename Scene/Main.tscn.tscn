@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=18 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
 [ext_resource type="Texture2D" uid="uid://6ifiu5e3bnln" path="res://assets/UI/Background/Inner Background.png" id="2_0n0co"]
 [ext_resource type="PackedScene" uid="uid://dxb2ihg5s7iiy" path="res://game/UI/game_ui.tscn" id="2_ql5uw"]
 [ext_resource type="PackedScene" uid="uid://bx6atr8b6pw7l" path="res://game/UI/outer_zone.tscn" id="4_0n0co"]
+[ext_resource type="PackedScene" uid="uid://b8c3khyey3y88" path="res://game/actors/enemy/enemy_normal.tscn" id="4_a6a44"]
 [ext_resource type="Script" uid="uid://dujfd3c07p3ab" path="res://Script/Other/path_manager.gd" id="5_ohpoc"]
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
 [ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/Other/enemy_spawner.gd" id="8_5t6br"]
@@ -60,6 +61,18 @@ texture = ExtResource("2_0n0co")
 
 [node name="PlayerBall" parent="." instance=ExtResource("1_axlnn")]
 position = Vector2(979, 555)
+
+[node name="EnemyNormal" parent="." instance=ExtResource("4_a6a44")]
+position = Vector2(628, 544)
+
+[node name="EnemyNormal2" parent="." instance=ExtResource("4_a6a44")]
+position = Vector2(975, 322)
+
+[node name="EnemyNormal3" parent="." instance=ExtResource("4_a6a44")]
+position = Vector2(975, 785)
+
+[node name="EnemyNormal4" parent="." instance=ExtResource("4_a6a44")]
+position = Vector2(1307, 547)
 
 [node name="Outer_Zone" parent="." instance=ExtResource("4_0n0co")]
 position = Vector2(960, 540)
