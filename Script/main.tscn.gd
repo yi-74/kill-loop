@@ -19,6 +19,7 @@ func _ready() -> void:
 	player.combo_updated.connect(on_player_combo_updated)
 
 
+
 # --- 当玩家连击数更新时，这个函数会被调用 ---
 func on_player_combo_updated(combo_count: int):
 	if not is_instance_valid(crt_effect_rect) or not crt_effect_rect.material:

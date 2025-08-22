@@ -15,18 +15,26 @@ extends Control
 
 var is_high_score_broken: bool = false
 var displayed_score: float = 0.0
+var combo_label_initial_scale: Vector2 = Vector2.ONE
+var combo_tween: Tween
 
 
 func _ready():
 	# 游戏开始时，显示历史最高分
 	high_score_label.text = "HI: " + str(DataManager.high_score)
 	return
+	
+	if is_instance_valid(combo_label):
+		combo_label_initial_scale = combo_label.scale
 
 
 
 func _process(delta: float) -> void:
 	# --- 【新增】在每一帧，都用 displayed_score 的整数部分来更新文本 ---
 	score_label.text = str(int(displayed_score))
+		# --- 【新增】监控 ComboLabel 的状态 ---
+	if is_instance_valid(combo_label):
+		print("ComboLabel 状态 -> 可见: ", combo_label.visible, " | 缩放: ", combo_label.scale, " | 文本: '", combo_label.text, "'")
 
 
 
@@ -93,7 +101,56 @@ func update_energy_display(total_energy: float):
 
 # --- 新增：接收连击更新的函数 ---
 func on_combo_updated(combo_count: int):
+	# 无论 combo_count 是多少，都先更新文本
 	combo_label.text = str(combo_count)
+	
+	# 然后，根据 combo_count 的值，来决定播放哪种动画
+	if combo_count > 0:
+		# 如果是增加连击，就播放“放大”动画
+		play_combo_bump_animation()
+	else:
+		# 如果是连击中断（归零），就播放“缩小”动画
+		play_combo_reset_animation()
+
+
+
+# --- 动画一：增加连击时的“放大弹跳” ---
+func play_combo_bump_animation():
+	if not is_instance_valid(combo_label): return
+
+	if is_instance_valid(combo_tween): combo_tween.kill()
+	combo_label.scale = combo_label_initial_scale
+
+	combo_tween = create_tween()
+	# 【手感调校】使用更有弹性的 ELASTIC 曲线
+	combo_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	
+	# 动画序列：
+	# a) 用 0.3 秒放大到 1.5 倍
+	combo_tween.tween_property(combo_label, "scale", combo_label_initial_scale * 1.3, 0.5)
+	# b) 再用 0.2 秒恢复5
+	combo_tween.tween_property(combo_label, "scale", combo_label_initial_scale, 0.5)
+
+
+
+# --- 动画二：连击中断时的“缩小抖动” ---
+func play_combo_reset_animation():
+	if not is_instance_valid(combo_label): return
+
+	if is_instance_valid(combo_tween): combo_tween.kill()
+	combo_label.scale = combo_label_initial_scale
+	
+	combo_tween = create_tween()
+	# 【手感调校】使用更平滑的 SINE 或 QUART 曲线
+	combo_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	
+	# 动画序列：
+	# a) 用 0.2 秒，缩小到 0.8 倍
+	combo_tween.tween_property(combo_label, "scale", combo_label_initial_scale * 0.7, 0.4)
+	# b) 再用 0.4 秒，带有弹性地恢复到原始大小
+	#    我们在这里切换一次缓动曲线，让回弹更有力
+	combo_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+	combo_tween.tween_property(combo_label, "scale", combo_label_initial_scale, 0.5)
 
 
 

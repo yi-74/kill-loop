@@ -169,6 +169,7 @@ func _on_body_entered(body: Node):
 	if not has_killed_in_combo:
 		bounces_since_last_kill += 1
 		if bounces_since_last_kill >= combo_max_bounces:
+			print("PlayerBall: 反弹次数超限，准备中断连击！") # <-- 添加这行
 			lose_combo()
 	
 	_update_energy(current_energy + energy_per_bounce)
@@ -176,6 +177,7 @@ func _on_body_entered(body: Node):
 
 
 func lose_combo():
+	print("PlayerBall: lose_combo() 函数被调用！") # <-- 添加这行
 	if current_combo > 0:
 		current_combo = 0
 		combo_updated.emit(current_combo)
