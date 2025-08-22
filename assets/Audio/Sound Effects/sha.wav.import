@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bq74xye280bdu"
+path="res://.godot/imported/sha.wav-fb8f75f310be6c9f4eabe719a369153d.sample"
+
+[deps]
+
+source_file="res://assets/Audio/Sound Effects/sha.wav"
+dest_files=["res://.godot/imported/sha.wav-fb8f75f310be6c9f4eabe719a369153d.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

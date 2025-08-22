@@ -22,6 +22,7 @@ signal combo_lost()
 @onready var kill_area: Area2D = $Area2D
 @onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
+@onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -123,6 +124,10 @@ func _on_kill_area_entered(area: Area2D):
 			var impact_direction = velocity_before_impact.normalized()
 			enemy_body.die(impact_direction)
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
+			
+			# --- 【核心修改】在这里触发屏幕抖动！ ---
+			if is_instance_valid(camera):
+				camera.apply_shake(6.0)
 			
 			# --- 每次成功击杀，都重置“撞墙计数器” ---
 			bounces_since_last_kill = 0

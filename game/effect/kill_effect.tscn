@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://da3smf7ntnkov"]
+[gd_scene load_steps=11 format=3 uid="uid://da3smf7ntnkov"]
 
 [ext_resource type="Texture2D" uid="uid://uj8ghc1iw0dh" path="res://assets/SpecialEffects/sha/1.png" id="1_vx8gb"]
 [ext_resource type="Texture2D" uid="uid://dincj24ihiolb" path="res://assets/SpecialEffects/sha/2.png" id="2_b3cbc"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://teci0omdimsw" path="res://assets/SpecialEffects/sha/5.png" id="5_iohwt"]
 [ext_resource type="Texture2D" uid="uid://djnx7yd8xct0r" path="res://assets/SpecialEffects/sha/6.png" id="6_r0jll"]
 [ext_resource type="Texture2D" uid="uid://7nwrcwfjcstp" path="res://assets/SpecialEffects/sha/7.png" id="7_curro"]
+[ext_resource type="AudioStream" uid="uid://bq74xye280bdu" path="res://assets/Audio/Sound Effects/sha.wav" id="9_b3cbc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6s5gk"]
 animations = [{
@@ -44,3 +45,6 @@ sprite_frames = SubResource("SpriteFrames_6s5gk")
 frame = 6
 frame_progress = 1.0
 script = ExtResource("5_b3cbc")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_b3cbc")
