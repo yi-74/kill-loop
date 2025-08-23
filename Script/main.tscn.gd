@@ -5,6 +5,8 @@ extends Node
 @onready var game_ui: Control = $GameUI
 @onready var spawner: Node = $EnemySpawner
 @onready var crt_effect_rect: ColorRect = $CanvasLayer/ColorRect
+@onready var background_effects: AnimatedSprite2D = $BackgroundEffects
+@onready var audio_manager: Node = $AudioManager
 
 
 func _ready() -> void:
@@ -17,6 +19,11 @@ func _ready() -> void:
 	spawner.game_time_updated.connect(game_ui.update_game_timer)
 	spawner.score_updated.connect(game_ui.on_score_updated)
 	player.combo_updated.connect(on_player_combo_updated)
+		# --- 【新增】连接连击中断信号到背景特效 ---
+	player.combo_lost.connect(background_effects.play_combo_lost_effect)
+	# --- 【新增】连接新的撞墙信号 ---
+	player.wall_bounced.connect(audio_manager.on_player_wall_bounced)
+	player.wall_bounced.connect(background_effects.play_bounce_effect)
 
 
 

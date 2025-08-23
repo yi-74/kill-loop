@@ -32,9 +32,6 @@ func _ready():
 func _process(delta: float) -> void:
 	# --- 【新增】在每一帧，都用 displayed_score 的整数部分来更新文本 ---
 	score_label.text = str(int(displayed_score))
-		# --- 【新增】监控 ComboLabel 的状态 ---
-	if is_instance_valid(combo_label):
-		print("ComboLabel 状态 -> 可见: ", combo_label.visible, " | 缩放: ", combo_label.scale, " | 文本: '", combo_label.text, "'")
 
 
 

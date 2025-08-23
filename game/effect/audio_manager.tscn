@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0oq63xhnn030"]
+
+[ext_resource type="Script" uid="uid://dwwh6sm4qcd87" path="res://Script/audio/audio_manager.gd" id="1_7eglo"]
+[ext_resource type="AudioStream" uid="uid://djvlwl12diixm" path="res://assets/Audio/Sound Effects/bounce.wav" id="2_rnt7f"]
+
+[node name="AudioManager" type="Node"]
+script = ExtResource("1_7eglo")
+
+[node name="WallBouncePlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_rnt7f")

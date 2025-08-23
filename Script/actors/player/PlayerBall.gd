@@ -4,6 +4,7 @@ signal speed_updated(speed: float)
 signal energy_updated(current_energy: float)
 signal combo_updated(combo_count: int)
 signal combo_lost()
+signal wall_bounced(bounce_count: int, is_combo_lost: bool)
 
 @export_group("Launch Power", "launch_")
 @export var launch_multiplier: float = 7.0 #发射力度
@@ -166,10 +167,20 @@ func _on_body_entered(body: Node):
 		return
 			
 	# 如果撞到的是墙壁，处理连击逻辑
+	var is_combo_lost_this_hit = false # 先假设本次撞击不会中断连击
 	if not has_killed_in_combo:
 		bounces_since_last_kill += 1
+		wall_bounced.emit()
 		if bounces_since_last_kill >= combo_max_bounces:
 			print("PlayerBall: 反弹次数超限，准备中断连击！") # <-- 添加这行
+			is_combo_lost_this_hit = true
+			lose_combo()
+
+		# --- 【核心修改】发出带有详细信息的信号 ---
+		wall_bounced.emit(bounces_since_last_kill, is_combo_lost_this_hit)
+		
+		# 在发出信号之后，再执行中断逻辑
+		if is_combo_lost_this_hit:
 			lose_combo()
 	
 	_update_energy(current_energy + energy_per_bounce)
