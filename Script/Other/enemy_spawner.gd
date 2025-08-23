@@ -227,3 +227,21 @@ func _find_safe_spawn_position() -> Vector2:
 			
 	# 7. 如果循环了 20 次，都没有找到一个安全的位置（通常是因为场上敌人太密集了）
 	return Vector2.INF
+
+
+
+# --- 【新增】添加 _unhandled_input 函数来检测全局按键 ---
+# 使用 _unhandled_input 可以确保我们的游戏 UI 不会“吞掉”这个按键事件
+func _unhandled_input(event: InputEvent) -> void:
+	# 检查玩家是否按下了我们刚刚定义的操作
+	if event.is_action_pressed("reset_high_score"):
+		print("--- 调试：正在重置历史最高分 ---")
+		
+		# 1. 将 DataManager 中的最高分清零
+		DataManager.high_score = 0
+		
+		# 2. 调用保存函数，将“0”这个新值写入存档文件
+		DataManager.save_data()
+		
+		# 3. 【可选】为了让 UI 立刻刷新，我们可以重新加载整个游戏
+		get_tree().reload_current_scene()
