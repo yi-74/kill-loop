@@ -13,11 +13,11 @@ signal wall_bounced(bounce_count: int, is_combo_lost: bool)
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
 @export var energy_per_kill: float = 20.0   # 击杀敌人增加的能量
-@export var energy_per_bounce: float = 30.0 # 反弹墙壁增加的能量
+@export var energy_per_bounce: float = 25.0 # 反弹墙壁增加的能量
 @export_group("Combo System")
 @export var combo_max_bounces: int = 4       # 最大反弹容忍次数
-@export var combo_speed_bonus: float = 300.0  # 每次连击成功，速度上限增加值
-@export var combo_energy_bonus: float = 10.0 # 每次连击成功，额外能量奖励
+@export var combo_speed_bonus: float = 250.0  # 每次连击成功，速度上限增加值
+@export var combo_energy_bonus: float = 12.0 # 每次连击成功，额外能量奖励
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D

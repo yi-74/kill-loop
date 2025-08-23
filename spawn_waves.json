@@ -15,7 +15,7 @@
             "start_time": 15,
             "end_time": 30,
             "min_interval": 0.3,
-            "max_interval": 0.6,
+            "max_interval": 0.5,
             "min_enemies": 6,
             "max_enemies": 12,
             "enemy_pool": {
@@ -27,7 +27,7 @@
             "start_time": 30,
             "end_time": 45,
             "min_interval": 0.2,
-            "max_interval": 0.5,
+            "max_interval": 0.4,
             "min_enemies": 8,
             "max_enemies": 15,
             "enemy_pool": {
@@ -38,9 +38,9 @@
         },
         {
             "start_time": 45,
-            "end_time": 600,
+            "end_time": 6000,
             "min_interval": 0.1,
-            "max_interval": 0.4,
+            "max_interval": 0.3,
             "min_enemies": 10,
             "max_enemies": 15,
             "enemy_pool": {

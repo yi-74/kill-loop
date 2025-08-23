@@ -1,11 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cbus8chf27tph"]
+[gd_scene load_steps=10 format=3 uid="uid://cbus8chf27tph"]
 
 [ext_resource type="Script" uid="uid://c2fcoufi6yji7" path="res://Script/actors/player/PlayerBall.gd" id="1_46ku3"]
 [ext_resource type="Texture2D" uid="uid://vayigwwgodbh" path="res://assets/actor/player2.png" id="2_5d0wo"]
 [ext_resource type="Script" uid="uid://b72hdcmnfo6yx" path="res://Script/actors/player/trailwith_line_2d.gd" id="3_5d0wo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_46ku3"]
-bounce = 0.65
+bounce = 0.6
 
 [sub_resource type="Curve" id="Curve_5d0wo"]
 _data = [Vector2(0.045, 0), 0.0, 0.990006, 0, 0, Vector2(0.995, 1), 0.324479, 0.0, 0, 0]
@@ -19,6 +19,9 @@ blend_mode = 1
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sk8k3"]
 radius = 26.0
+
+[sub_resource type="Gradient" id="Gradient_pfcfs"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [node name="PlayerBall" type="RigidBody2D"]
 z_index = 1
@@ -45,6 +48,9 @@ texture = ExtResource("2_5d0wo")
 shape = SubResource("CircleShape2D_sk8k3")
 
 [node name="Line2D" type="Line2D" parent="."]
+gradient = SubResource("Gradient_pfcfs")
+joint_mode = 2
+end_cap_mode = 2
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 8
