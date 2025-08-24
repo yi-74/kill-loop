@@ -9,6 +9,9 @@ extends Control
 @onready var energy_bar_1: TextureProgressBar = $BoxContainer/EnergyBar
 @onready var energy_bar_2: TextureProgressBar = $BoxContainer/EnergyBar2
 @onready var energy_bar_3: TextureProgressBar = $BoxContainer/EnergyBar3
+@onready var effect_bar1_full: AnimatedSprite2D = $BoxContainer/EnergyBar1_FullEffect
+@onready var effect_bar2_full: AnimatedSprite2D = $BoxContainer/EnergyBar2_FullEffect
+@onready var effect_bar3_full: AnimatedSprite2D = $BoxContainer/EnergyBar3_FullEffect
 # 注意：为了能正确获取，您可能需要手动给场景树里的三个能量条改名
 @onready var combo_label: Label = $ComboLabel
 @onready var game_timer_label: Label = $GameTimerLabel
@@ -26,6 +29,16 @@ func _ready():
 	
 	if is_instance_valid(combo_label):
 		combo_label_initial_scale = combo_label.scale
+		
+			# --- 【新增】连接三个特效的动画完成信号 ---
+	if is_instance_valid(effect_bar1_full):
+		effect_bar1_full.animation_finished.connect(func(): effect_bar1_full.hide())
+		
+	if is_instance_valid(effect_bar2_full):
+		effect_bar2_full.animation_finished.connect(func(): effect_bar2_full.hide())
+		
+	if is_instance_valid(effect_bar3_full):
+		effect_bar3_full.animation_finished.connect(func(): effect_bar3_full.hide())
 
 
 
@@ -93,6 +106,23 @@ func update_energy_display(total_energy: float):
 	energy_bar_1.value = clamp(total_energy, 0, 100)
 	energy_bar_2.value = clamp(total_energy - 100, 0, 100)
 	energy_bar_3.value = clamp(total_energy - 200, 0, 100)
+
+
+
+func play_bar1_full_animation():
+	if is_instance_valid(effect_bar1_full):
+		effect_bar1_full.show() # 先让它可见
+		effect_bar1_full.play("play_full_effect") # 播放动画 (假设动画名叫 "default")
+
+func play_bar2_full_animation():
+	if is_instance_valid(effect_bar2_full):
+		effect_bar2_full.show()
+		effect_bar2_full.play("play_full_effect")
+
+func play_bar3_full_animation():
+	if is_instance_valid(effect_bar3_full):
+		effect_bar3_full.show()
+		effect_bar3_full.play("play_full_effect")
 
 
 

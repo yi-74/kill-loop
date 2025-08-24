@@ -218,5 +218,5 @@ animations = [{
 [node name="BackgroundEffects" type="AnimatedSprite2D"]
 z_index = -10
 sprite_frames = SubResource("SpriteFrames_v4mcd")
-animation = &"idle"
+animation = &"combo_lost"
 script = ExtResource("49_8gvng")

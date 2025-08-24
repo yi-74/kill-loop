@@ -1,9 +1,65 @@
-[gd_scene load_steps=5 format=3 uid="uid://dxb2ihg5s7iiy"]
+[gd_scene load_steps=18 format=3 uid="uid://dxb2ihg5s7iiy"]
 
 [ext_resource type="Script" uid="uid://djg3frqlupki3" path="res://Script/UI/game_ui.gd" id="1_wevqw"]
+[ext_resource type="Texture2D" uid="uid://glkrsxf4v2jh" path="res://assets/SpecialEffects/energybar/energy_00000.png" id="2_hdsvf"]
 [ext_resource type="PackedScene" uid="uid://b2w2xgarrueib" path="res://game/UI/energy_bar1.tscn" id="2_igryo"]
+[ext_resource type="Texture2D" uid="uid://b2y2w0q5646ab" path="res://assets/SpecialEffects/energybar/energy_00001.png" id="3_7iike"]
 [ext_resource type="PackedScene" uid="uid://b1ocj2ah3u560" path="res://game/UI/energy_bar2.tscn" id="3_x2aio"]
+[ext_resource type="Texture2D" uid="uid://dlc555ftcespk" path="res://assets/SpecialEffects/energybar/energy_00002.png" id="4_2xi8n"]
 [ext_resource type="PackedScene" uid="uid://bmhu42hm1acrr" path="res://game/UI/energy_bar3.tscn" id="4_hedtu"]
+[ext_resource type="Texture2D" uid="uid://dfbob47f4r8ux" path="res://assets/SpecialEffects/energybar/energy_00003.png" id="5_n3gfa"]
+[ext_resource type="Texture2D" uid="uid://bgsjyrrorr7cy" path="res://assets/SpecialEffects/energybar/energy_00004.png" id="6_upyb7"]
+[ext_resource type="Texture2D" uid="uid://w6j0cgarf8nu" path="res://assets/SpecialEffects/energybar/energy_00005.png" id="7_s5ruu"]
+[ext_resource type="Texture2D" uid="uid://ba3yxlr7feljo" path="res://assets/SpecialEffects/energybar/energy_00006.png" id="8_mjotj"]
+[ext_resource type="Texture2D" uid="uid://dtw5ff3247qmg" path="res://assets/SpecialEffects/energybar/energy_00007.png" id="9_tx40p"]
+[ext_resource type="Texture2D" uid="uid://d0f1bs7ykwxm4" path="res://assets/SpecialEffects/energybar/energy_00008.png" id="10_7mlbu"]
+[ext_resource type="Texture2D" uid="uid://bw2qrqr02ecxl" path="res://assets/SpecialEffects/energybar/energy_00009.png" id="11_vkcsn"]
+[ext_resource type="Texture2D" uid="uid://co3ji8tbrthyk" path="res://assets/SpecialEffects/energybar/energy_00010.png" id="12_m5gub"]
+[ext_resource type="Texture2D" uid="uid://c2apo1327mei8" path="res://assets/SpecialEffects/energybar/energy_00011.png" id="13_7v5pt"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_53mlu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_hdsvf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_7iike")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_2xi8n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_n3gfa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_upyb7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_s5ruu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_mjotj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_tx40p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_7mlbu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_vkcsn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_m5gub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_7v5pt")
+}],
+"loop": false,
+"name": &"play_full_effect",
+"speed": 30.0
+}]
 
 [node name="GameUI" type="Control"]
 layout_mode = 3
@@ -15,10 +71,31 @@ script = ExtResource("1_wevqw")
 [node name="BoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 2.0
-offset_top = 1022.0
+offset_top = 988.0
 offset_right = 1920.0
 offset_bottom = 1084.0
 alignment = 1
+
+[node name="EnergyBar1_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+visible = false
+position = Vector2(659, 13)
+sprite_frames = SubResource("SpriteFrames_53mlu")
+animation = &"play_full_effect"
+frame = 11
+frame_progress = 1.0
+
+[node name="EnergyBar2_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+position = Vector2(959, 13)
+sprite_frames = SubResource("SpriteFrames_53mlu")
+animation = &"play_full_effect"
+frame = 11
+frame_progress = 1.0
+
+[node name="EnergyBar3_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+visible = false
+position = Vector2(1259, 13)
+sprite_frames = SubResource("SpriteFrames_53mlu")
+animation = &"play_full_effect"
 
 [node name="EnergyBar" parent="BoxContainer" instance=ExtResource("2_igryo")]
 layout_mode = 2

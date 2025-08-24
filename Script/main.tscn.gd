@@ -24,6 +24,9 @@ func _ready() -> void:
 	# --- 【新增】连接新的撞墙信号 ---
 	player.wall_bounced.connect(audio_manager.on_player_wall_bounced)
 	player.wall_bounced.connect(background_effects.play_bounce_effect)
+	player.energy_bar_1_filled.connect(game_ui.play_bar1_full_animation)
+	player.energy_bar_2_filled.connect(game_ui.play_bar2_full_animation)
+	player.energy_bar_3_filled.connect(game_ui.play_bar3_full_animation)
 
 
 

@@ -5,6 +5,9 @@ signal energy_updated(current_energy: float)
 signal combo_updated(combo_count: int)
 signal combo_lost()
 signal wall_bounced(bounce_count: int, is_combo_lost: bool)
+signal energy_bar_1_filled()
+signal energy_bar_2_filled()
+signal energy_bar_3_filled()
 
 @export_group("Launch Power", "launch_")
 @export var launch_multiplier: float = 7.0 #发射力度
@@ -13,7 +16,7 @@ signal wall_bounced(bounce_count: int, is_combo_lost: bool)
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
 @export var energy_per_kill: float = 20.0   # 击杀敌人增加的能量
-@export var energy_per_bounce: float = 25.0 # 反弹墙壁增加的能量
+@export var energy_per_bounce: float = 30.0 # 反弹墙壁增加的能量
 @export_group("Combo System")
 @export var combo_max_bounces: int = 4       # 最大反弹容忍次数
 @export var combo_speed_bonus: float = 250.0  # 每次连击成功，速度上限增加值
@@ -24,6 +27,7 @@ signal wall_bounced(bounce_count: int, is_combo_lost: bool)
 @onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 @onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
+@onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -110,10 +114,35 @@ func _physics_process(delta: float) -> void:
 
 
 func _update_energy(new_energy: float):
-	# 将能量限制在 0 到 300 之间
+	# --- 1. 记录更新前的能量值 ---
+	var energy_before_update = current_energy
+
+	# --- 2. 更新并限制能量值 (与之前相同) ---
 	current_energy = clamp(new_energy, 0.0, 300.0)
-	# 发出信号，通知 UI 更新
+	
+	# --- 3. 发出常规的能量更新信号，让 UI 能量条刷新 (与之前相同) ---
 	energy_updated.emit(current_energy)
+	
+	# -----------------------------------------------------------------
+	# --- 4. 【核心】检查是否【向上】跨越了阈值 ---
+	# -----------------------------------------------------------------
+	# 只有在能量是【增加】的情况下，才进行检查
+	if current_energy > energy_before_update:
+		
+		# 检查是否跨越了 100
+		if energy_before_update < 100.0 and current_energy >= 100.0:
+			energy_bar_1_filled.emit()
+			print("能量达到 100! 触发动画1")
+			
+		# 检查是否跨越了 200
+		if energy_before_update < 200.0 and current_energy >= 200.0:
+			energy_bar_2_filled.emit()
+			print("能量达到 200! 触发动画2")
+			
+		# 检查是否跨越了 300 (能量满了)
+		if energy_before_update < 300.0 and current_energy >= 300.0:
+			energy_bar_3_filled.emit()
+			print("能量达到 300! 触发动画3")
 
 
 
@@ -217,6 +246,10 @@ func _player_death_sequence():
 		return
 	is_dead = true
 	
+	# --- 【核心修改】在函数的最开始，立刻播放死亡音效 ---
+	if is_instance_valid(death_audio_player):
+		death_audio_player.play()
+		
 	lose_combo()
 
 	Engine.time_scale = 1.0
