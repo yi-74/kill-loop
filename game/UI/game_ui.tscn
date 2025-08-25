@@ -152,5 +152,5 @@ offset_top = 40.0
 offset_right = 1920.0
 offset_bottom = 130.0
 theme_override_font_sizes/font_size = 65
-text = "0"
+text = "01"
 horizontal_alignment = 1

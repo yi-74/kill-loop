@@ -28,6 +28,8 @@ signal energy_bar_3_filled()
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 @onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
 @onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer
+@onready var visual_sprite: Sprite2D = $Sprite2D
+@onready var trail_node: Line2D = $TrailwithLine2D
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -48,6 +50,7 @@ func _ready() -> void:
 	kill_area.area_entered.connect(_on_kill_area_entered)
 	body_entered.connect(_on_body_entered)
 	current_max_speed = default_max_speed
+	speed_updated.connect(on_speed_updated)
 
 
 
@@ -110,6 +113,35 @@ func _physics_process(delta: float) -> void:
 			set_collision_mask_value(2, true)
 	# 发出信号 --- 我们用 .length() 获取当前速度的大小，并用 int() 把它变成整数，方便显示
 	speed_updated.emit(int(linear_velocity.length()))
+
+
+
+
+func on_speed_updated(current_speed: float):
+	# 1. 调用颜色计算函数
+	var target_color = get_color_for_speed(current_speed)
+	
+	# 2. 将计算出的颜色，应用到视觉节点上
+	if is_instance_valid(visual_sprite):
+		visual_sprite.modulate = target_color
+
+
+
+
+func get_color_for_speed(speed: float) -> Color:
+	# 【核心修正】我们现在使用 trail_node 这个变量来获取权威数据
+	var low_thresh = trail_node.low_speed_threshold
+	var high_thresh = trail_node.high_speed_threshold
+	
+	if speed <= low_thresh:
+		return trail_node.low_speed_color
+	elif speed < high_thresh:
+		var progress = inverse_lerp(low_thresh, high_thresh, speed)
+		return trail_node.low_speed_color.lerp(trail_node.mid_speed_color, progress)
+	else:
+		var super_speed_thresh = high_thresh + 500.0
+		var progress = inverse_lerp(high_thresh, super_speed_thresh, speed)
+		return trail_node.mid_speed_color.lerp(trail_node.high_speed_color, progress)
 
 
 
