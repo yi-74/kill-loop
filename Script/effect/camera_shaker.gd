@@ -4,7 +4,7 @@
 extends Camera2D
 
 # --- 可在编辑器中调整的参数 ---
-@export var decay_rate: float = 15.0 # 衰减速率，值越大，抖动停止得越快
+@export var decay_rate: float = 5.0 # 衰减速率，值越大，抖动停止得越快
 
 # --- 内部变量 ---
 var shake_strength: float = 0.0 # 当前的抖动强度

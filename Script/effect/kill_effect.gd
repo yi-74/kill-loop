@@ -11,8 +11,8 @@ func _ready() -> void:
 	# --- 【核心修正】在这里加入随机音高 ---
 
 	# 1. 定义一个随机范围，比如在正常音高 (1.0) 的上下 15% 之间浮动
-	var min_pitch = 0.85
-	var max_pitch = 1.15
+	var min_pitch = 0.75
+	var max_pitch = 1
 	
 	# 2. 生成一个随机的音高值
 	var random_pitch = randf_range(min_pitch, max_pitch)

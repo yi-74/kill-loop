@@ -143,6 +143,7 @@ offset_bottom = 0.0
 [node name="DeathInversionEffect" type="ColorRect" parent="."]
 visible = false
 modulate = Color(1, 1, 1, 0)
+z_index = 10
 material = SubResource("ShaderMaterial_ohpoc")
 anchors_preset = 15
 anchor_right = 1.0

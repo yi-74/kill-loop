@@ -30,6 +30,8 @@ signal energy_bar_3_filled()
 @onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer
 @onready var visual_sprite: Sprite2D = $Sprite2D
 @onready var trail_node: Line2D = $TrailwithLine2D
+@onready var slow_mo_audio: AudioStreamPlayer = $SlowMoAudioPlayer
+@onready var launch_audio: AudioStreamPlayer = $LaunchAudioPlayer
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -54,39 +56,66 @@ func _ready() -> void:
 
 
 
+# 在 PlayerBall.gd 中，替换旧的 _input 函数
+
 func _input(event: InputEvent) -> void:
+	# --- is_dead 的安全检查可以加在最外面 ---
+	if is_dead: return
+	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.is_pressed():
+		
+		if event.is_pressed(): # --- 鼠标按下 ---
 			if not is_aiming:
 				is_aiming = true
 				drag_start_position_screen = event.position
 				Engine.time_scale = slow_mo_scale
 				line_2d.clear_points()
 				line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
-		else: 
+				
+				# 【音效】在进入瞄准时，播放循环音效
+				if is_instance_valid(slow_mo_audio):
+					slow_mo_audio.play()
+
+		else: # --- 鼠标松开 ---
 			if is_aiming:
-				if current_energy < 100.0: # --- 发射前检查能量 ---
+				
+				# --- 无论发射成功与否，瞄准都结束了，所以先停止循环音效 ---
+				if is_instance_valid(slow_mo_audio):
+					slow_mo_audio.stop()
+
+				# --- 发射前检查能量 ---
+				if current_energy < 100.0:
 					print("能量不足！无法发射！")
+					# 在这里可以播放“能量不足”的提示音（可选）
+					# if is_instance_valid(no_energy_audio): no_energy_audio.play()
+					
+					# 清理状态并提前退出
 					is_aiming = false
 					Engine.time_scale = 1.0
 					line_2d.clear_points()
 					return
+
+				# --- 如果能量足够，执行后续操作 ---
 				
-				is_aiming = false # --- 如果能量足够，执行后续操作 ---
+				# 【音效】在这里，播放成功的发射音效！
+				if is_instance_valid(launch_audio):
+					launch_audio.play()
+
+				is_aiming = false
 				Engine.time_scale = 1.0
 				line_2d.clear_points()
 				
-				_update_energy(current_energy - 100.0) #消耗能量
+				_update_energy(current_energy - 100.0)
 
+				# ... (后续的发射向量计算和速度设置，与您的代码完全一样) ...
 				var screen_drag_vector = event.position - drag_start_position_screen
 				var launch_magnitude = screen_drag_vector.length() * launch_multiplier
 				var mouse_world_pos = get_global_mouse_position()
 				var world_direction_vector = (mouse_world_pos - global_position).normalized()
 				linear_velocity = -world_direction_vector * launch_magnitude
 
-				# 根据速度，决定是否开启“穿透模式”（即关闭物理碰撞）
 				if linear_velocity.length_squared() > kill_threshold * kill_threshold:
-					set_collision_mask_value(2, false) # 关闭对第2层(enemies_solid)的检测
+					set_collision_mask_value(2, false)
 				else:
 					set_collision_mask_value(2, true)
 
@@ -164,17 +193,14 @@ func _update_energy(new_energy: float):
 		# 检查是否跨越了 100
 		if energy_before_update < 100.0 and current_energy >= 100.0:
 			energy_bar_1_filled.emit()
-			print("能量达到 100! 触发动画1")
 			
 		# 检查是否跨越了 200
 		if energy_before_update < 200.0 and current_energy >= 200.0:
 			energy_bar_2_filled.emit()
-			print("能量达到 200! 触发动画2")
-			
+
 		# 检查是否跨越了 300 (能量满了)
 		if energy_before_update < 300.0 and current_energy >= 300.0:
 			energy_bar_3_filled.emit()
-			print("能量达到 300! 触发动画3")
 
 
 
@@ -219,7 +245,6 @@ func _on_body_entered(body: Node):
 	# 只有在【低速】撞到敌人时，才会触发死亡
 	if body.is_in_group("enemy"):
 		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
-			print("速度不足，玩家死亡！")
 			# 【核心修正】不再是 queue_free()，而是调用我们的死亡演出
 			_player_death_sequence()
 		return
@@ -233,7 +258,6 @@ func _on_body_entered(body: Node):
 		bounces_since_last_kill += 1
 		wall_bounced.emit()
 		if bounces_since_last_kill >= combo_max_bounces:
-			print("PlayerBall: 反弹次数超限，准备中断连击！") # <-- 添加这行
 			is_combo_lost_this_hit = true
 			lose_combo()
 
@@ -249,7 +273,6 @@ func _on_body_entered(body: Node):
 
 
 func lose_combo():
-	print("PlayerBall: lose_combo() 函数被调用！") # <-- 添加这行
 	if current_combo > 0:
 		current_combo = 0
 		combo_updated.emit(current_combo)
