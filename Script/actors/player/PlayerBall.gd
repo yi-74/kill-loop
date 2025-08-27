@@ -24,14 +24,15 @@ signal energy_bar_3_filled()
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
-@onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
-@onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
-@onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
 @onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer
 @onready var visual_sprite: Sprite2D = $Sprite2D
 @onready var trail_node: Line2D = $TrailwithLine2D
 @onready var slow_mo_audio: AudioStreamPlayer = $SlowMoAudioPlayer
 @onready var launch_audio: AudioStreamPlayer = $LaunchAudioPlayer
+@onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
+@onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
+@onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
+@onready var crt_effect: ColorRect = get_node("/root/Main_tscn/CanvasLayer/ColorRect") # 获取 CRT 特效
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -72,6 +73,9 @@ func _input(event: InputEvent) -> void:
 				line_2d.clear_points()
 				line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
 				
+				# 【新增】触发滤镜【淡入】
+				fade_slow_mo_filter(true)
+				
 				# 【音效】在进入瞄准时，播放循环音效
 				if is_instance_valid(slow_mo_audio):
 					slow_mo_audio.play()
@@ -82,6 +86,7 @@ func _input(event: InputEvent) -> void:
 				# --- 无论发射成功与否，瞄准都结束了，所以先停止循环音效 ---
 				if is_instance_valid(slow_mo_audio):
 					slow_mo_audio.stop()
+					fade_slow_mo_filter(false)
 
 				# --- 发射前检查能量 ---
 				if current_energy < 100.0:
@@ -93,6 +98,7 @@ func _input(event: InputEvent) -> void:
 					is_aiming = false
 					Engine.time_scale = 1.0
 					line_2d.clear_points()
+					# 【新增】触发滤镜【淡出】
 					return
 
 				# --- 如果能量足够，执行后续操作 ---
@@ -292,6 +298,23 @@ func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float 
 		Engine.time_scale = slow_mo_scale
 	else:
 		Engine.time_scale = 1.0
+
+
+
+# --- 添加全新的、简化的滤镜控制函数 ---
+func fade_slow_mo_filter(turn_on: bool):
+	if not is_instance_valid(crt_effect) or not crt_effect.material: return
+
+	var tween = create_tween().set_trans(Tween.TRANS_SINE)
+	var final_mix_value = 1.0 if turn_on else 0.0
+	
+	# 我们只对 "slow_mo_mix" 这一个参数进行动画
+	tween.tween_method(
+		func(v): crt_effect.material.set_shader_parameter("slow_mo_mix", v),
+		crt_effect.material.get_shader_parameter("slow_mo_mix"),
+		final_mix_value,
+		0.2
+	)
 
 
 

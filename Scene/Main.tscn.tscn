@@ -63,6 +63,11 @@ shader_parameter/barrel_distortion = 0.1
 shader_parameter/chromatic_abberation = 0.002
 shader_parameter/noise_intensity = 0.2
 shader_parameter/scanline_count = 420.0
+shader_parameter/slow_mo_mix = 0.0
+shader_parameter/saturation = 1.0
+shader_parameter/contrast = 1.2
+shader_parameter/vignette_intensity = 0.0
+shader_parameter/vignette_smoothness = 0.1
 
 [node name="Main_tscn" type="Node"]
 script = ExtResource("1_0n0co")
