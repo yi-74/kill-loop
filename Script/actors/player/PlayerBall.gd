@@ -15,8 +15,9 @@ signal energy_bar_3_filled()
 @export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
-@export var energy_per_kill: float = 20.0   # 击杀敌人增加的能量
-@export var energy_per_bounce: float = 30.0 # 反弹墙壁增加的能量
+@export var energy_per_kill: float = 22.0   # 击杀敌人增加的能量
+@export var energy_per_bounce: float = 33.0 # 反弹墙壁增加的能量
+@export var energy_drain_per_second: float = 100.0 # 举例：每秒消耗**点能量
 @export_group("Combo System")
 @export var combo_max_bounces: int = 4       # 最大反弹容忍次数
 @export var combo_speed_bonus: float = 250.0  # 每次连击成功，速度上限增加值
@@ -86,6 +87,7 @@ func _input(event: InputEvent) -> void:
 				# --- 无论发射成功与否，瞄准都结束了，所以先停止循环音效 ---
 				if is_instance_valid(slow_mo_audio):
 					slow_mo_audio.stop()
+					# 【新增】触发滤镜【淡出】
 					fade_slow_mo_filter(false)
 
 				# --- 发射前检查能量 ---
@@ -98,7 +100,6 @@ func _input(event: InputEvent) -> void:
 					is_aiming = false
 					Engine.time_scale = 1.0
 					line_2d.clear_points()
-					# 【新增】触发滤镜【淡出】
 					return
 
 				# --- 如果能量足够，执行后续操作 ---
@@ -132,6 +133,15 @@ func _process(delta: float) -> void:
 		var mouse_world_pos = get_global_mouse_position()
 		var local_mouse_pos = to_local(mouse_world_pos)
 		line_2d.set_point_position(1, local_mouse_pos)
+		# 【新增】持续消耗能量
+		#    用我们之前创建的 _update_energy 函数，来安全地减少能量
+		#    消耗的量 = 每秒消耗量 * 这一帧所经过的时间(delta)
+		_update_energy(current_energy - (energy_drain_per_second * delta))
+		# 【新增】检查能量是否耗尽
+		if current_energy <= 0:
+			print("能量耗尽，强制退出子弹时间！")
+			# 我们可以创建一个新的函数来处理“取消瞄准”的逻辑，避免代码重复
+			_cancel_aiming()
 
 
 
@@ -148,6 +158,19 @@ func _physics_process(delta: float) -> void:
 			set_collision_mask_value(2, true)
 	# 发出信号 --- 我们用 .length() 获取当前速度的大小，并用 int() 把它变成整数，方便显示
 	speed_updated.emit(int(linear_velocity.length()))
+
+
+
+
+# --- 在脚本中添加这个新的辅助函数 ---
+func _cancel_aiming():
+	is_aiming = false
+	Engine.time_scale = 1.0
+	line_2d.clear_points()
+	if is_instance_valid(slow_mo_audio):
+		slow_mo_audio.stop()
+		fade_slow_mo_filter(false)
+	# 在这里可以播放一个“能量耗尽”的特殊音效
 
 
 
