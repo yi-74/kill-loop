@@ -30,6 +30,7 @@ signal energy_bar_3_filled()
 @onready var trail_node: Line2D = $TrailwithLine2D
 @onready var slow_mo_audio: AudioStreamPlayer = $SlowMoAudioPlayer
 @onready var launch_audio: AudioStreamPlayer = $LaunchAudioPlayer
+@onready var cancel_audio: AudioStreamPlayer = $CancelAudioPlayer
 @onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 @onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
@@ -58,63 +59,63 @@ func _ready() -> void:
 
 
 
-# 在 PlayerBall.gd 中，替换旧的 _input 函数
 
 func _input(event: InputEvent) -> void:
-	# --- is_dead 的安全检查可以加在最外面 ---
 	if is_dead: return
-	
+
+	# --- 【核心修正】我们在这里精确地只检查鼠标右键的【按下】事件 ---
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
+		# 如果是右键按下了，就调用取消函数
+		_cancel_aiming()
+		# 并且立刻结束本次输入处理，不再理会左键
+		return
+
+	# --- 左键的逻辑保持我们之前最稳定的版本 ---
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		
 		if event.is_pressed(): # --- 鼠标按下 ---
 			if not is_aiming:
-				is_aiming = true
-				drag_start_position_screen = event.position
-				Engine.time_scale = slow_mo_scale
-				line_2d.clear_points()
-				line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
-				
-				# 【新增】触发滤镜【淡入】
-				fade_slow_mo_filter(true)
-				
-				# 【音效】在进入瞄准时，播放循环音效
-				if is_instance_valid(slow_mo_audio):
-					slow_mo_audio.play()
+				if current_energy >= 100.0:
+					is_aiming = true
+					drag_start_position_screen = event.position
+					Engine.time_scale = slow_mo_scale
+					line_2d.clear_points()
+					line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
+					
+					if is_instance_valid(slow_mo_audio):
+						slow_mo_audio.play()
+					if has_method("fade_slow_mo_filter"):
+						fade_slow_mo_filter(true)
+				else:
+					print("能量不足，无法进入瞄准！")
 
 		else: # --- 鼠标松开 ---
 			if is_aiming:
-				
-				# --- 无论发射成功与否，瞄准都结束了，所以先停止循环音效 ---
-				if is_instance_valid(slow_mo_audio):
-					slow_mo_audio.stop()
-					# 【新增】触发滤镜【淡出】
-					fade_slow_mo_filter(false)
-
-				# --- 发射前检查能量 ---
-				if current_energy < 100.0:
-					print("能量不足！无法发射！")
-					# 在这里可以播放“能量不足”的提示音（可选）
-					# if is_instance_valid(no_energy_audio): no_energy_audio.play()
-					
-					# 清理状态并提前退出
-					is_aiming = false
-					Engine.time_scale = 1.0
-					line_2d.clear_points()
-					return
-
-				# --- 如果能量足够，执行后续操作 ---
-				
-				# 【音效】在这里，播放成功的发射音效！
-				if is_instance_valid(launch_audio):
-					launch_audio.play()
-
+				# 无论发射成功与否，瞄准都结束了，所以先执行所有“收尾”工作
 				is_aiming = false
 				Engine.time_scale = 1.0
 				line_2d.clear_points()
+				if is_instance_valid(slow_mo_audio):
+					slow_mo_audio.stop()
+				if has_method("fade_slow_mo_filter"):
+					fade_slow_mo_filter(false)
+
+				# 检查能量是否足够发射
+				if current_energy < 100.0:
+					print("能量不足！无法发射！")
+					if is_instance_valid(cancel_audio):
+						cancel_audio.play()
+					return # 能量不足，直接结束
+
+				# --- 如果能量足够，则执行发射 ---
+				if is_instance_valid(launch_audio):
+					launch_audio.play()
 				
 				_update_energy(current_energy - 100.0)
+				
+				bounces_since_last_kill = 0
+				# has_killed_in_combo = false  <-- 在“持续状态”连击模式下，这行不需要了
 
-				# ... (后续的发射向量计算和速度设置，与您的代码完全一样) ...
 				var screen_drag_vector = event.position - drag_start_position_screen
 				var launch_magnitude = screen_drag_vector.length() * launch_multiplier
 				var mouse_world_pos = get_global_mouse_position()
@@ -164,13 +165,13 @@ func _physics_process(delta: float) -> void:
 
 # --- 在脚本中添加这个新的辅助函数 ---
 func _cancel_aiming():
+	if not is_aiming: return
 	is_aiming = false
 	Engine.time_scale = 1.0
 	line_2d.clear_points()
-	if is_instance_valid(slow_mo_audio):
-		slow_mo_audio.stop()
-		fade_slow_mo_filter(false)
-	# 在这里可以播放一个“能量耗尽”的特殊音效
+	if is_instance_valid(slow_mo_audio): slow_mo_audio.stop()
+	if is_instance_valid(cancel_audio): cancel_audio.play()
+	if has_method("fade_slow_mo_filter"): fade_slow_mo_filter(false)
 
 
 

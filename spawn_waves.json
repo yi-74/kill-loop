@@ -1,7 +1,7 @@
 {
     "waves": [
         {
-            "start_time": 0,
+            "start_time": 2,
             "end_time": 15,
             "min_interval": 0.4,
             "max_interval": 0.7,
