@@ -27,6 +27,7 @@ func _ready() -> void:
 	player.energy_bar_1_filled.connect(game_ui.play_bar1_full_animation)
 	player.energy_bar_2_filled.connect(game_ui.play_bar2_full_animation)
 	player.energy_bar_3_filled.connect(game_ui.play_bar3_full_animation)
+	player.launch_failed.connect(game_ui.on_player_launch_failed)
 
 
 

@@ -12,6 +12,7 @@ extends Control
 @onready var effect_bar1_full: AnimatedSprite2D = $BoxContainer/EnergyBar1_FullEffect
 @onready var effect_bar2_full: AnimatedSprite2D = $BoxContainer/EnergyBar2_FullEffect
 @onready var effect_bar3_full: AnimatedSprite2D = $BoxContainer/EnergyBar3_FullEffect
+@onready var launch_fail_effect: AnimatedSprite2D = $BoxContainer/LaunchFailEffect
 # 注意：为了能正确获取，您可能需要手动给场景树里的三个能量条改名
 @onready var combo_label: Label = $ComboLabel
 @onready var game_timer_label: Label = $GameTimerLabel
@@ -39,6 +40,9 @@ func _ready():
 		
 	if is_instance_valid(effect_bar3_full):
 		effect_bar3_full.animation_finished.connect(func(): effect_bar3_full.hide())
+		
+	if is_instance_valid(launch_fail_effect):
+		launch_fail_effect.animation_finished.connect(func(): launch_fail_effect.hide())
 
 
 
@@ -123,6 +127,14 @@ func play_bar3_full_animation():
 	if is_instance_valid(effect_bar3_full):
 		effect_bar3_full.show()
 		effect_bar3_full.play("play_full_effect")
+
+
+
+# --- 创建新的接收函数 ---
+func on_player_launch_failed():
+	if is_instance_valid(launch_fail_effect):
+		launch_fail_effect.show()
+		launch_fail_effect.play("flash")
 
 
 

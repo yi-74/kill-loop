@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://co3ji8tbrthyk"
-path="res://.godot/imported/energy_00010.png-ccf35f471350743a4a6fa55420835ff7.ctex"
+uid="uid://ba3yxlr7feljo"
+path="res://.godot/imported/energy_00006.png-c9ac93650fcf78f0d0c91472501141d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/SpecialEffects/energybar/energy_00010.png"
-dest_files=["res://.godot/imported/energy_00010.png-ccf35f471350743a4a6fa55420835ff7.ctex"]
+source_file="res://assets/SpecialEffects/energybar/EnergyFull/energy_00006.png"
+dest_files=["res://.godot/imported/energy_00006.png-c9ac93650fcf78f0d0c91472501141d2.ctex"]
 
 [params]
 

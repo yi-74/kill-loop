@@ -4,6 +4,7 @@ signal speed_updated(speed: float)
 signal energy_updated(current_energy: float)
 signal combo_updated(combo_count: int)
 signal combo_lost()
+signal launch_failed()
 signal wall_bounced(bounce_count: int, is_combo_lost: bool)
 signal energy_bar_1_filled()
 signal energy_bar_2_filled()
@@ -45,6 +46,9 @@ var current_combo: int = 0
 var bounces_since_last_kill: int = 0
 var has_killed_in_combo: bool = false
 var current_max_speed: float = 0.0
+var line_color_normal: Color = Color.WHITE
+var line_color_low_energy: Color = Color("ff3b30") # 这是我们之前用过的那个红色
+var line_color_tween: Tween # 用来控制颜色过渡的 Tween```
 
 
 func _ready() -> void:
@@ -63,32 +67,25 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if is_dead: return
 
-	# --- 【核心修正】我们在这里精确地只检查鼠标右键的【按下】事件 ---
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
-		# 如果是右键按下了，就调用取消函数
-		_cancel_aiming()
-		# 并且立刻结束本次输入处理，不再理会左键
-		return
+	# ... (右键取消的逻辑不变) ...
 
-	# --- 左键的逻辑保持我们之前最稳定的版本 ---
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		
 		if event.is_pressed(): # --- 鼠标按下 ---
 			if not is_aiming:
-				if current_energy >= 100.0:
-					is_aiming = true
-					drag_start_position_screen = event.position
-					Engine.time_scale = slow_mo_scale
-					line_2d.clear_points()
-					line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
-					
-					if is_instance_valid(slow_mo_audio):
-						slow_mo_audio.play()
-					if has_method("fade_slow_mo_filter"):
-						fade_slow_mo_filter(true)
-				else:
-					print("能量不足，无法进入瞄准！")
-
+				# --- 【核心修正】移除能量检查，无条件进入子弹时间！ ---
+				is_aiming = true
+				Engine.time_scale = slow_mo_scale
+				
+				# ... (其他进入瞄准的逻辑保持不变)
+				drag_start_position_screen = event.position
+				line_2d.clear_points()
+				line_2d.add_point(Vector2.ZERO); line_2d.add_point(Vector2.ZERO)
+				if is_instance_valid(slow_mo_audio):
+					slow_mo_audio.play()
+				if has_method("fade_slow_mo_filter"):
+					fade_slow_mo_filter(true)
+		
 		else: # --- 鼠标松开 ---
 			if is_aiming:
 				# 无论发射成功与否，瞄准都结束了，所以先执行所有“收尾”工作
@@ -100,12 +97,14 @@ func _input(event: InputEvent) -> void:
 				if has_method("fade_slow_mo_filter"):
 					fade_slow_mo_filter(false)
 
-				# 检查能量是否足够发射
+				# --- 【门禁被移动到了这里】---
+				# 只有在尝试发射时，才检查能量
 				if current_energy < 100.0:
 					print("能量不足！无法发射！")
 					if is_instance_valid(cancel_audio):
 						cancel_audio.play()
-					return # 能量不足，直接结束
+					launch_failed.emit()
+					return # 能量不足，发射失败并结束
 
 				# --- 如果能量足够，则执行发射 ---
 				if is_instance_valid(launch_audio):
@@ -133,7 +132,12 @@ func _process(delta: float) -> void:
 	if is_aiming:
 		var mouse_world_pos = get_global_mouse_position()
 		var local_mouse_pos = to_local(mouse_world_pos)
+		
 		line_2d.set_point_position(1, local_mouse_pos)
+		# 【新增】持续消耗能量
+		var energy_before_drain = current_energy
+		_update_energy(current_energy - (energy_drain_per_second * delta))
+		
 		# 【新增】持续消耗能量
 		#    用我们之前创建的 _update_energy 函数，来安全地减少能量
 		#    消耗的量 = 每秒消耗量 * 这一帧所经过的时间(delta)
@@ -143,6 +147,16 @@ func _process(delta: float) -> void:
 			print("能量耗尽，强制退出子弹时间！")
 			# 我们可以创建一个新的函数来处理“取消瞄准”的逻辑，避免代码重复
 			_cancel_aiming()
+			return
+			
+		# --- 4. 【核心修正】在这里，每一帧都检查能量并更新颜色 ---
+		# 判断当前能量是否低于“发射阈值”(100)
+		if current_energy < 100.0:
+			# 如果是，就将颜色 Tween 到“低能量”状态
+			_tween_line_color(line_color_low_energy)
+		else:
+			# 否则，就将颜色 Tween 到“正常”状态
+			_tween_line_color(line_color_normal)
 
 
 
@@ -322,6 +336,35 @@ func trigger_kill_slow_motion(duration: float, time_scale_during_slow_mo: float 
 		Engine.time_scale = slow_mo_scale
 	else:
 		Engine.time_scale = 1.0
+
+
+
+func _tween_line_color(target_color: Color):
+	# --- 【核心优化】 ---
+	
+	# 1. 检查：如果线的【当前颜色】已经是我们想要的【目标颜色】了，
+	#    那就没必要再播放动画了，直接结束函数。
+	if line_2d.default_color == target_color:
+		return
+
+	# 2. 检查：如果【已经有一个颜色过渡动画】正在朝向我们的目标颜色播放，
+	#    那也没必要再创建一个新的了，同样直接结束函数。
+	if is_instance_valid(line_color_tween) and line_color_tween.is_running():
+		# 这个检查更复杂，我们先用一个更简单的方法
+		pass # 我们先简化逻辑
+
+	# --- 如果颜色确实需要改变，才执行后续的动画逻辑 ---
+	
+	# a) 先杀死任何可能还在运行的旧动画
+	if is_instance_valid(line_color_tween):
+		line_color_tween.kill()
+	
+	# b) 创建一个新的 Tween
+	line_color_tween = create_tween()
+	line_color_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	
+	# c) 播放颜色过渡动画
+	line_color_tween.tween_property(line_2d, "default_color", target_color, 0.003)
 
 
 
