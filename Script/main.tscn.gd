@@ -10,6 +10,7 @@ extends Node
 
 
 func _ready() -> void:
+	reset_crt_shader_parameters()
 	# 连接信号！
 	# player 的 speed_updated 信号，连接到 game_ui 的 update_speed_label 函数
 	player.speed_updated.connect(game_ui.update_speed_label)
@@ -19,15 +20,14 @@ func _ready() -> void:
 	spawner.game_time_updated.connect(game_ui.update_game_timer)
 	spawner.score_updated.connect(game_ui.on_score_updated)
 	player.combo_updated.connect(on_player_combo_updated)
-		# --- 【新增】连接连击中断信号到背景特效 ---
 	player.combo_lost.connect(background_effects.play_combo_lost_effect)
-	# --- 【新增】连接新的撞墙信号 ---
 	player.wall_bounced.connect(audio_manager.on_player_wall_bounced)
 	player.wall_bounced.connect(background_effects.play_bounce_effect)
 	player.energy_bar_1_filled.connect(game_ui.play_bar1_full_animation)
 	player.energy_bar_2_filled.connect(game_ui.play_bar2_full_animation)
 	player.energy_bar_3_filled.connect(game_ui.play_bar3_full_animation)
 	player.launch_failed.connect(game_ui.on_player_launch_failed)
+	
 
 
 
@@ -63,3 +63,32 @@ func on_player_combo_updated(combo_count: int):
 		target_aberration_strength,
 		0.3
 	)
+
+
+
+
+# --- 一个专门负责重置 CRT 着色器参数的函数 ---
+func reset_crt_shader_parameters():
+	# 安全检查：确保 CRT 特效节点存在且有材质
+	if not is_instance_valid(crt_effect_rect) or not crt_effect_rect.material:
+		return
+
+	print("Main: 正在重置 CRT Shader 参数...")
+	
+	# 获取材质的引用，方便后续调用
+	var crt_material = crt_effect_rect.material
+	
+	# --- 在这里，我们将所有需要重置的参数，都手动设置回它们的默认值 ---
+	
+	# 1. 重置与连击相关的【色差】
+	crt_material.set_shader_parameter("chromatic_abberation", 0.002) # 这是 0-9 连击时的初始值
+	
+	# 2. 重置您可能手动调整过的其他 CRT 参数
+	crt_material.set_shader_parameter("scanline_intensity", 0.03)
+	crt_material.set_shader_parameter("barrel_distortion", 0.1)
+	crt_material.set_shader_parameter("noise_intensity", 0.002)
+	crt_material.set_shader_parameter("scanline_count", 420.0)
+	
+	# 3. 【重要】重置子弹时间滤镜的混合度
+	#    确保游戏开始时，子弹时间滤-镜是完全关闭的
+	crt_material.set_shader_parameter("slow_mo_mix", 0.0)
