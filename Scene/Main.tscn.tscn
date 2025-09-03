@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=25 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://c0oq63xhnn030" path="res://game/effect/audio_manager.tscn" id="8_e0lk5"]
 [ext_resource type="Shader" uid="uid://bcime6o6emfsa" path="res://Script/shader/CanvasLayer.gdshader" id="10_5t6br"]
 [ext_resource type="Script" uid="uid://d38r084prjvtp" path="res://Script/Other/bounce_counter_manager.gd" id="11_b6ym3"]
+[ext_resource type="AudioStream" uid="uid://djvlwl12diixm" path="res://assets/Audio/Sound Effects/bounce.wav" id="11_bbtn3"]
 
 [sub_resource type="Curve2D" id="Curve2D_pff3i"]
 _data = {
@@ -132,6 +133,9 @@ curve = SubResource("Curve2D_e0lk5")
 
 [node name="BounceCounterManager" type="Node" parent="."]
 script = ExtResource("11_b6ym3")
+
+[node name="WallBouncePlayer" type="AudioStreamPlayer" parent="BounceCounterManager"]
+stream = ExtResource("11_bbtn3")
 
 [node name="EnemySpawner" type="Node" parent="."]
 script = ExtResource("8_5t6br")

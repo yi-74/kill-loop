@@ -284,36 +284,40 @@ func _on_kill_area_entered(area: Area2D):
 
 
 func _on_body_entered(body: Node):
-	var is_combo_lost_this_hit = false # 先假设本次撞击不会中断连击
-	# 只有在【低速】撞到敌人时，才会触发死亡
+	if is_dead: return
+
+	# --- 【核心修正】计算精确的近似碰撞点 ---
+	
+	# 1. 获取玩家碰撞体的半径 (假设是圆形)
+	var player_radius = $CollisionShape2D.shape.radius * global_scale.x
+	
+	# 2. 获取玩家撞击墙壁时的方向
+	var impact_direction = velocity_before_impact.normalized()
+	
+	# 3. 精确的碰撞点 ≈ 玩家的中心位置 + 沿着撞击方向延伸一个半径的距离
+	var impact_position = global_position + impact_direction * player_radius
+
+	# --- 后续的所有逻辑，都使用这个新的、更精确的 impact_position ---
+	
 	if body.is_in_group("enemy"):
-		# 【核心】我们需要获取碰撞点，但这需要修改信号连接方式
-		# 我们先用一个近似值：玩家的位置
-		var impact_pos = global_position
-		wall_bounced.emit(bounces_since_last_kill + 1, is_combo_lost_this_hit, impact_pos)
-		
 		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
-			# 【核心修正】不再是 queue_free()，而是调用我们的死亡演出
 			_player_death_sequence()
 		return
 
 	if body.is_in_group("bouncing_enemy"):
 		return
 			
-	# 如果撞到的是墙壁，处理连击逻辑
+	# 如果是墙壁
+	var is_combo_lost_this_hit = false
 	if not has_killed_in_combo:
 		bounces_since_last_kill += 1
-		wall_bounced.emit()
 		if bounces_since_last_kill >= combo_max_bounces:
 			is_combo_lost_this_hit = true
-			lose_combo()
-
-		# --- 【核心修改】发出带有详细信息的信号 ---
-		wall_bounced.emit(bounces_since_last_kill, is_combo_lost_this_hit)
-		
-		# 在发出信号之后，再执行中断逻辑
-		if is_combo_lost_this_hit:
-			lose_combo()
+			
+	wall_bounced.emit(bounces_since_last_kill, is_combo_lost_this_hit, impact_position)
+			
+	if is_combo_lost_this_hit:
+		lose_combo()
 	
 	_update_energy(current_energy + energy_per_bounce)
 

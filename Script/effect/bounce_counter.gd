@@ -10,52 +10,49 @@ preload("res://assets/SpecialEffects/3210/0.png")  # 对应计数器 = 4 (连击
 # 注意：请将 "res://textures/..." 替换为您图片的真实路径！
 
 var current_tween: Tween
+var is_disappearing: bool = false # 【新增】状态锁，防止在消失时被再次触发
+
 
 # --- 1. 生成动画 (撞墙) ---
 func animate_spawn(bounce_count: int):
-		# --- 【监控点 E】 ---
-	print("--- BounceCounter: animate_spawn() 已被调用！---")
-	print("E1. 收到的 bounce_count: ", bounce_count)
-	# 安全检查：确保次数在我们预期的 1, 2, 3 次范围内
-	if bounce_count < 1 or bounce_count > 3:
-		print("BounceCounter: 收到了无效的撞墙次数: ", bounce_count)
+	# 【新增】如果正在消失，就忽略所有新的生成指令
+	if is_disappearing:
 		return
-			
-	# --- 【核心修正】正确的数字映射逻辑 ---
-	# 计数器 = 1 → 索引 = 0 (3.png)
-	# 计数器 = 2 → 索引 = 1 (2.png)
-	# 计数器 = 3 → 索引 = 2 (1.png)
-	# 这个映射关系，正好是 TEXTURES.size() - bounce_count - 1
-	# 我们可以用一个更简单的数组来查表
+		
+	# 安全检查和贴图映射 (与之前相同)
+	var count_to_texture_index = { 1: 0, 2: 1, 3: 2 }
+	if not count_to_texture_index.has(bounce_count): return
+	texture = TEXTURES[count_to_texture_index[bounce_count]]
 	
-	# 我们直接用一个字典 (Dictionary) 来做映射，最清晰，最不可能出错
-	var count_to_texture_index = {
-		1: 0, # 第1次撞墙，显示 TEXTURES[0]，即 3.png
-		2: 1, # 第2次撞墙，显示 TEXTURES[1]，即 2.png
-		3: 2  # 第3次撞墙，显示 TEXTURES[2]，即 1.png
-	}
+	# 杀死旧动画，确保状态干净
+	if is_instance_valid(current_tween): current_tween.kill()
 	
-	# 检查 bounce_count 是否在我们的映射表里
-	if not count_to_texture_index.has(bounce_count):
-		return
-
-	var texture_index = count_to_texture_index[bounce_count]
-	texture = TEXTURES[texture_index]
+	# 重置初始状态
+	scale = Vector2.ONE * 0.6
+	modulate.a = 0.0
+	show() # 确保可见
 	
-	current_tween = create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	current_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	current_tween.set_parallel()
 	
-	# 动画序列
-	current_tween.tween_property(self, "scale", Vector2.ONE, 0.25) # Godot 的 TRANS_BACK 自动处理 1.2 -> 1.0 的回弹
-	current_tween.tween_property(self, "modulate:a", 1.0, 0.15) # 透明度变化快一些
+	# 【核心修正】手动编排一个更可靠的“弹出”动画
+	var anim_tween_seq = create_tween().set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	# a) 先放大到 1.2 倍
+	anim_tween_seq.tween_property(self, "scale", Vector2.ONE * 1.2, 0.3)
+	# b) 再恢复到 1.0 倍
+	anim_tween_seq.tween_property(self, "scale", Vector2.ONE, 0.5)
 	
-	show()
+	# 透明度动画
+	current_tween.tween_property(self, "modulate:a", 1.0, 0.15)
 
 
 # --- 2. 重置动画 (击杀) ---
 func animate_reset():
-	print("--- 重置动画已被调用！---")
-	if is_instance_valid(current_tween): await current_tween.finished # 等待当前动画播完
+	# 【核心修正】不再等待旧动画，而是直接杀死它
+	if is_instance_valid(current_tween):
+		current_tween.kill()
+
+	is_disappearing = true # 标记为“正在消失”
 	
 	current_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	current_tween.set_parallel()
@@ -63,23 +60,33 @@ func animate_reset():
 	current_tween.tween_property(self, "scale", Vector2.ZERO, 0.2)
 	current_tween.tween_property(self, "modulate:a", 0.0, 0.2)
 	
-	await current_tween.finished
-	queue_free()
+	# 我们不再在函数内部等待，而是让 Tween 自己处理销毁
+	current_tween.finished.connect(queue_free)
 
 
 # --- 3. 破裂动画 (连击中断) ---
+# --- 3. 破裂动画 (连击中断) ---
 func animate_break():
-	print("--- 破裂动画已被调用！---")
-	if is_instance_valid(current_tween): await current_tween.finished # 等待当前动画播完
+	# --- 【核心修正】与 animate_reset() 保持完全一致的健壮性 ---
+
+	# a) 立即杀死任何正在运行的旧动画
+	if is_instance_valid(current_tween):
+		current_tween.kill()
+
+	# b) 设置“正在消失”状态锁
+	is_disappearing = true
 	
-	# 连击中断时，强制显示最后一张 "0.png"
+	# c) 强制显示 "0.png" 贴图
 	texture = TEXTURES.back()
+	show() # 确保在播放动画前是可见的
 	
+	# d) 创建新的“破裂”动画 Tween
 	current_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	current_tween.set_parallel()
 	
+	# e) 编排动画
 	current_tween.tween_property(self, "scale", Vector2.ONE * 2.0, 0.25)
 	current_tween.tween_property(self, "modulate:a", 0.0, 0.25)
 	
-	await current_tween.finished
-	queue_free()
+	# f) 【核心】使用信号，在动画播放完毕后，再安全地销毁自己
+	current_tween.finished.connect(queue_free)

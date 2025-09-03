@@ -2,49 +2,74 @@ extends Node
 
 const BounceCounterScene = preload("res://game/effect/bounce_counter.tscn")
 
-var active_counter: Sprite2D = null
+# --- 音效参数 ---
+@export_group("Wall Bounce Pitch")
+@export var base_pitch: float = 1.2 
+@export var pitch_decrement: float = 0.2
+@export var combo_lost_pitch: float = 0.5
 
-# --- 接收撞墙信号 ---
+@onready var wall_bounce_player: AudioStreamPlayer = $WallBouncePlayer
+
+# --- 【核心】我们现在管理一个数组，而不是单个变量 ---
+var active_counters: Array[Sprite2D] = []
+
+
+# --- 1. 接收撞墙信号 ---
 func on_player_wall_bounced(bounce_count: int, is_combo_lost: bool, impact_position: Vector2):
-	# --- 【监控点 A】 ---
-	print("--- Manager: 收到【撞墙】信号 ---")
-	print("A1. 撞墙次数: ", bounce_count, " | 是否中断: ", is_combo_lost)
-	# 如果是中断的那一次撞击
+	# a) 播放音效 (逻辑不变)
+	var target_pitch: float
 	if is_combo_lost:
-		if is_instance_valid(active_counter):
-			active_counter.animate_break()
-		active_counter = null # 清空引用
+		target_pitch = combo_lost_pitch
+	else:
+		target_pitch = base_pitch - (bounce_count - 1) * pitch_decrement
+	wall_bounce_player.pitch_scale = max(target_pitch, 0.1)
+	wall_bounce_player.play()
+	
+  # b) 如果是中断的那一次撞击...
+	if is_combo_lost:
+		# 首先，让【所有】现存的旧数字都破裂
+		for counter in active_counters:
+			if is_instance_valid(counter):
+				counter.animate_break()
+		active_counters.clear()
+		
+		# 然后，在碰撞点【生成一个新的 '0' 数字】，并让它也播放破裂动画
+		var zero_counter = BounceCounterScene.instantiate()
+		add_child(zero_counter)
+		zero_counter.global_position = impact_position
+		zero_counter.animate_break() # animate_break 内部会自动设置 "0.png"
 		return
 
-	# --- 如果是普通的撞击 ---
-	# 如果已经有一个计数器，先让它消失
-	if is_instance_valid(active_counter):
-		active_counter.animate_reset()
-		
-	# 创建一个新的计数器实例
-	active_counter = BounceCounterScene.instantiate()
-	add_child(active_counter)
+	# c) 如果是普通的撞击，就【只管生成一个新的数字】
+	var new_counter = BounceCounterScene.instantiate()
+	add_child(new_counter)
+	new_counter.global_position = impact_position
+	new_counter.animate_spawn(bounce_count)
 	
-	# 【核心】获取碰撞点位置 (我们需要 PlayerBall 广播这个信息)
-	# 我们先用一个临时位置
-	# 【核心】我们将在这里直接设置位置，而不是在 BounceCounter 内部
-	active_counter.global_position = impact_position
+	# 将这个新的数字，添加到我们的管理数组中
+	active_counters.append(new_counter)
 
-	print("Manager: 已将新的 BounceCounter 位置设置为: ", active_counter.global_position)
-	# --- 【监控点 B】 ---
-	print("B1. 已创建新的 BounceCounter 实例。")
-	print("B2. 准备调用 animate_spawn，传入 bounce_count: ", bounce_count)
-	
-	active_counter.animate_spawn(bounce_count)
 
-# --- 接收击杀信号 ---
+# --- 2. 接收击杀信号 ---
 func on_player_killed_enemy():
-	if is_instance_valid(active_counter):
-		active_counter.animate_reset()
-	active_counter = null
+	print("--- Manager: 收到【击杀】信号，准备重置所有计数器 ---")
+	
+	# 这个循环的逻辑是正确的
+	for counter in active_counters:
+		if is_instance_valid(counter):
+			# 现在，这个调用会立刻杀死旧动画，并开始播放消失动画
+			counter.animate_reset()
+			
+	# 清空管理数组
+	active_counters.clear()
 
-# --- 接收连击中断信号 (来自 lose_combo) ---
+
+# --- 3. 接收连击中断信号 (来自 lose_combo) ---
+#    注意：这个信号和 is_combo_lost=true 的撞墙信号，可能会同时触发
+#    我们的逻辑需要能处理这种情况
 func on_player_combo_lost():
-	if is_instance_valid(active_counter):
-		active_counter.animate_break()
-	active_counter = null
+	# 同样，让【所有】现存的数字都破裂
+	for counter in active_counters:
+		if is_instance_valid(counter):
+			counter.animate_break()
+	active_counters.clear()
