@@ -7,6 +7,7 @@ extends Node
 @onready var crt_effect_rect: ColorRect = $CanvasLayer/ColorRect
 @onready var background_effects: AnimatedSprite2D = $BackgroundEffects
 @onready var audio_manager: Node = $AudioManager
+@onready var bounce_counter_manager: Node = $BounceCounterManager
 
 
 func _ready() -> void:
@@ -27,7 +28,10 @@ func _ready() -> void:
 	player.energy_bar_2_filled.connect(game_ui.play_bar2_full_animation)
 	player.energy_bar_3_filled.connect(game_ui.play_bar3_full_animation)
 	player.launch_failed.connect(game_ui.on_player_launch_failed)
-	
+	player.wall_bounced.connect(bounce_counter_manager.on_player_wall_bounced)
+	player.enemy_killed.connect(bounce_counter_manager.on_player_killed_enemy)
+	player.combo_lost.connect(bounce_counter_manager.on_player_combo_lost)
+
 
 
 
@@ -86,7 +90,7 @@ func reset_crt_shader_parameters():
 	# 2. 重置您可能手动调整过的其他 CRT 参数
 	crt_material.set_shader_parameter("scanline_intensity", 0.03)
 	crt_material.set_shader_parameter("barrel_distortion", 0.1)
-	crt_material.set_shader_parameter("noise_intensity", 0.002)
+	crt_material.set_shader_parameter("noise_intensity", 0.2)
 	crt_material.set_shader_parameter("scanline_count", 420.0)
 	
 	# 3. 【重要】重置子弹时间滤镜的混合度

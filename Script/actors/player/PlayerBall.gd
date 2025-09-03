@@ -5,7 +5,8 @@ signal energy_updated(current_energy: float)
 signal combo_updated(combo_count: int)
 signal combo_lost()
 signal launch_failed()
-signal wall_bounced(bounce_count: int, is_combo_lost: bool)
+signal wall_bounced(bounce_count: int, is_combo_lost: bool, impact_position: Vector2)
+signal enemy_killed()
 signal energy_bar_1_filled()
 signal energy_bar_2_filled()
 signal energy_bar_3_filled()
@@ -111,9 +112,6 @@ func _input(event: InputEvent) -> void:
 					launch_audio.play()
 				
 				_update_energy(current_energy - 100.0)
-				
-				bounces_since_last_kill = 0
-				# has_killed_in_combo = false  <-- 在“持续状态”连击模式下，这行不需要了
 
 				var screen_drag_vector = event.position - drag_start_position_screen
 				var launch_magnitude = screen_drag_vector.length() * launch_multiplier
@@ -256,6 +254,7 @@ func _on_kill_area_entered(area: Area2D):
 			var impact_direction = velocity_before_impact.normalized()
 			enemy_body.die(impact_direction)
 			call_deferred("trigger_kill_slow_motion", 0.15, 0.2)
+			enemy_killed.emit()
 			
 			# --- 【核心修改】在这里触发屏幕抖动！ ---
 			if is_instance_valid(camera):
@@ -263,14 +262,13 @@ func _on_kill_area_entered(area: Area2D):
 			
 			# --- 每次成功击杀，都重置“撞墙计数器” ---
 			bounces_since_last_kill = 0
+			enemy_killed.emit()
 			
 			# --- 增加 Combo ---
 			current_combo += 1
-			print("连击成功! 当前 Combo: ", current_combo)
 			combo_updated.emit(current_combo)
 
 			current_max_speed = default_max_speed + (current_combo * combo_speed_bonus)
-			print("速度上限提升! 新上限: ", current_max_speed)
 			# -----------------------------------------------------------------
 
 			# 给予能量奖励 (这个逻辑可以保持不变，也可以同样做成累积的)
@@ -286,8 +284,14 @@ func _on_kill_area_entered(area: Area2D):
 
 
 func _on_body_entered(body: Node):
+	var is_combo_lost_this_hit = false # 先假设本次撞击不会中断连击
 	# 只有在【低速】撞到敌人时，才会触发死亡
 	if body.is_in_group("enemy"):
+		# 【核心】我们需要获取碰撞点，但这需要修改信号连接方式
+		# 我们先用一个近似值：玩家的位置
+		var impact_pos = global_position
+		wall_bounced.emit(bounces_since_last_kill + 1, is_combo_lost_this_hit, impact_pos)
+		
 		if velocity_before_impact.length_squared() < kill_threshold * kill_threshold:
 			# 【核心修正】不再是 queue_free()，而是调用我们的死亡演出
 			_player_death_sequence()
@@ -297,7 +301,6 @@ func _on_body_entered(body: Node):
 		return
 			
 	# 如果撞到的是墙壁，处理连击逻辑
-	var is_combo_lost_this_hit = false # 先假设本次撞击不会中断连击
 	if not has_killed_in_combo:
 		bounces_since_last_kill += 1
 		wall_bounced.emit()
