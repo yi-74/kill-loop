@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cbus8chf27tph"]
+[gd_scene load_steps=15 format=3 uid="uid://cbus8chf27tph"]
 
 [ext_resource type="Script" uid="uid://c2fcoufi6yji7" path="res://Script/actors/player/PlayerBall.gd" id="1_46ku3"]
 [ext_resource type="Script" uid="uid://b72hdcmnfo6yx" path="res://Script/actors/player/trailwith_line_2d.gd" id="3_5d0wo"]
@@ -10,7 +10,10 @@
 [ext_resource type="AudioStream" uid="uid://b5xdyakhov6he" path="res://assets/Audio/Sound Effects/CancelAim.wav" id="8_8oxga"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_46ku3"]
-bounce = 0.63
+bounce = 0.62
+
+[sub_resource type="Gradient" id="Gradient_8oxga"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="Curve" id="Curve_5d0wo"]
 _data = [Vector2(0.045, 0), 0.0, 0.990006, 0, 0, Vector2(0.995, 1), 0.324479, 0.0, 0, 0]
@@ -28,13 +31,13 @@ radius = 26.0
 [node name="PlayerBall" type="RigidBody2D"]
 z_index = 1
 collision_mask = 6
-mass = 0.3
 physics_material_override = SubResource("PhysicsMaterial_46ku3")
 gravity_scale = 0.0
 continuous_cd = 2
 script = ExtResource("1_46ku3")
 
 [node name="Line2D" type="Line2D" parent="."]
+gradient = SubResource("Gradient_8oxga")
 joint_mode = 2
 end_cap_mode = 2
 

@@ -45,9 +45,9 @@ func on_player_combo_updated(combo_count: int):
 	if combo_count >= 35:
 		target_aberration_strength = 0.02
 	elif combo_count >= 20:
-		target_aberration_strength = 0.01
+		target_aberration_strength = 0.012
 	elif combo_count >= 10:
-		target_aberration_strength = 0.005
+		target_aberration_strength = 0.007
 	
 	# --- 使用 Tween 实现平滑过渡 ---
 	

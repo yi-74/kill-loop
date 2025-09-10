@@ -17,8 +17,8 @@ signal energy_bar_3_filled()
 @export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间
 @export_group("Energy System")
-@export var energy_per_kill: float = 22.0   # 击杀敌人增加的能量
-@export var energy_per_bounce: float = 33.0 # 反弹墙壁增加的能量
+@export var energy_per_kill: float = 25.0   # 击杀敌人增加的能量
+@export var energy_per_bounce: float = 35.0 # 反弹墙壁增加的能量
 @export var energy_drain_per_second: float = 100.0 # 举例：每秒消耗**点能量
 @export_group("Combo System")
 @export var combo_max_bounces: int = 4       # 最大反弹容忍次数

@@ -8,7 +8,7 @@ extends Node
 # 每撞一次墙，音高降低多少
 @export var pitch_decrement: float = 0.2
 # 连击中断时（第四次）的特殊音高
-@export var combo_lost_pitch: float = 0.3
+@export var combo_lost_pitch: float = 0.2
 
 @onready var wall_bounce_player: AudioStreamPlayer = $WallBouncePlayer
 

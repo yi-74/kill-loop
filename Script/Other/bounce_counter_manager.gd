@@ -9,6 +9,7 @@ const BounceCounterScene = preload("res://game/effect/bounce_counter.tscn")
 @export var combo_lost_pitch: float = 0.5
 
 @onready var wall_bounce_player: AudioStreamPlayer = $WallBouncePlayer
+@onready var background_effects: AnimatedSprite2D = get_node("/root/Main_tscn/BackgroundEffects")
 
 # --- 【核心】我们现在管理一个数组，而不是单个变量 ---
 var active_counters: Array[Sprite2D] = []
@@ -16,6 +17,9 @@ var active_counters: Array[Sprite2D] = []
 
 # --- 1. 接收撞墙信号 ---
 func on_player_wall_bounced(bounce_count: int, is_combo_lost: bool, impact_position: Vector2):
+	if is_instance_valid(background_effects):
+		background_effects.play_bounce_effect() # 我们假设 BackgroundEffects 有这个公开函数
+	
 	# a) 播放音效 (逻辑不变)
 	var target_pitch: float
 	if is_combo_lost:
@@ -52,7 +56,6 @@ func on_player_wall_bounced(bounce_count: int, is_combo_lost: bool, impact_posit
 
 # --- 2. 接收击杀信号 ---
 func on_player_killed_enemy():
-	print("--- Manager: 收到【击杀】信号，准备重置所有计数器 ---")
 	
 	# 这个循环的逻辑是正确的
 	for counter in active_counters:
