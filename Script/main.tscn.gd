@@ -8,6 +8,8 @@ extends Node
 @onready var background_effects: AnimatedSprite2D = $BackgroundEffects
 @onready var audio_manager: Node = $AudioManager
 @onready var bounce_counter_manager: Node = $BounceCounterManager
+@onready var pause_menu: CanvasLayer = $PauseMenu
+
 
 
 func _ready() -> void:
@@ -32,6 +34,35 @@ func _ready() -> void:
 	player.enemy_killed.connect(bounce_counter_manager.on_player_killed_enemy)
 	player.combo_lost.connect(bounce_counter_manager.on_player_combo_lost)
 
+
+
+func _input(event: InputEvent) -> void:
+	# 因为 Main 节点的 Process Mode 是 Always，所以这个函数永远都会被调用
+	if Input.is_action_just_pressed("ui_cancel"):
+		toggle_pause_menu()
+
+
+
+func toggle_pause_menu():
+	# 1. 切换游戏树的暂停状态
+	get_tree().paused = not get_tree().paused
+	
+	# 2. 根据新的暂停状态，来执行操作
+	if get_tree().paused:
+		# --- 进入暂停 ---
+		pause_menu.show()
+		
+		# 【核心修正】直接修改 player 的 freeze 属性
+		if is_instance_valid(player):
+			player.freeze = true
+			
+	else:
+		# --- 恢复游戏 ---
+		pause_menu.hide()
+		
+		# 【核心修正】直接修改 player 的 freeze 属性
+		if is_instance_valid(player):
+			player.freeze = false
 
 
 
@@ -88,11 +119,10 @@ func reset_crt_shader_parameters():
 	crt_material.set_shader_parameter("chromatic_abberation", 0.002) # 这是 0-9 连击时的初始值
 	
 	# 2. 重置您可能手动调整过的其他 CRT 参数
-	crt_material.set_shader_parameter("scanline_intensity", 0.03)
+	crt_material.set_shader_parameter("scanline_intensity", 0.05)
 	crt_material.set_shader_parameter("barrel_distortion", 0.1)
 	crt_material.set_shader_parameter("noise_intensity", 0.2)
 	crt_material.set_shader_parameter("scanline_count", 420.0)
-	
 	# 3. 【重要】重置子弹时间滤镜的混合度
 	#    确保游戏开始时，子弹时间滤-镜是完全关闭的
 	crt_material.set_shader_parameter("slow_mo_mix", 0.0)

@@ -39,7 +39,7 @@
         {
             "start_time": 45,
             "end_time": 6000,
-            "min_interval": 0.1,
+            "min_interval": 0.05,
             "max_interval": 0.2,
             "min_enemies": 10,
             "max_enemies": 15,

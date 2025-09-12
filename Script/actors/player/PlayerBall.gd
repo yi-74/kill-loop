@@ -69,7 +69,10 @@ func _input(event: InputEvent) -> void:
 	if is_dead: return
 
 	# ... (右键取消的逻辑不变) ...
-
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
+		_cancel_aiming()
+		return # 处理完右键后，直接结束本次输入处理
+		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		
 		if event.is_pressed(): # --- 鼠标按下 ---
