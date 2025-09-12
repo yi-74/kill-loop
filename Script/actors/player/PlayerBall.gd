@@ -401,6 +401,11 @@ func _player_death_sequence():
 		return
 	is_dead = true
 	
+		# --- 【核心修改】在这里暂停音乐 ---
+	# 我们直接通过全局名称访问 MusicManager
+	if MusicManager: # 安全检查
+		MusicManager.stop() # stop() 会暂停并回到开头
+	
 	# --- 【核心修改】在函数的最开始，立刻播放死亡音效 ---
 	if is_instance_valid(death_audio_player):
 		death_audio_player.play()

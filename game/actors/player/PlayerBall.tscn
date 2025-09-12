@@ -36,6 +36,16 @@ physics_material_override = SubResource("PhysicsMaterial_46ku3")
 gravity_scale = 0.0
 continuous_cd = 2
 script = ExtResource("1_46ku3")
+launch_multiplier = null
+kill_threshold = null
+default_max_speed = null
+slow_mo_scale = null
+energy_per_kill = null
+energy_per_bounce = null
+energy_drain_per_second = null
+combo_max_bounces = null
+combo_speed_bonus = null
+combo_energy_bonus = null
 
 [node name="Line2D" type="Line2D" parent="."]
 gradient = SubResource("Gradient_8oxga")
@@ -77,10 +87,11 @@ stream = ExtResource("4_pfcfs")
 
 [node name="SlowMoAudioPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_b8hb8")
-volume_db = -20.0
+volume_db = -8.0
 
 [node name="LaunchAudioPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_8oxga")
+volume_db = 5.0
 
 [node name="CancelAudioPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_8oxga")

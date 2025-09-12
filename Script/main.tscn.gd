@@ -13,6 +13,8 @@ extends Node
 
 
 func _ready() -> void:
+	if MusicManager:
+		MusicManager.play()
 	reset_crt_shader_parameters()
 	# 连接信号！
 	# player 的 speed_updated 信号，连接到 game_ui 的 update_speed_label 函数

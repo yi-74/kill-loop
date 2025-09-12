@@ -18,6 +18,7 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 DataManager="*res://Script/Other/data_manager.gd"
+MusicManager="*res://game/music/music_manager.tscn"
 
 [display]
 
