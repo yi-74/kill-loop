@@ -39,9 +39,14 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	# 因为 Main 节点的 Process Mode 是 Always，所以这个函数永远都会被调用
+	# --- 1. 处理暂停菜单 (这个逻辑您已经有了) ---
 	if Input.is_action_just_pressed("ui_cancel"):
 		toggle_pause_menu()
+		
+	# --- 2. 【新增】处理切换全屏 ---
+	if Input.is_action_just_pressed("toggle_fullscreen"):
+		# 调用我们自己写的切换函数
+		toggle_fullscreen_mode()
 
 
 
@@ -101,6 +106,20 @@ func on_player_combo_updated(combo_count: int):
 		0.3
 	)
 
+
+
+func toggle_fullscreen_mode():
+	# 我们只做一件事：切换窗口的全屏状态
+	# get_window().mode 这个属性，是 Godot 4 中控制窗口模式最直接的方法
+	
+	if get_window().mode == Window.MODE_FULLSCREEN:
+		# 如果当前是全屏，就切换回窗口
+		get_window().mode = Window.MODE_WINDOWED
+		print("已退出全屏。")
+	else:
+		# 如果当前不是全屏，就切换到全屏
+		get_window().mode = Window.MODE_FULLSCREEN
+		print("已进入全屏。")
 
 
 
