@@ -13,6 +13,8 @@
 bounce = 0.62
 
 [sub_resource type="Gradient" id="Gradient_8oxga"]
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.82191783)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="Curve" id="Curve_5d0wo"]
@@ -36,16 +38,6 @@ physics_material_override = SubResource("PhysicsMaterial_46ku3")
 gravity_scale = 0.0
 continuous_cd = 2
 script = ExtResource("1_46ku3")
-launch_multiplier = null
-kill_threshold = null
-default_max_speed = null
-slow_mo_scale = null
-energy_per_kill = null
-energy_per_bounce = null
-energy_drain_per_second = null
-combo_max_bounces = null
-combo_speed_bonus = null
-combo_energy_bonus = null
 
 [node name="Line2D" type="Line2D" parent="."]
 gradient = SubResource("Gradient_8oxga")

@@ -12,7 +12,7 @@ signal energy_bar_2_filled()
 signal energy_bar_3_filled()
 
 @export_group("Launch Power", "launch_")
-@export var launch_multiplier: float = 7.0 #发射力度
+@export var launch_multiplier: float = 8.0 #发射力度
 @export var kill_threshold: float = 1500.0 #击杀速度
 @export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间

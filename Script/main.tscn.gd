@@ -1,5 +1,8 @@
 extends Node
 
+var time_scale_before_pause: float = 1.0
+var is_paused: bool = false
+
 # 用 @onready 获取节点引用
 @onready var player: RigidBody2D = $PlayerBall
 @onready var game_ui: Control = $GameUI
@@ -51,25 +54,26 @@ func _input(event: InputEvent) -> void:
 
 
 func toggle_pause_menu():
-	# 1. 切换游戏树的暂停状态
-	get_tree().paused = not get_tree().paused
+	# 我们直接反转自己的暂停状态
+	is_paused = not is_paused
 	
-	# 2. 根据新的暂停状态，来执行操作
-	if get_tree().paused:
+	if is_paused:
 		# --- 进入暂停 ---
-		pause_menu.show()
 		
-		# 【核心修正】直接修改 player 的 freeze 属性
-		if is_instance_valid(player):
-			player.freeze = true
-			
+		# 将时间流速设为 0，冻结所有普通节点
+		Engine.time_scale = 0.0
+		
+		# 显示菜单
+		pause_menu.show()
 	else:
 		# --- 恢复游戏 ---
-		pause_menu.hide()
 		
-		# 【核心修正】直接修改 player 的 freeze 属性
-		if is_instance_valid(player):
-			player.freeze = false
+		# 将时间流速恢复为 1.0 (正常速度)
+		Engine.time_scale = 1.0
+		
+		# 隐藏菜单
+		pause_menu.hide()
+
 
 
 
