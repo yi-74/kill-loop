@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh8ve25xxrm82"]
 
 [ext_resource type="Script" uid="uid://dp1y1fgb0548b" path="res://Script/UI/pause_menu.gd" id="1_20ict"]
-[ext_resource type="Texture2D" uid="uid://b4dyd17uapsxr" path="res://assets/UI/Background/Onboarding.png" id="2_gxot8"]
+[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/Onboarding2.png" id="2_20ict"]
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 2
@@ -18,5 +18,5 @@ offset_right = -16.0
 offset_bottom = -11.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_gxot8")
+texture = ExtResource("2_20ict")
 expand_mode = 1

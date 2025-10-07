@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ShaShaSha"
-run/main_scene="uid://c28lu4w14ia1x"
+run/main_scene="uid://oobqc5xxn0o8"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
