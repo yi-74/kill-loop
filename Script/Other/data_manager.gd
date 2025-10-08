@@ -14,6 +14,21 @@ func _ready() -> void:
 
 
 
+# --- 【新增】一个专门用于调试的、重置所有数据的函数 ---
+func debug_reset_all_data():
+	print("--- DEBUG: 正在执行完全重置 ---")
+	
+	# a) 重置所有变量
+	high_score = 0
+	has_played_before = false
+	
+	# b) 将这些重置后的“空”数据，覆盖保存到存档文件中
+	save_data()
+	
+	print("--- DEBUG: 所有数据已重置并保存。---")
+
+
+
 func load_data() -> void:
 	if FileAccess.file_exists(SAVE_FILE_PATH):
 		var file = FileAccess.open(SAVE_FILE_PATH, FileAccess.READ)

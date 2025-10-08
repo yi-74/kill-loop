@@ -51,6 +51,16 @@ func _input(event: InputEvent) -> void:
 		# 调用我们自己写的切换函数
 		toggle_fullscreen_mode()
 
+	# --- 【新增】监听“一键重置”的热键 ---
+	if Input.is_action_just_pressed("debug_reset"):
+		# a) 调用 DataManager 的重置函数
+		DataManager.debug_reset_all_data()
+		
+		# b) 【核心】立即重新加载当前场景
+		#    这能确保所有 UI 和游戏状态，都立刻从重置后的新数据中读取
+		get_tree().reload_current_scene()
+		print("--- DEBUG: 场景已重载以应用重置。---")
+
 
 
 func toggle_pause_menu():
