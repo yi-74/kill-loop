@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://oobqc5xxn0o8"]
+[gd_scene load_steps=50 format=3 uid="uid://oobqc5xxn0o8"]
 
 [ext_resource type="Script" uid="uid://8e456vg5levh" path="res://Script/UI/main_menu.gd" id="1_pvidh"]
 [ext_resource type="Texture2D" uid="uid://dk7pxsghmij81" path="res://assets/UI/kill/kill_00000.png" id="3_6pjjg"]
@@ -47,6 +47,7 @@
 [ext_resource type="Texture2D" uid="uid://ctawj78ictv0f" path="res://assets/UI/kill/kill_00042.png" id="45_gynaq"]
 [ext_resource type="Texture2D" uid="uid://hltd06s8l2rs" path="res://assets/UI/kill/kill_00043.png" id="46_oy56h"]
 [ext_resource type="Texture2D" uid="uid://boqsx0m5044bg" path="res://assets/UI/kill/kill_00044.png" id="47_5v5ex"]
+[ext_resource type="PackedScene" uid="uid://c3rlf8mfiwqdj" path="res://game/effect/background_effects.tscn" id="48_jwsrh"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_daaac"]
 animations = [{
@@ -212,6 +213,7 @@ alignment = 1
 [node name="StartButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
+action_mode = 0
 text = "开始游戏"
 flat = true
 
@@ -249,3 +251,6 @@ sprite_frames = SubResource("SpriteFrames_daaac")
 autoplay = "default"
 frame = 36
 frame_progress = 0.07172376
+
+[node name="BackgroundEffects" parent="." instance=ExtResource("48_jwsrh")]
+position = Vector2(960, 540)

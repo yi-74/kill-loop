@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene load_steps=24 format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -12,7 +12,6 @@
 [ext_resource type="Shader" uid="uid://dkl8x5ieduiaj" path="res://Script/shader/DeathInversionEffect.gdshader" id="7_ql5uw"]
 [ext_resource type="Script" uid="uid://5wog4f2s2u3a" path="res://Script/Other/enemy_spawner.gd" id="8_5t6br"]
 [ext_resource type="PackedScene" uid="uid://c0oq63xhnn030" path="res://game/effect/audio_manager.tscn" id="8_e0lk5"]
-[ext_resource type="Shader" uid="uid://bcime6o6emfsa" path="res://Script/shader/CanvasLayer.gdshader" id="10_5t6br"]
 [ext_resource type="Script" uid="uid://d38r084prjvtp" path="res://Script/Other/bounce_counter_manager.gd" id="11_b6ym3"]
 [ext_resource type="AudioStream" uid="uid://djvlwl12diixm" path="res://assets/Audio/Sound Effects/bounce.wav" id="11_bbtn3"]
 [ext_resource type="PackedScene" uid="uid://dh8ve25xxrm82" path="res://game/UI/pause_menu.tscn" id="15_cne5c"]
@@ -58,19 +57,6 @@ size = Vector2(1430, 694.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
 shader = ExtResource("7_ql5uw")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5t6br"]
-shader = ExtResource("10_5t6br")
-shader_parameter/scanline_intensity = 0.05
-shader_parameter/barrel_distortion = 0.1
-shader_parameter/chromatic_abberation = 0.002
-shader_parameter/noise_intensity = 0.2
-shader_parameter/scanline_count = 420.0
-shader_parameter/slow_mo_mix = 0.0
-shader_parameter/saturation = 1.0
-shader_parameter/contrast = 1.2
-shader_parameter/vignette_intensity = 0.0
-shader_parameter/vignette_smoothness = 0.1
 
 [node name="Main_tscn" type="Node"]
 process_mode = 3
@@ -171,11 +157,4 @@ visible = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 128
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_5t6br")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+visible = false

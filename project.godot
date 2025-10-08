@@ -19,6 +19,7 @@ config/icon="res://assets/icon.svg"
 
 DataManager="*res://Script/Other/data_manager.gd"
 MusicManager="*res://game/music/music_manager.tscn"
+GlobalEffects="*res://game/effect/global_effects.tscn"
 
 [display]
 

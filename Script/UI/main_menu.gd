@@ -5,6 +5,7 @@ extends Control
 @onready var fullscreen_button: Button = $VBoxContainer/FullscreenButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton
 @onready var tutorial_image: TextureRect = $TutorialImage
+@onready var background_effects: AnimatedSprite2D = $BackgroundEffects
 
 # --- 内部状态 ---
 var is_showing_tutorial: bool = false
@@ -45,11 +46,30 @@ func on_quit_button_pressed():
 
 # --- 当教程图片被点击时 ---
 func on_tutorial_image_clicked(event: InputEvent):
-	# 只要有任何鼠标点击事件，就关闭教程并开始游戏
 	if event is InputEventMouseButton and event.is_pressed():
+		# 【核心】让教程图片的点击，也走带有转场动画的流程
 		start_game()
 
 # --- 开始游戏的统一函数 ---
 func start_game():
-	# 切换到您的主游戏场景
+	# 安全检查
+	if not is_instance_valid(background_effects):
+		# 如果找不到特效，就直接切换场景
+		get_tree().change_scene_to_file("res://Scene/Main.tscn.tscn")
+		return
+
+	# --- 【核心】转场动画逻辑 ---
+	
+	# 1. 禁用所有按钮，防止玩家在转场时重复点击
+	start_button.disabled = true
+	fullscreen_button.disabled = true
+	quit_button.disabled = true
+	
+	# 2. 播放“连击中断”动画
+	background_effects.play("combo_lost") # 我们假设这个动画名叫 "combo_lost"
+	
+	# 3. 等待这个动画播放【完毕】
+	await background_effects.animation_finished
+	
+	# 4. 动画播放完毕后，再执行场景切换
 	get_tree().change_scene_to_file("res://Scene/Main.tscn.tscn")

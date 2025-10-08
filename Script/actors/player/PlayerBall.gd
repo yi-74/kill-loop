@@ -36,7 +36,7 @@ signal energy_bar_3_filled()
 @onready var death_effect: ColorRect = get_node("/root/Main_tscn/DeathInversionEffect")
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 @onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
-@onready var crt_effect: ColorRect = get_node("/root/Main_tscn/CanvasLayer/ColorRect") # 获取 CRT 特效
+@onready var crt_effect: ColorRect = get_node("/root/GlobalEffects/ColorRect") # 获取 CRT 特效
 
 var is_dead: bool = false
 var is_aiming: bool = false
