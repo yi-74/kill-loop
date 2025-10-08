@@ -126,6 +126,7 @@ script = ExtResource("11_b6ym3")
 stream = ExtResource("11_bbtn3")
 
 [node name="EnemySpawner" type="Node" parent="."]
+process_mode = 1
 script = ExtResource("8_5t6br")
 spawn_zone_path = NodePath("../SpawnZone")
 

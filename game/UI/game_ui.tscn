@@ -130,6 +130,7 @@ animations = [{
 }]
 
 [node name="GameUI" type="Control"]
+process_mode = 1
 layout_mode = 3
 anchors_preset = 0
 offset_right = 143.0

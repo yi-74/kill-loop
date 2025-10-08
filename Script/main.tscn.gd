@@ -19,6 +19,7 @@ func _ready() -> void:
 	if MusicManager:
 		MusicManager.play()
 	reset_crt_shader_parameters()
+		
 	# 连接信号！
 	# player 的 speed_updated 信号，连接到 game_ui 的 update_speed_label 函数
 	player.speed_updated.connect(game_ui.update_speed_label)
@@ -41,48 +42,21 @@ func _ready() -> void:
 
 
 
-func _input(event: InputEvent) -> void:
-	# --- 1. 处理暂停菜单 (这个逻辑您已经有了) ---
+func _input(event: InputEvent):
 	if Input.is_action_just_pressed("ui_cancel"):
-		toggle_pause_menu()
-		
-	# --- 2. 【新增】处理切换全屏 ---
-	if Input.is_action_just_pressed("toggle_fullscreen"):
-		# 调用我们自己写的切换函数
-		toggle_fullscreen_mode()
+		get_tree().paused = not get_tree().paused
 
-	# --- 【新增】监听“一键重置”的热键 ---
-	if Input.is_action_just_pressed("debug_reset"):
-		# a) 调用 DataManager 的重置函数
-		DataManager.debug_reset_all_data()
-		
-		# b) 【核心】立即重新加载当前场景
-		#    这能确保所有 UI 和游戏状态，都立刻从重置后的新数据中读取
-		get_tree().reload_current_scene()
-		print("--- DEBUG: 场景已重载以应用重置。---")
+func _process(delta: float):
+	pause_menu.visible = get_tree().paused
 
 
 
 func toggle_pause_menu():
-	# 我们直接反转自己的暂停状态
-	is_paused = not is_paused
+	# 1. 直接反转游戏树的暂停状态
+	get_tree().paused = not get_tree().paused
 	
-	if is_paused:
-		# --- 进入暂停 ---
-		
-		# 将时间流速设为 0，冻结所有普通节点
-		Engine.time_scale = 0.0
-		
-		# 显示菜单
-		pause_menu.show()
-	else:
-		# --- 恢复游戏 ---
-		
-		# 将时间流速恢复为 1.0 (正常速度)
-		Engine.time_scale = 1.0
-		
-		# 隐藏菜单
-		pause_menu.hide()
+	# 2. 根据新的暂停状态，来决定是否显示菜单
+	pause_menu.visible = get_tree().paused
 
 
 
