@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b5q0rjiwx5f1y" path="res://assets/SpecialEffects/SpawnMarker.png" id="2_v6kvi"]
 
 [node name="SpawnMarker" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_v6kvi")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

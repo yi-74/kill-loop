@@ -2,6 +2,7 @@ extends Node
 
 var time_scale_before_pause: float = 1.0
 var is_paused: bool = false
+var is_death_pause_active: bool = false
 
 # 用 @onready 获取节点引用
 @onready var player: RigidBody2D = $PlayerBall
@@ -39,6 +40,7 @@ func _ready() -> void:
 	player.wall_bounced.connect(bounce_counter_manager.on_player_wall_bounced)
 	player.enemy_killed.connect(bounce_counter_manager.on_player_killed_enemy)
 	player.combo_lost.connect(bounce_counter_manager.on_player_combo_lost)
+	player.player_died.connect(on_player_died)
 
 
 
@@ -47,7 +49,10 @@ func _input(event: InputEvent):
 		get_tree().paused = not get_tree().paused
 
 func _process(delta: float):
-	pause_menu.visible = get_tree().paused
+	# --- 【核心修正】在这里加入状态检查 ---
+	# 只有在【不是】死亡暂停的情况下，才根据 paused 状态显示菜单
+	if not is_death_pause_active:
+		pause_menu.visible = get_tree().paused
 
 
 
@@ -109,6 +114,12 @@ func toggle_fullscreen_mode():
 		get_window().mode = Window.MODE_FULLSCREEN
 		print("已进入全屏。")
 
+
+
+# --- 【新增】一个专门接收死亡信号的函数 ---
+func on_player_died():
+	# 当收到玩家死亡的信号时，立刻“上锁”
+	is_death_pause_active = true
 
 
 # --- 一个专门负责重置 CRT 着色器参数的函数 ---

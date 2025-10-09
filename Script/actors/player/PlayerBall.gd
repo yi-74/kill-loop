@@ -10,6 +10,7 @@ signal enemy_killed()
 signal energy_bar_1_filled()
 signal energy_bar_2_filled()
 signal energy_bar_3_filled()
+signal player_died()
 
 @export_group("Launch Power", "launch_")
 @export var launch_multiplier: float = 8.0 #发射力度
@@ -401,6 +402,8 @@ func _player_death_sequence():
 		return
 	is_dead = true
 	
+	# --- 【新增】在执行任何暂停操作前，先广播“我死了”的信号 ---
+	player_died.emit()
 		# --- 【核心修改】在这里暂停音乐 ---
 	# 我们直接通过全局名称访问 MusicManager
 	if MusicManager: # 安全检查
