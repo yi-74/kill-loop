@@ -19,17 +19,17 @@ func _ready() -> void:
 	# 游戏开始时，让教程图片可以接收输入
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
 
-# --- 按下“开始游戏”按钮 ---
+# --- 按下“开始游戏”按钮 (V2.0 - 基于分数判断) ---
 func on_start_button_pressed():
-	# 检查 DataManager 中是否已经有“玩过”的记录
-	if not DataManager.has_played_before:
-		# 如果是第一次玩，就显示教程
+	# --- 【核心修正】我们现在直接检查 DataManager 里的最高分 ---
+	if DataManager.high_score < 1000:
+		# 如果最高分小于 1000，就认为ta是“新玩家”，显示教程
+		print("MainMenu: 最高分低于1000，判定为新玩家，显示教程。")
 		tutorial_image.show()
-		is_showing_tutorial = true
-		# 并且在 DataManager 中记录下“已经玩过了”
-		DataManager.set_played_before()
+		# is_showing_tutorial = true # 这个状态变量可能不再需要，但可以保留
 	else:
-		# 如果不是第一次玩，就直接开始游戏
+		# 如果最高分大于等于 1000，就直接开始游戏
+		print("MainMenu: 最高分已达到，判定为老玩家，直接开始游戏。")
 		start_game()
 
 # --- 按下“设置全屏”按钮 ---

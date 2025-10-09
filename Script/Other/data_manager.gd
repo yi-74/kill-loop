@@ -14,18 +14,20 @@ func _ready() -> void:
 
 
 
-# --- 【新增】一个专门用于调试的、重置所有数据的函数 ---
+# --- 【新】一个专门用于调试的、只重置分数的函数 ---
 func debug_reset_all_data():
-	print("--- DEBUG: 正在执行完全重置 ---")
+	print("--- DEBUG: 正在执行分数重置 ---")
 	
-	# a) 重置所有变量
+	# a) 只重置分数
 	high_score = 0
-	has_played_before = false
 	
-	# b) 将这些重置后的“空”数据，覆盖保存到存档文件中
+	# b) 我们不再需要 has_played_before 这个变量了
+	#    可以从脚本顶部、load_data 和 save_data 中都删除它
+	
+	# c) 将重置后的分数，保存到存档文件中
 	save_data()
 	
-	print("--- DEBUG: 所有数据已重置并保存。---")
+	print("--- DEBUG: 分数已重置为 0 并保存。---")
 
 
 
