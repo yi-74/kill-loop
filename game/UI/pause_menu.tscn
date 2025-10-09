@@ -20,7 +20,7 @@ offset_bottom = 148.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ResumeButton" type="Button" parent="VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
@@ -28,7 +28,7 @@ action_mode = 0
 text = "继续游戏"
 flat = true
 
-[node name="TutorialButton" type="Button" parent="VBoxContainer"]
+[node name="TutorialButton" type="Button" parent="VBoxContainer" groups=["bottons", "buttons"]]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
@@ -36,7 +36,7 @@ action_mode = 0
 text = "教程"
 flat = true
 
-[node name="FullscreenButton" type="Button" parent="VBoxContainer"]
+[node name="FullscreenButton" type="Button" parent="VBoxContainer" groups=["bottons", "buttons"]]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
@@ -44,7 +44,7 @@ action_mode = 0
 text = "全屏（快捷键1）"
 flat = true
 
-[node name="MainMenuButton" type="Button" parent="VBoxContainer"]
+[node name="MainMenuButton" type="Button" parent="VBoxContainer" groups=["bottons", "buttons"]]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 45

@@ -210,21 +210,21 @@ offset_left = -95.0
 offset_top = 191.0
 alignment = 1
 
-[node name="StartButton" type="Button" parent="VBoxContainer"]
+[node name="StartButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
 action_mode = 0
 text = "开始游戏"
 flat = true
 
-[node name="FullscreenButton" type="Button" parent="VBoxContainer"]
+[node name="FullscreenButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
 action_mode = 0
 text = "全屏"
 flat = true
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
+[node name="QuitButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
 action_mode = 0
