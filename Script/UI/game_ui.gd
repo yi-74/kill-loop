@@ -21,7 +21,6 @@ var is_high_score_broken: bool = false
 var displayed_score: float = 0.0
 var combo_label_initial_scale: Vector2 = Vector2.ONE
 var combo_tween: Tween
-var combo_color_tween: Tween # 用于控制连击中断时的颜色动画
 
 
 func _ready():
@@ -198,32 +197,5 @@ func play_combo_reset_animation():
 func on_combo_lost():
 	# 播放 "Combo Lost" 动画
 	#combo_lost_anim.play("show_and_fade")
-	
-	# 播放连击中断的颜色高亮效果
-	play_combo_lost_color_effect()
 	return
-
-
-# --- 新增：播放连击中断时标签颜色变化的动画 ---
-func play_combo_lost_color_effect():
-	# 安全检查，确保 ComboLabel 存在
-	if not is_instance_valid(combo_label):
-		return
-
-	# 如果上一个颜色动画还在播放，先停止它，防止动画冲突
-	if is_instance_valid(combo_color_tween):
-		combo_color_tween.kill()
-
-	# 创建一个新的 Tween 动画实例
-	combo_color_tween = create_tween()
-	# 设置动画曲线，使其末尾有缓动效果，看起来更自然
-	combo_color_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	
-	# 步骤1: 立即将标签的颜色“混合模式”设置为红色。
-	# self_modulate 会将节点自身的颜色与这个颜色相乘，所以设为红色就会变红。
-	combo_label.self_modulate = Color.RED
-	
-	# 步骤2: 创建动画，在 1 秒内，将颜色混合模式平滑地恢复为白色。
-	# Color.WHITE (即 Color(1,1,1,1)) 在这里的含义是“不进行任何颜色混合”，即恢复原始颜色。
-	# 这个动画会独立运行，即使 combo 数值再次变化，颜色也会在1秒后恢复。
-	combo_color_tween.tween_property(combo_label, "self_modulate", Color.WHITE, 1.0)
