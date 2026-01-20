@@ -1,8 +1,10 @@
 extends Control
 
+const SettingsMenuScene = preload("res://game/UI/settings_menu.tscn")
+
 # --- 节点引用 ---
 @onready var start_button: Button = $VBoxContainer/StartButton
-@onready var fullscreen_button: Button = $VBoxContainer/FullscreenButton
+@onready var settings_button: Button = $VBoxContainer/SettingsButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton
 @onready var tutorial_image: TextureRect = $TutorialImage
 @onready var background_effects: AnimatedSprite2D = $BackgroundEffects
@@ -10,14 +12,16 @@ extends Control
 # --- 内部状态 ---
 var is_showing_tutorial: bool = false
 
+
 func _ready() -> void:
 	# --- 连接所有按钮的 "pressed" 信号 ---
 	start_button.pressed.connect(on_start_button_pressed)
-	fullscreen_button.pressed.connect(on_fullscreen_button_pressed)
+	settings_button.pressed.connect(on_settings_button_pressed)
 	quit_button.pressed.connect(on_quit_button_pressed)
 	
 	# 游戏开始时，让教程图片可以接收输入
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
+
 
 # --- 按下“开始游戏”按钮 (V2.0 - 基于分数判断) ---
 func on_start_button_pressed():
@@ -32,13 +36,15 @@ func on_start_button_pressed():
 		print("MainMenu: 最高分已达到，判定为老玩家，直接开始游戏。")
 		start_game()
 
-# --- 按下“设置全屏”按钮 ---
-func on_fullscreen_button_pressed():
-	var current_mode = DisplayServer.window_get_mode()
-	if current_mode == DisplayServer.WINDOW_MODE_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+
+# --- 【新增】一个全新的函数，用来打开设置菜单 ---
+func on_settings_button_pressed():
+	# --- 【核心修正】在打开菜单前，先暂停游戏 ---
+	get_tree().paused = true
+	
+	var settings_menu_instance = SettingsMenuScene.instantiate()
+	add_child(settings_menu_instance)
+
 
 # --- 按下“退出游戏”按钮 ---
 func on_quit_button_pressed():
@@ -62,7 +68,7 @@ func start_game():
 	
 	# 1. 禁用所有按钮，防止玩家在转场时重复点击
 	start_button.disabled = true
-	fullscreen_button.disabled = true
+	settings_button.disabled = true
 	quit_button.disabled = true
 	
 	# 2. 播放“连击中断”动画

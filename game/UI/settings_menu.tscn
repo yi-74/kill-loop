@@ -1,0 +1,164 @@
+[gd_scene load_steps=2 format=3 uid="uid://db3cb5ikpel7g"]
+
+[ext_resource type="Script" uid="uid://cjhj6mdn7s2eq" path="res://Script/UI/settings_menu.gd" id="1_h1nl5"]
+
+[node name="SettingsMenu" type="Control"]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h1nl5")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+show_behind_parent = true
+layout_mode = 1
+offset_left = -1.0
+offset_top = -8.0
+offset_right = 1924.0
+offset_bottom = 1086.0
+color = Color(0.103743605, 0.103743516, 0.103743516, 0.68235296)
+
+[node name="BackButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -273.5
+offset_right = 49.0
+offset_bottom = -202.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+text = "返回"
+flat = true
+icon_alignment = 1
+
+[node name="ChineseButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -79.0
+offset_right = 172.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+action_mode = 0
+text = "中文"
+flat = true
+
+[node name="EnglishButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -172.0
+offset_top = -79.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+action_mode = 0
+text = "English"
+flat = true
+
+[node name="FullscreenButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -190.5
+offset_right = 49.0
+offset_bottom = -119.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+action_mode = 0
+text = "全屏"
+flat = true
+
+[node name="MusicText" type="Label" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = 49.5
+offset_right = 90.0
+offset_bottom = 112.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+text = "音乐音量"
+
+[node name="MusicSlider" type="HSlider" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -243.0
+offset_top = 113.0
+offset_right = 252.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SFXText" type="Label" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = 181.5
+offset_right = 90.0
+offset_bottom = 244.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+text = "音效音量"
+
+[node name="SFXSlider" type="HSlider" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -243.0
+offset_top = 249.0
+offset_right = 252.0
+offset_bottom = 311.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

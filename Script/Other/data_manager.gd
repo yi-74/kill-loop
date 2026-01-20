@@ -6,6 +6,31 @@ const SAVE_FILE_PATH = "user://savegame.dat"
 var high_score: int = 0
 # --- 【新增】记录玩家是否玩过的变量 ---
 var has_played_before: bool = false
+var settings: Dictionary = {
+	"fullscreen": false,
+	"language": "zh_CN",
+	"music_volume": 0.0,
+	"sfx_volume": 0.0
+}
+
+# 在 load_data() 中，加载 settings
+# 在 save_data() 中，保存 settings
+
+# --- 新增应用设置的函数 ---
+func apply_all_settings():
+	# ... (全屏和语言的逻辑不变) ...
+	
+	# --- 【核心修正】应用音量到不同的总线 ---
+	# linear_to_db() 是一个内置函数，能把 0-1 的线性值，转换为 -80 到 0 的分贝(db)值
+	# AudioServer.get_bus_index() 用来通过名字找到总线的索引
+	
+	# 设置音乐总线的音量
+	var music_bus_idx = AudioServer.get_bus_index("Music")
+	AudioServer.set_bus_volume_db(music_bus_idx, linear_to_db(settings.music_volume / 100.0))
+	
+	# 设置音效总线的音量
+	var sfx_bus_idx = AudioServer.get_bus_index("SFX")
+	AudioServer.set_bus_volume_db(sfx_bus_idx, linear_to_db(settings.sfx_volume / 100.0))
 
 
 

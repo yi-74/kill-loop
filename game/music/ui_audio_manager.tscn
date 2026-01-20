@@ -10,6 +10,8 @@ script = ExtResource("1_04u2m")
 
 [node name="HoverPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_a2vs6")
+bus = &"SFX"
 
 [node name="ClickPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_04u2m")
+bus = &"SFX"

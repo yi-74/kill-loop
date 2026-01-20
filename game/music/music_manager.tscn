@@ -5,4 +5,5 @@
 
 [node name="MusicManager" type="AudioStreamPlayer"]
 stream = ExtResource("1_jlc8f")
+bus = &"Music"
 script = ExtResource("2_etxhc")

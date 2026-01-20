@@ -26,7 +26,7 @@ var combo_color_tween: Tween # 用于控制连击中断时的颜色动画
 
 func _ready():
 	# 游戏开始时，显示历史最高分
-	high_score_label.text = "HI: " + str(DataManager.high_score)
+	high_score_label.text = "HIGH: " + str(DataManager.high_score)
 	return
 	
 	if is_instance_valid(combo_label):
@@ -66,7 +66,7 @@ func on_score_updated(new_score: int):
 
 	# 3. 获取最新的历史最高分，并更新显示 (这部分逻辑保持不变)
 	var current_high_score = DataManager.high_score
-	high_score_label.text = "HI: " + str(current_high_score)
+	high_score_label.text = "HIGH: " + str(current_high_score)
 	
 	# 4. 根据【最终分数】来决定颜色 (而不是中间值)
 	if new_score >= current_high_score:

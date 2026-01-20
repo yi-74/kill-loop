@@ -217,11 +217,11 @@ action_mode = 0
 text = "开始游戏"
 flat = true
 
-[node name="FullscreenButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
+[node name="SettingsButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 theme_override_font_sizes/font_size = 45
 action_mode = 0
-text = "全屏"
+text = "设置"
 flat = true
 
 [node name="QuitButton" type="Button" parent="VBoxContainer" groups=["buttons"]]
