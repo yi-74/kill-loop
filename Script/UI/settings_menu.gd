@@ -4,13 +4,15 @@ extends Control
 # --- 我们依然使用唯一名称来获取节点，因为这最稳健 ---
 @onready var back_button: Button = %BackButton
 @onready var fullscreen_button: Button = %FullscreenButton
+@onready var tutorial_button: Button = %TutorialButton
 @onready var english_button: Button = %EnglishButton
 @onready var chinese_button: Button = %ChineseButton
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SFXSlider
+@onready var tutorial_image: TextureRect = %TutorialImage
 
 
-func _ready():
+func _ready() -> void:
 	# 1. 初始化所有 UI 的状态
 	fullscreen_button.button_pressed = DataManager.settings.fullscreen
 	music_slider.value = DataManager.settings.music_volume
@@ -19,12 +21,21 @@ func _ready():
 	
 	# 2. 连接所有信号
 	back_button.pressed.connect(queue_free) # 最简单的返回，就是销毁自己
+	tutorial_button.pressed.connect(on_tutorial_button_pressed)
+	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
 	fullscreen_button.toggled.connect(on_fullscreen_button_pressed)
 	english_button.pressed.connect(func(): set_language("en"))
 	chinese_button.pressed.connect(func(): set_language("zh_CN"))
 	music_slider.value_changed.connect(on_music_volume_changed)
 	sfx_slider.value_changed.connect(on_sfx_volume_changed)
 
+
+func on_tutorial_button_pressed():
+	tutorial_image.show()
+	
+func on_tutorial_image_clicked(event: InputEvent):
+	if event is InputEventMouseButton and event.is_pressed():
+		tutorial_image.hide()
 
 func on_fullscreen_button_pressed():
 	# 全屏的逻辑可以自己处理，也可以调用 Main 的，自己处理更简单
@@ -41,7 +52,6 @@ func set_language(lang_code: String):
 	DataManager.save_data()
 	# 切换语言后，可能需要重启游戏或重新加载场景才能让所有文本生效
 	
-# 在 settings_menu.gd 的最下方
 
 # --- 【补全】当“音乐音量”滑块的值改变时，这个函数会被调用 ---
 func on_music_volume_changed(value: float):

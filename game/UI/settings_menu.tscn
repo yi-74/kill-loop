@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://db3cb5ikpel7g"]
+[gd_scene load_steps=3 format=3 uid="uid://db3cb5ikpel7g"]
 
 [ext_resource type="Script" uid="uid://cjhj6mdn7s2eq" path="res://Script/UI/settings_menu.gd" id="1_h1nl5"]
+[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/Onboarding2.png" id="2_vuhnc"]
 
 [node name="SettingsMenu" type="Control"]
 process_mode = 2
@@ -16,10 +17,10 @@ script = ExtResource("1_h1nl5")
 show_behind_parent = true
 layout_mode = 1
 offset_left = -1.0
-offset_top = -8.0
+offset_top = -9.0
 offset_right = 1924.0
-offset_bottom = 1086.0
-color = Color(0.103743605, 0.103743516, 0.103743516, 0.68235296)
+offset_bottom = 1085.0
+color = Color(0.060079634, 0.06415287, 0.12077343, 0.68235296)
 
 [node name="BackButton" type="Button" parent="ColorRect"]
 unique_name_in_owner = true
@@ -30,15 +31,46 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -49.0
-offset_top = -273.5
+offset_top = -311.5
 offset_right = 49.0
-offset_bottom = -202.5
+offset_bottom = -240.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 45
 text = "返回"
 flat = true
 icon_alignment = 1
+
+[node name="TutorialButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 913.5
+offset_top = 309.5
+offset_right = 1011.5
+offset_bottom = 380.5
+theme_override_font_sizes/font_size = 45
+action_mode = 0
+text = "教程"
+flat = true
+
+[node name="FullscreenButton" type="Button" parent="ColorRect"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.0
+offset_top = -164.5
+offset_right = 49.0
+offset_bottom = -93.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 45
+action_mode = 0
+text = "全屏"
+flat = true
 
 [node name="ChineseButton" type="Button" parent="ColorRect"]
 unique_name_in_owner = true
@@ -76,25 +108,6 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 45
 action_mode = 0
 text = "English"
-flat = true
-
-[node name="FullscreenButton" type="Button" parent="ColorRect"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -49.0
-offset_top = -190.5
-offset_right = 49.0
-offset_bottom = -119.5
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 45
-action_mode = 0
-text = "全屏"
 flat = true
 
 [node name="MusicText" type="Label" parent="ColorRect"]
@@ -161,4 +174,19 @@ offset_bottom = 311.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="TutorialImage" type="TextureRect" parent="ColorRect"]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 24.0
+offset_right = -15.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_vuhnc")
+expand_mode = 1
