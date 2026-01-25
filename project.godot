@@ -63,6 +63,10 @@ toggle_fullscreen={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://Script/language/language.en.translation", "res://Script/language/language.zh.translation")
+
 [layer_names]
 
 2d_physics/layer_1="player"
