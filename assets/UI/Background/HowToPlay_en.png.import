@@ -2,22 +2,24 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4dyd17uapsxr"
-path="res://.godot/imported/Onboarding.png-481363c41d949f14eb5d5813878a8ba3.ctex"
+uid="uid://1lvsj3tqy0fd"
+path="res://.godot/imported/HowToPlay_en.png-938da336847720535f70ba440fee6627.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/UI/Background/Onboarding.png"
-dest_files=["res://.godot/imported/Onboarding.png-481363c41d949f14eb5d5813878a8ba3.ctex"]
+source_file="res://assets/UI/Background/HowToPlay_en.png"
+dest_files=["res://.godot/imported/HowToPlay_en.png-938da336847720535f70ba440fee6627.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
@@ -25,6 +27,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

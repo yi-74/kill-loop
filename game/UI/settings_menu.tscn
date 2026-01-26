@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://db3cb5ikpel7g"]
 
 [ext_resource type="Script" uid="uid://cjhj6mdn7s2eq" path="res://Script/UI/settings_menu.gd" id="1_h1nl5"]
-[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/Onboarding2.png" id="2_vuhnc"]
+[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/HowToPlay_zh.png" id="2_vuhnc"]
 
 [node name="SettingsMenu" type="Control"]
 process_mode = 2

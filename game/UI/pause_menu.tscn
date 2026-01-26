@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh8ve25xxrm82"]
 
 [ext_resource type="Script" uid="uid://dp1y1fgb0548b" path="res://Script/UI/pause_menu.gd" id="1_20ict"]
-[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/Onboarding2.png" id="2_20ict"]
+[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/HowToPlay_zh.png" id="2_20ict"]
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 2

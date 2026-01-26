@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c8rabwv6ngmkp"
-path="res://.godot/imported/Onboarding2.png-36aa8f3f8a3d4e047afd7f8ecd1f6773.ctex"
+path="res://.godot/imported/HowToPlay_zh.png-25023108de338f1ba6ca0d41ed9e9f0f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/UI/Background/Onboarding2.png"
-dest_files=["res://.godot/imported/Onboarding2.png-36aa8f3f8a3d4e047afd7f8ecd1f6773.ctex"]
+source_file="res://assets/UI/Background/HowToPlay_zh.png"
+dest_files=["res://.godot/imported/HowToPlay_zh.png-25023108de338f1ba6ca0d41ed9e9f0f.ctex"]
 
 [params]
 

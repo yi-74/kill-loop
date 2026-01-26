@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://8e456vg5levh" path="res://Script/UI/main_menu.gd" id="1_pvidh"]
 [ext_resource type="Texture2D" uid="uid://dk7pxsghmij81" path="res://assets/UI/kill/kill_00000.png" id="3_6pjjg"]
 [ext_resource type="Texture2D" uid="uid://bcdctbnx2dtne" path="res://assets/UI/kill/kill_00001.png" id="4_jwsrh"]
-[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/Onboarding2.png" id="5_ejkra"]
+[ext_resource type="Texture2D" uid="uid://c8rabwv6ngmkp" path="res://assets/UI/Background/HowToPlay_zh.png" id="5_ejkra"]
 [ext_resource type="Texture2D" uid="uid://dm5pcyojmsxxo" path="res://assets/UI/kill/kill_00002.png" id="5_tbbh3"]
 [ext_resource type="Texture2D" uid="uid://be7dhgtpv4ifo" path="res://assets/UI/kill/kill_00003.png" id="6_eds0v"]
 [ext_resource type="Texture2D" uid="uid://t74mlbxdro3d" path="res://assets/UI/kill/kill_00004.png" id="7_42v0b"]
