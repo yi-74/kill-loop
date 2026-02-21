@@ -15,9 +15,11 @@ signal score_updated(new_score: int)
 @onready var spawn_timer: Timer = $SpawnTimer
 @onready var spawn_zone: Area2D = get_node(spawn_zone_path)
 @onready var spawn_zone_shape: CollisionShape2D = spawn_zone.get_child(0)
+@onready var player: RigidBody2D = get_node("/root/Main_tscn/PlayerBall") # 使用绝对路径$
 
 # --- 内部变量 ---
 var current_score: int = 0
+var kills_this_run: int = 0
 var game_time: float = 0.0
 var wave_data: Array = []
 var current_wave: Dictionary
@@ -43,7 +45,13 @@ func _ready() -> void:
 
 	# 3. 初始化第一波
 	_update_wave()
-
+	
+	# 【新增】监听玩家的死亡信号
+	if is_instance_valid(player):
+		player.player_died.connect(on_player_died)
+	
+	# 【新增】游戏开始时，重置本局击杀数
+	kills_this_run = 0
 
 
 func _process(delta: float) -> void:
@@ -71,6 +79,11 @@ func add_score(base_score: int, combo: int, position: Vector2):
 	# 2. 更新当前总分
 	var old_score = current_score
 	current_score += final_score
+	# --- 【新增】在这里，累加本局击杀数 ---
+	kills_this_run += 1
+	# --- 【新增】在这里，检查并更新“单局最高连击” ---
+	if combo > DataManager.max_combo_per_run:
+		DataManager.max_combo_per_run = combo
 	# 3. 检查是否打破最高分
 	if current_score > DataManager.high_score and old_score <= DataManager.high_score:
 		print("打破最高分记录！")
@@ -244,3 +257,26 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 		# 3. 【可选】为了让 UI 立刻刷新，我们可以重新加载整个游戏
 		get_tree().reload_current_scene()
+
+
+
+# --- 【新增】一个全新的函数，在玩家死亡时被调用 ---
+func on_player_died():
+	print("GameManager: 玩家已死亡，正在结算本局数据...")
+	
+	# 1. 将本局存活时间，累加到历史总时长
+	DataManager.total_play_time += game_time
+	
+	# 2. 将本局击杀数，累加到历史总击杀
+	DataManager.total_kills += kills_this_run
+	
+	# 3. 检查并更新“单局最高击杀”
+	if kills_this_run > DataManager.max_kills_per_run:
+		DataManager.max_kills_per_run = kills_this_run
+	# --- 【新增】检查并更新“单局最高存活时间” ---
+	# game_time 这个变量，本身就记录了本局的存活时间
+	if game_time > DataManager.max_survival_time:
+		DataManager.max_survival_time = game_time
+		
+	# 4. 最终，保存所有更新后的数据
+	DataManager.save_data()

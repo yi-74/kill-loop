@@ -129,6 +129,8 @@ stream = ExtResource("11_bbtn3")
 process_mode = 1
 script = ExtResource("8_5t6br")
 spawn_zone_path = NodePath("../SpawnZone")
+min_spawn_distance = null
+spawn_prep_time = null
 
 [node name="SpawnTimer" type="Timer" parent="EnemySpawner"]
 
@@ -139,8 +141,6 @@ position = Vector2(960, 540)
 shape = SubResource("RectangleShape2D_pff3i")
 
 [node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
-offset_right = 0.0
-offset_bottom = 0.0
 
 [node name="DeathInversionEffect" type="ColorRect" parent="."]
 visible = false

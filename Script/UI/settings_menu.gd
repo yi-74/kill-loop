@@ -10,6 +10,7 @@ extends Control
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SFXSlider
 @onready var tutorial_image: TextureRect = %TutorialImage
+@onready var background_animation: AnimatedSprite2D = $BackgroundAnimation
 
 
 func _ready() -> void:
@@ -28,6 +29,10 @@ func _ready() -> void:
 	chinese_button.pressed.connect(func(): set_language("zh_CN"))
 	music_slider.value_changed.connect(on_music_volume_changed)
 	sfx_slider.value_changed.connect(on_sfx_volume_changed)
+
+	# --- 【新增】在所有数据都准备好后，开始播放背景动画 ---
+	if is_instance_valid(background_animation):
+		background_animation.play("default")
 
 
 func on_tutorial_button_pressed():

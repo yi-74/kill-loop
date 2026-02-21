@@ -13,8 +13,13 @@ var settings: Dictionary = {
 	"sfx_volume": 0.0
 }
 
-# 在 load_data() 中，加载 settings
-# 在 save_data() 中，保存 settings
+# --- 【新增】统计数据 ---
+var total_play_time: float = 0.0     # 历史总游戏时长 (秒)
+var total_kills: int = 0             # 历史总击杀数
+var max_kills_per_run: int = 0       # 单局最高击杀数
+var max_combo_per_run: int = 0       # 单局最高连击数 (新增，这个很有趣！)
+var max_survival_time: float = 0.0   # 单局最高存活时间
+
 
 # --- 新增应用设置的函数 ---
 func apply_all_settings():
@@ -43,13 +48,9 @@ func _ready() -> void:
 func debug_reset_all_data():
 	print("--- DEBUG: 正在执行分数重置 ---")
 	
-	# a) 只重置分数
-	high_score = 0
-	
-	# b) 我们不再需要 has_played_before 这个变量了
-	#    可以从脚本顶部、load_data 和 save_data 中都删除它
-	
-	# c) 将重置后的分数，保存到存档文件中
+	# 只重置分数
+	high_score = 0	
+	# 将重置后的分数，保存到存档文件中
 	save_data()
 	
 	print("--- DEBUG: 分数已重置为 0 并保存。---")
@@ -65,6 +66,13 @@ func load_data() -> void:
 			high_score = data.get("high_score", 0)
 			# --- 【新增】加载“是否玩过”的记录 ---
 			has_played_before = data.get("has_played_before", false)
+			# 【新增】加载统计数据，如果不存在，则默认为 0
+			total_play_time = data.get("total_play_time", 0.0)
+			total_kills = data.get("total_kills", 0)
+			max_kills_per_run = data.get("max_kills_per_run", 0)
+			max_combo_per_run = data.get("max_combo_per_run", 0)
+			max_survival_time = data.get("max_survival_time", 0.0)
+			
 	print("DataManager: 已加载数据。最高分: ", high_score, " | 是否玩过: ", has_played_before)
 
 
@@ -75,7 +83,13 @@ func save_data() -> void:
 	# --- 【新增】将“是否玩过”也保存起来 ---
 	var data = {
 		"high_score": high_score,
-		"has_played_before": has_played_before
+		"has_played_before": has_played_before,
+		# 【新增】保存所有统计数据
+		"total_play_time": total_play_time,
+		"total_kills": total_kills,
+		"max_kills_per_run": max_kills_per_run,
+		"max_combo_per_run": max_combo_per_run,
+		"max_survival_time": max_survival_time
 	}
 	file.store_var(data, true)
 	file.close()

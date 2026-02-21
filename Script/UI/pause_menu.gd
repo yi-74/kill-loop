@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var fullscreen_button: Button = %FullscreenButton
 @onready var main_menu_button: Button = %MainMenuButton
 @onready var tutorial_image: TextureRect = %TutorialImage
+@onready var background_animation: AnimatedSprite2D = $BackgroundAnimation
 
 # 我们不再需要 main_script 引用了
 
@@ -15,6 +16,10 @@ func _ready() -> void:
 	fullscreen_button.pressed.connect(on_fullscreen_button_pressed)
 	main_menu_button.pressed.connect(on_main_menu_button_pressed)
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
+	
+		# --- 【新增】在所有数据都准备好后，开始播放背景动画 ---
+	if is_instance_valid(background_animation):
+		background_animation.play("default")
 
 # 我们不再需要 _input 函数来监听 Esc 了
 

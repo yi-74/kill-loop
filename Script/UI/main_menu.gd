@@ -1,10 +1,12 @@
 extends Control
 
 const SettingsMenuScene = preload("res://game/UI/settings_menu.tscn")
+const DataStatsScene = preload("res://game/UI/data_stats.tscn")
 
 # --- 节点引用 ---
 @onready var start_button: Button = $VBoxContainer/StartButton
 @onready var settings_button: Button = $VBoxContainer/SettingsButton
+@onready var stats_button: Button = $VBoxContainer/StatsButton
 @onready var quit_button: Button = $VBoxContainer/QuitButton
 @onready var tutorial_image: TextureRect = $TutorialImage
 @onready var background_effects: AnimatedSprite2D = $BackgroundEffects
@@ -17,6 +19,7 @@ func _ready() -> void:
 	# --- 连接所有按钮的 "pressed" 信号 ---
 	start_button.pressed.connect(on_start_button_pressed)
 	settings_button.pressed.connect(on_settings_button_pressed)
+	stats_button.pressed.connect(on_stats_button_pressed)
 	quit_button.pressed.connect(on_quit_button_pressed)
 	
 	# 游戏开始时，让教程图片可以接收输入
@@ -44,6 +47,18 @@ func on_settings_button_pressed():
 	
 	var settings_menu_instance = SettingsMenuScene.instantiate()
 	add_child(settings_menu_instance)
+
+
+# --- 【新增】一个全新的函数，用来打开数据统计页面 ---
+func on_stats_button_pressed():
+	# 1. 创建数据统计页面的实例
+	var stats_menu_instance = DataStatsScene.instantiate()
+	
+	# 2. 将它作为子节点，添加到当前场景中
+	#    这会让它像一个“弹窗”一样，显示在主菜单之上
+	add_child(stats_menu_instance)
+	
+	print("主菜单：已打开数据统计页面。")
 
 
 # --- 按下“退出游戏”按钮 ---
