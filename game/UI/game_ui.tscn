@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://dxb2ihg5s7iiy"]
+[gd_scene format=3 uid="uid://dxb2ihg5s7iiy"]
 
 [ext_resource type="Script" uid="uid://djg3frqlupki3" path="res://Script/UI/game_ui.gd" id="1_wevqw"]
 [ext_resource type="Texture2D" uid="uid://dtg1geh3b4smt" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00000.png" id="2_2wy20"]
@@ -129,7 +129,7 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="GameUI" type="Control"]
+[node name="GameUI" type="Control" unique_id=1595452720]
 process_mode = 1
 layout_mode = 3
 anchors_preset = 15
@@ -139,7 +139,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wevqw")
 
-[node name="BoxContainer" type="HBoxContainer" parent="."]
+[node name="BoxContainer" type="HBoxContainer" parent="." unique_id=755078903]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -153,13 +153,13 @@ grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
 
-[node name="LaunchFailEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+[node name="LaunchFailEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1154053665]
 visible = false
 position = Vector2(659, 13)
 sprite_frames = SubResource("SpriteFrames_4y4wl")
 animation = &"flash"
 
-[node name="EnergyBar1_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+[node name="EnergyBar1_FullEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1322686864]
 visible = false
 position = Vector2(659, 13)
 sprite_frames = SubResource("SpriteFrames_53mlu")
@@ -167,7 +167,7 @@ animation = &"play_full_effect"
 frame = 11
 frame_progress = 1.0
 
-[node name="EnergyBar2_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+[node name="EnergyBar2_FullEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1511803887]
 visible = false
 position = Vector2(959, 13)
 sprite_frames = SubResource("SpriteFrames_53mlu")
@@ -175,22 +175,22 @@ animation = &"play_full_effect"
 frame = 11
 frame_progress = 1.0
 
-[node name="EnergyBar3_FullEffect" type="AnimatedSprite2D" parent="BoxContainer"]
+[node name="EnergyBar3_FullEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=592816810]
 visible = false
 position = Vector2(1259, 13)
 sprite_frames = SubResource("SpriteFrames_53mlu")
 animation = &"play_full_effect"
 
-[node name="EnergyBar" parent="BoxContainer" instance=ExtResource("2_igryo")]
+[node name="EnergyBar" parent="BoxContainer" unique_id=248450969 instance=ExtResource("2_igryo")]
 layout_mode = 2
 
-[node name="EnergyBar2" parent="BoxContainer" instance=ExtResource("3_x2aio")]
+[node name="EnergyBar2" parent="BoxContainer" unique_id=16650845 instance=ExtResource("3_x2aio")]
 layout_mode = 2
 
-[node name="EnergyBar3" parent="BoxContainer" instance=ExtResource("4_hedtu")]
+[node name="EnergyBar3" parent="BoxContainer" unique_id=239746978 instance=ExtResource("4_hedtu")]
 layout_mode = 2
 
-[node name="SpeedLabel" type="Label" parent="."]
+[node name="SpeedLabel" type="Label" parent="." unique_id=1071767584]
 layout_mode = 0
 offset_left = 75.0
 offset_top = 36.0
@@ -199,7 +199,7 @@ offset_bottom = 94.0
 theme_override_font_sizes/font_size = 40
 text = "Speed:"
 
-[node name="ComboLabel" type="Label" parent="."]
+[node name="ComboLabel" type="Label" parent="." unique_id=230386039]
 custom_minimum_size = Vector2(960, 540)
 layout_mode = 0
 offset_right = 1920.0
@@ -211,7 +211,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GameTimerLabel" type="Label" parent="."]
+[node name="GameTimerLabel" type="Label" parent="." unique_id=1550873275]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -225,7 +225,7 @@ theme_override_font_sizes/font_size = 40
 text = "00:00"
 horizontal_alignment = 2
 
-[node name="HighScoreLabel" type="Label" parent="."]
+[node name="HighScoreLabel" type="Label" parent="." unique_id=1940434534]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -239,7 +239,7 @@ theme_override_font_sizes/font_size = 30
 text = "0"
 horizontal_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="."]
+[node name="ScoreLabel" type="Label" parent="." unique_id=1049435273]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5

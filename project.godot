@@ -70,9 +70,11 @@ toggle_fullscreen={
 [internationalization]
 
 locale/translation_remaps={
-"res://assets/UI/Background/HowToPlay_zh.png": PackedStringArray("res://assets/UI/Background/HowToPlay_en.png:en")
+"res://assets/UI/Background/HowToPlay_en.png": PackedStringArray("res://assets/UI/Background/HowToPlay_en.png:en", "res://assets/UI/Background/HowToPlay_zh.png:zh"),
+"res://assets/UI/Background/HowToPlay_zh.png": PackedStringArray("res://assets/UI/Background/HowToPlay_en.png:en", "res://assets/UI/Background/HowToPlay_zh.png:zh")
 }
 locale/translations=PackedStringArray("res://Script/language/language.en.translation", "res://Script/language/language.zh.translation")
+locale/test="en"
 
 [layer_names]
 

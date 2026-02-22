@@ -339,6 +339,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6smng")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=426082297]
+layout_mode = 0
+offset_left = -17.0
+offset_top = -24.0
+offset_right = 1941.0
+offset_bottom = 1098.0
+color = Color(0.07015244, 0.07015244, 0.070152424, 1)
+
 [node name="BackgroundAnimation" type="AnimatedSprite2D" parent="." unique_id=1166455405]
 position = Vector2(960, 540)
 sprite_frames = SubResource("SpriteFrames_utf4n")
@@ -406,10 +414,10 @@ text = "0"
 [node name="MaxKillsLabel" type="Label" parent="." unique_id=135328218]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 264.0
-offset_top = 439.0
-offset_right = 614.0
-offset_bottom = 508.0
+offset_left = 263.0
+offset_top = 438.0
+offset_right = 613.0
+offset_bottom = 507.0
 theme_override_font_sizes/font_size = 50
 text = "单局最大击杀数"
 
@@ -426,9 +434,9 @@ text = "0"
 [node name="MaxComboLabel" type="Label" parent="." unique_id=634734546]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 263.0
+offset_left = 264.0
 offset_top = 556.0
-offset_right = 613.0
+offset_right = 614.0
 offset_bottom = 625.0
 theme_override_font_sizes/font_size = 50
 text = "单局最大连击数"
