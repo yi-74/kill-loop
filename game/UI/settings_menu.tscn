@@ -377,9 +377,9 @@ icon_alignment = 1
 [node name="TutorialButton" type="Button" parent="ColorRect" unique_id=1287105564]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 913.5
+offset_left = 650.0
 offset_top = 309.5
-offset_right = 1011.5
+offset_right = 1274.0
 offset_bottom = 380.5
 theme_override_font_sizes/font_size = 45
 action_mode = 0

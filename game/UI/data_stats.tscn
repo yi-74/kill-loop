@@ -366,7 +366,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_left = 1001.0
 offset_top = 182.0
-offset_right = 1041.0
+offset_right = 1251.0
 offset_bottom = 251.0
 theme_override_font_sizes/font_size = 50
 text = "0"
@@ -374,60 +374,60 @@ text = "0"
 [node name="TotalTimeLabel" type="Label" parent="." unique_id=818123659]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1054.0
-offset_top = 317.0
-offset_right = 1304.0
-offset_bottom = 386.0
+offset_left = 1054.075
+offset_top = 316.0
+offset_right = 1304.075
+offset_bottom = 385.0
 theme_override_font_sizes/font_size = 50
 text = "总存活时间"
 
 [node name="TotalTimeValue" type="Label" parent="." unique_id=77969747]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1397.0
-offset_top = 316.0
-offset_right = 1699.0
-offset_bottom = 385.0
+offset_left = 1062.0
+offset_top = 380.0
+offset_right = 1364.0
+offset_bottom = 449.0
 theme_override_font_sizes/font_size = 50
 text = "00.00s"
 
 [node name="TotalKillsLabel" type="Label" parent="." unique_id=71870053]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1057.0
-offset_top = 440.0
-offset_right = 1357.0
-offset_bottom = 509.0
+offset_left = 1054.0
+offset_top = 479.0
+offset_right = 1354.0
+offset_bottom = 548.0
 theme_override_font_sizes/font_size = 50
 text = "总击杀数量"
 
 [node name="TotalKillsValue" type="Label" parent="." unique_id=1621020092]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1404.0
-offset_top = 438.0
-offset_right = 1444.0
-offset_bottom = 507.0
+offset_left = 1061.0
+offset_top = 544.0
+offset_right = 1101.0
+offset_bottom = 613.0
 theme_override_font_sizes/font_size = 50
 text = "0"
 
 [node name="MaxKillsLabel" type="Label" parent="." unique_id=135328218]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 263.0
-offset_top = 438.0
-offset_right = 613.0
-offset_bottom = 507.0
+offset_left = 264.0
+offset_top = 479.0
+offset_right = 614.0
+offset_bottom = 548.0
 theme_override_font_sizes/font_size = 50
 text = "单局最大击杀数"
 
 [node name="MaxKillsValue" type="Label" parent="." unique_id=2044440313]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 728.0
-offset_top = 441.0
-offset_right = 768.0
-offset_bottom = 510.0
+offset_left = 273.0
+offset_top = 544.0
+offset_right = 313.0
+offset_bottom = 613.0
 theme_override_font_sizes/font_size = 50
 text = "0"
 
@@ -435,19 +435,19 @@ text = "0"
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 264.0
-offset_top = 556.0
+offset_top = 645.0
 offset_right = 614.0
-offset_bottom = 625.0
+offset_bottom = 714.00006
 theme_override_font_sizes/font_size = 50
 text = "单局最大连击数"
 
 [node name="MaxComboValue" type="Label" parent="." unique_id=1839103143]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 727.0
-offset_top = 556.0
-offset_right = 767.0
-offset_bottom = 625.0
+offset_left = 276.0
+offset_top = 716.0
+offset_right = 316.0
+offset_bottom = 785.0
 theme_override_font_sizes/font_size = 50
 text = "0"
 
@@ -456,7 +456,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_left = 264.0
 offset_top = 316.0
-offset_right = 664.0
+offset_right = 664.00146
 offset_bottom = 385.0
 theme_override_font_sizes/font_size = 50
 text = "单局最长存活时间"
@@ -464,42 +464,44 @@ text = "单局最长存活时间"
 [node name="MaxTimeValue" type="Label" parent="." unique_id=805480680]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 750.0
-offset_top = 319.0
-offset_right = 1052.0
-offset_bottom = 388.0
+offset_left = 270.0
+offset_top = 380.0
+offset_right = 572.0
+offset_bottom = 449.0
 theme_override_font_sizes/font_size = 50
 text = "00.00s"
 
 [node name="name" type="Label" parent="." unique_id=912251842]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1464.0
-offset_top = 930.0
-offset_right = 1704.0
-offset_bottom = 986.0
+offset_left = 1072.0
+offset_top = 939.0
+offset_right = 1880.0
+offset_bottom = 995.0
 theme_override_colors/font_color = Color(0.6666667, 1, 1, 1)
 theme_override_font_sizes/font_size = 40
 text = "制作人：天青"
+horizontal_alignment = 1
 
 [node name="name2" type="Label" parent="." unique_id=1505522715]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1297.0
-offset_top = 994.0
-offset_right = 1865.0
-offset_bottom = 1050.0
+offset_left = 1076.0
+offset_top = 1008.0
+offset_right = 1873.0
+offset_bottom = 1064.0
 theme_override_colors/font_color = Color(0.6627451, 0.99607843, 0.99607843, 1)
 theme_override_font_sizes/font_size = 30
 text = "感谢freesound网站对游戏音乐音效的支持"
+horizontal_alignment = 1
 
 [node name="BackButton" type="Button" parent="." unique_id=1466727332]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 902.0
-offset_top = 906.0
+offset_top = 898.0
 offset_right = 1010.0
-offset_bottom = 983.0
+offset_bottom = 975.0
 theme_override_font_sizes/font_size = 50
 text = "返回"
 flat = true

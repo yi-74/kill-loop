@@ -26,7 +26,7 @@ func _ready() -> void:
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
 	fullscreen_button.toggled.connect(on_fullscreen_button_pressed)
 	english_button.pressed.connect(func(): set_language("en"))
-	chinese_button.pressed.connect(func(): set_language("zh_CN"))
+	chinese_button.pressed.connect(func(): set_language("zh"))
 	music_slider.value_changed.connect(on_music_volume_changed)
 	sfx_slider.value_changed.connect(on_sfx_volume_changed)
 

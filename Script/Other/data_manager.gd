@@ -8,7 +8,7 @@ var high_score: int = 0
 var has_played_before: bool = false
 var settings: Dictionary = {
 	"fullscreen": false,
-	"language": "zh_CN",
+	"language": "en",
 	"music_volume": 0.0,
 	"sfx_volume": 0.0
 }
@@ -23,6 +23,7 @@ var max_survival_time: float = 0.0   # 单局最高存活时间
 
 # --- 新增应用设置的函数 ---
 func apply_all_settings():
+	TranslationServer.set_locale(settings.language)
 	# ... (全屏和语言的逻辑不变) ...
 	
 	# --- 【核心修正】应用音量到不同的总线 ---
@@ -41,6 +42,7 @@ func apply_all_settings():
 
 func _ready() -> void:
 	load_data()
+	apply_all_settings()
 
 
 
@@ -64,6 +66,7 @@ func load_data() -> void:
 		file.close()
 		if data is Dictionary:
 			high_score = data.get("high_score", 0)
+			settings = data.get("settings", settings)
 			# --- 【新增】加载“是否玩过”的记录 ---
 			has_played_before = data.get("has_played_before", false)
 			# 【新增】加载统计数据，如果不存在，则默认为 0
@@ -83,6 +86,7 @@ func save_data() -> void:
 	# --- 【新增】将“是否玩过”也保存起来 ---
 	var data = {
 		"high_score": high_score,
+		"settings": settings,
 		"has_played_before": has_played_before,
 		# 【新增】保存所有统计数据
 		"total_play_time": total_play_time,
