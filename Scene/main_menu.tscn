@@ -48,6 +48,7 @@
 [ext_resource type="Texture2D" uid="uid://hltd06s8l2rs" path="res://assets/UI/kill/kill_00043.png" id="46_oy56h"]
 [ext_resource type="Texture2D" uid="uid://boqsx0m5044bg" path="res://assets/UI/kill/kill_00044.png" id="47_5v5ex"]
 [ext_resource type="PackedScene" uid="uid://c3rlf8mfiwqdj" path="res://game/effect/background_effects.tscn" id="48_jwsrh"]
+[ext_resource type="PackedScene" uid="uid://db3cb5ikpel7g" path="res://game/UI/settings_menu.tscn" id="49_tbbh3"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_daaac"]
 animations = [{
@@ -263,3 +264,7 @@ frame_progress = 0.07172376
 
 [node name="BackgroundEffects" parent="." unique_id=1533792561 instance=ExtResource("48_jwsrh")]
 position = Vector2(960, 540)
+
+[node name="SettingsMenu" parent="." unique_id=828530356 instance=ExtResource("49_tbbh3")]
+visible = false
+layout_mode = 1

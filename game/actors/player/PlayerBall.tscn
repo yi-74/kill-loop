@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cbus8chf27tph"]
+[gd_scene format=3 uid="uid://cbus8chf27tph"]
 
 [ext_resource type="Script" uid="uid://c2fcoufi6yji7" path="res://Script/actors/player/PlayerBall.gd" id="1_46ku3"]
 [ext_resource type="Script" uid="uid://b72hdcmnfo6yx" path="res://Script/actors/player/trailwith_line_2d.gd" id="3_5d0wo"]
@@ -30,7 +30,7 @@ blend_mode = 1
 [sub_resource type="CircleShape2D" id="CircleShape2D_sk8k3"]
 radius = 26.0
 
-[node name="PlayerBall" type="RigidBody2D"]
+[node name="PlayerBall" type="RigidBody2D" unique_id=187355441]
 process_mode = 1
 z_index = 1
 collision_mask = 6
@@ -40,12 +40,12 @@ gravity_scale = 0.0
 continuous_cd = 2
 script = ExtResource("1_46ku3")
 
-[node name="Line2D" type="Line2D" parent="."]
+[node name="Line2D" type="Line2D" parent="." unique_id=377856886]
 gradient = SubResource("Gradient_8oxga")
 joint_mode = 2
 end_cap_mode = 2
 
-[node name="TrailwithLine2D" type="Line2D" parent="."]
+[node name="TrailwithLine2D" type="Line2D" parent="." unique_id=1940428517]
 process_mode = 3
 top_level = true
 width = 50.0
@@ -53,40 +53,44 @@ width_curve = SubResource("Curve_5d0wo")
 gradient = SubResource("Gradient_5d0wo")
 script = ExtResource("3_5d0wo")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1068455621]
 position = Vector2(0.750004, -2.82608)
 scale = Vector2(0.835404, 0.835404)
 texture = ExtResource("4_ta8qa")
 
-[node name="Ball" type="Sprite2D" parent="."]
+[node name="Ball" type="Sprite2D" parent="." unique_id=859641945]
 material = SubResource("CanvasItemMaterial_46ku3")
 position = Vector2(0, -3)
 scale = Vector2(0.843168, 0.843168)
 texture = ExtResource("3_pfcfs")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1501115901]
 shape = SubResource("CircleShape2D_sk8k3")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=1910824856]
 collision_layer = 8
 collision_mask = 20
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=797913086]
 shape = SubResource("CircleShape2D_sk8k3")
 
-[node name="DeathAudioPlayer" type="AudioStreamPlayer" parent="."]
+[node name="DeathAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=165832327]
 process_mode = 3
 stream = ExtResource("4_pfcfs")
+bus = &"SFX"
 
-[node name="SlowMoAudioPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SlowMoAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=2091355507]
 stream = ExtResource("6_b8hb8")
 volume_db = -8.0
+bus = &"SFX"
 
-[node name="LaunchAudioPlayer" type="AudioStreamPlayer" parent="."]
+[node name="LaunchAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1569453072]
 stream = ExtResource("7_8oxga")
 volume_db = 5.0
+bus = &"SFX"
 
-[node name="CancelAudioPlayer" type="AudioStreamPlayer" parent="."]
+[node name="CancelAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=693007289]
 stream = ExtResource("8_8oxga")
+bus = &"SFX"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

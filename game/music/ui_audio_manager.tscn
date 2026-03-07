@@ -1,17 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://dk1d2oahsjcih"]
+[gd_scene format=3 uid="uid://dk1d2oahsjcih"]
 
 [ext_resource type="Script" uid="uid://b4neha7ubg72x" path="res://Script/audio/ui_audio_manager.gd" id="1_04u2m"]
 [ext_resource type="AudioStream" uid="uid://7x2wt6gxwrnn" path="res://assets/Audio/Sound Effects/ButtonHover.wav" id="1_a2vs6"]
 [ext_resource type="AudioStream" uid="uid://ndaa4lahmigs" path="res://assets/Audio/Sound Effects/BottonClick.wav" id="2_04u2m"]
 
-[node name="UIAudioManager" type="Node"]
+[node name="UIAudioManager" type="Node" unique_id=1145723343]
 process_mode = 2
 script = ExtResource("1_04u2m")
 
-[node name="HoverPlayer" type="AudioStreamPlayer" parent="."]
+[node name="HoverPlayer" type="AudioStreamPlayer" parent="." unique_id=2109951133]
 stream = ExtResource("1_a2vs6")
+volume_db = -6.0
 bus = &"SFX"
 
-[node name="ClickPlayer" type="AudioStreamPlayer" parent="."]
+[node name="ClickPlayer" type="AudioStreamPlayer" parent="." unique_id=1758786873]
 stream = ExtResource("2_04u2m")
 bus = &"SFX"

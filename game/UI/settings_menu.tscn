@@ -332,7 +332,7 @@ animations = [{
 }]
 
 [node name="SettingsMenu" type="Control" unique_id=828530356]
-process_mode = 2
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -355,7 +355,7 @@ offset_right = 1924.0
 offset_bottom = 1085.0
 color = Color(0.060079634, 0.06415287, 0.12077343, 0.68235296)
 
-[node name="BackButton" type="Button" parent="ColorRect" unique_id=1008223312]
+[node name="BackButton" type="Button" parent="ColorRect" unique_id=1008223312 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -374,7 +374,7 @@ text = "返回"
 flat = true
 icon_alignment = 1
 
-[node name="TutorialButton" type="Button" parent="ColorRect" unique_id=1287105564]
+[node name="TutorialButton" type="Button" parent="ColorRect" unique_id=1287105564 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 650.0
@@ -386,7 +386,7 @@ action_mode = 0
 text = "教程"
 flat = true
 
-[node name="FullscreenButton" type="Button" parent="ColorRect" unique_id=1969646028]
+[node name="FullscreenButton" type="Button" parent="ColorRect" unique_id=1969646028 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -405,7 +405,7 @@ action_mode = 0
 text = "全屏"
 flat = true
 
-[node name="ChineseButton" type="Button" parent="ColorRect" unique_id=1783480556]
+[node name="ChineseButton" type="Button" parent="ColorRect" unique_id=1783480556 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -424,7 +424,7 @@ action_mode = 0
 text = "中文"
 flat = true
 
-[node name="EnglishButton" type="Button" parent="ColorRect" unique_id=1221611163]
+[node name="EnglishButton" type="Button" parent="ColorRect" unique_id=1221611163 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -460,7 +460,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 45
 text = "音乐音量"
 
-[node name="MusicSlider" type="HSlider" parent="ColorRect" unique_id=1299974010]
+[node name="MusicSlider" type="HSlider" parent="ColorRect" unique_id=1299974010 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -493,7 +493,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 45
 text = "音效音量"
 
-[node name="SFXSlider" type="HSlider" parent="ColorRect" unique_id=59884769]
+[node name="SFXSlider" type="HSlider" parent="ColorRect" unique_id=59884769 groups=["buttons"]]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8

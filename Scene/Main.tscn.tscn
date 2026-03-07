@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c28lu4w14ia1x"]
+[gd_scene format=3 uid="uid://c28lu4w14ia1x"]
 
 [ext_resource type="Script" uid="uid://fue54mlf5e0c" path="res://Script/main.tscn.gd" id="1_0n0co"]
 [ext_resource type="PackedScene" uid="uid://cbus8chf27tph" path="res://game/actors/player/PlayerBall.tscn" id="1_axlnn"]
@@ -58,91 +58,92 @@ size = Vector2(1430, 694.5)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ohpoc"]
 shader = ExtResource("7_ql5uw")
 
-[node name="Main_tscn" type="Node"]
+[node name="Main_tscn" type="Node" unique_id=1121592037]
 process_mode = 3
 script = ExtResource("1_0n0co")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=812661296]
 position = Vector2(960, 540)
 script = ExtResource("2_pff3i")
 
-[node name="BackgroundEffects" parent="." instance=ExtResource("3_ksvd0")]
+[node name="BackgroundEffects" parent="." unique_id=1412279025 instance=ExtResource("3_ksvd0")]
 position = Vector2(960, 540)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2071417603]
 visible = false
 position = Vector2(960, 540)
 texture = ExtResource("2_0n0co")
 
-[node name="PlayerBall" parent="." instance=ExtResource("1_axlnn")]
+[node name="PlayerBall" parent="." unique_id=581590884 instance=ExtResource("1_axlnn")]
 position = Vector2(960, 540)
 
-[node name="Enemy" type="Node" parent="."]
+[node name="Enemy" type="Node" parent="." unique_id=2069302610]
 
-[node name="EnemyNormal" parent="Enemy" instance=ExtResource("4_a6a44")]
+[node name="EnemyNormal" parent="Enemy" unique_id=1109225374 instance=ExtResource("4_a6a44")]
 position = Vector2(628, 547)
 
-[node name="EnemyNormal2" parent="Enemy" instance=ExtResource("4_a6a44")]
+[node name="EnemyNormal2" parent="Enemy" unique_id=825509678 instance=ExtResource("4_a6a44")]
 position = Vector2(960, 321)
 
-[node name="EnemyNormal3" parent="Enemy" instance=ExtResource("4_a6a44")]
+[node name="EnemyNormal3" parent="Enemy" unique_id=2130563902 instance=ExtResource("4_a6a44")]
 position = Vector2(960, 785)
 
-[node name="EnemyNormal4" parent="Enemy" instance=ExtResource("4_a6a44")]
+[node name="EnemyNormal4" parent="Enemy" unique_id=1426427807 instance=ExtResource("4_a6a44")]
 position = Vector2(1307, 547)
 
-[node name="Outer_Zone" parent="." instance=ExtResource("4_0n0co")]
+[node name="Outer_Zone" parent="." unique_id=1125512174 instance=ExtResource("4_0n0co")]
 position = Vector2(960, 540)
 
-[node name="AudioManager" parent="." instance=ExtResource("8_e0lk5")]
+[node name="AudioManager" parent="." unique_id=2108528834 instance=ExtResource("8_e0lk5")]
 
-[node name="PathManager" type="Node" parent="."]
+[node name="PathManager" type="Node" parent="." unique_id=1055280589]
 script = ExtResource("5_ohpoc")
 
-[node name="Path2D3" type="Path2D" parent="PathManager"]
+[node name="Path2D3" type="Path2D" parent="PathManager" unique_id=1085510744]
 curve = SubResource("Curve2D_pff3i")
 
-[node name="Path2D2" type="Path2D" parent="PathManager"]
+[node name="Path2D2" type="Path2D" parent="PathManager" unique_id=344858543]
 curve = SubResource("Curve2D_5t6br")
 
-[node name="Path2D" type="Path2D" parent="PathManager"]
+[node name="Path2D" type="Path2D" parent="PathManager" unique_id=1639470717]
 curve = SubResource("Curve2D_a6a44")
 
-[node name="Path2D4" type="Path2D" parent="PathManager"]
+[node name="Path2D4" type="Path2D" parent="PathManager" unique_id=1748765594]
 curve = SubResource("Curve2D_ksvd0")
 
-[node name="Path2D5" type="Path2D" parent="PathManager"]
+[node name="Path2D5" type="Path2D" parent="PathManager" unique_id=237012195]
 curve = SubResource("Curve2D_ohpoc")
 
-[node name="Path2D6" type="Path2D" parent="PathManager"]
+[node name="Path2D6" type="Path2D" parent="PathManager" unique_id=271321938]
 curve = SubResource("Curve2D_e0lk5")
 
-[node name="PatrolPaths" type="Node" parent="."]
+[node name="PatrolPaths" type="Node" parent="." unique_id=658346928]
 
-[node name="BounceCounterManager" type="Node" parent="."]
+[node name="BounceCounterManager" type="Node" parent="." unique_id=1761565756]
 script = ExtResource("11_b6ym3")
 
-[node name="WallBouncePlayer" type="AudioStreamPlayer" parent="BounceCounterManager"]
+[node name="WallBouncePlayer" type="AudioStreamPlayer" parent="BounceCounterManager" unique_id=1477963845]
 stream = ExtResource("11_bbtn3")
+bus = &"SFX"
 
-[node name="EnemySpawner" type="Node" parent="."]
+[node name="EnemySpawner" type="Node" parent="." unique_id=814681262]
 process_mode = 1
 script = ExtResource("8_5t6br")
 spawn_zone_path = NodePath("../SpawnZone")
 min_spawn_distance = null
 spawn_prep_time = null
 
-[node name="SpawnTimer" type="Timer" parent="EnemySpawner"]
+[node name="SpawnTimer" type="Timer" parent="EnemySpawner" unique_id=1198915410]
 
-[node name="SpawnZone" type="Area2D" parent="."]
+[node name="SpawnZone" type="Area2D" parent="." unique_id=1738335258]
 position = Vector2(960, 540)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnZone"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpawnZone" unique_id=1994424337]
 shape = SubResource("RectangleShape2D_pff3i")
 
-[node name="GameUI" parent="." instance=ExtResource("2_ql5uw")]
+[node name="GameUI" parent="." unique_id=621402391 instance=ExtResource("2_ql5uw")]
 
-[node name="DeathInversionEffect" type="ColorRect" parent="."]
+[node name="DeathInversionEffect" type="ColorRect" parent="." unique_id=32968976]
 visible = false
 modulate = Color(1, 1, 1, 0)
 z_index = 10
@@ -153,9 +154,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PauseMenu" parent="." instance=ExtResource("15_cne5c")]
+[node name="PauseMenu" parent="." unique_id=592546638 instance=ExtResource("15_cne5c")]
 visible = false
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=807310582]
 layer = 128
 visible = false

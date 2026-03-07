@@ -1,6 +1,5 @@
 extends Control
 
-const SettingsMenuScene = preload("res://game/UI/settings_menu.tscn")
 const DataStatsScene = preload("res://game/UI/data_stats.tscn")
 
 # --- 节点引用 ---
@@ -10,6 +9,7 @@ const DataStatsScene = preload("res://game/UI/data_stats.tscn")
 @onready var quit_button: Button = $VBoxContainer/QuitButton
 @onready var tutorial_image: TextureRect = $TutorialImage
 @onready var background_effects: AnimatedSprite2D = $BackgroundEffects
+@onready var settings_menu: Control = $SettingsMenu
 
 # --- 内部状态 ---
 var is_showing_tutorial: bool = false
@@ -42,11 +42,8 @@ func on_start_button_pressed():
 
 # --- 【新增】一个全新的函数，用来打开设置菜单 ---
 func on_settings_button_pressed():
-	# --- 【核心修正】在打开菜单前，先暂停游戏 ---
-	get_tree().paused = true
-	
-	var settings_menu_instance = SettingsMenuScene.instantiate()
-	add_child(settings_menu_instance)
+	# --- 【核心修正】我们不再创建，而是直接显示 ---
+	settings_menu.show()
 
 
 # --- 【新增】一个全新的函数，用来打开数据统计页面 ---

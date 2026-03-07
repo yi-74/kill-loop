@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://da3smf7ntnkov"]
+[gd_scene format=3 uid="uid://da3smf7ntnkov"]
 
 [ext_resource type="Texture2D" uid="uid://uj8ghc1iw0dh" path="res://assets/SpecialEffects/sha/1.png" id="1_vx8gb"]
 [ext_resource type="Texture2D" uid="uid://dincj24ihiolb" path="res://assets/SpecialEffects/sha/2.png" id="2_b3cbc"]
@@ -39,13 +39,14 @@ animations = [{
 "speed": 20.0
 }]
 
-[node name="KillEffect" type="AnimatedSprite2D"]
+[node name="KillEffect" type="AnimatedSprite2D" unique_id=112625654]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_6s5gk")
 frame = 6
 frame_progress = 1.0
 script = ExtResource("5_b3cbc")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1074949951]
 process_mode = 3
 stream = ExtResource("9_b3cbc")
+bus = &"SFX"

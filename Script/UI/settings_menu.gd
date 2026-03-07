@@ -18,10 +18,10 @@ func _ready() -> void:
 	fullscreen_button.button_pressed = DataManager.settings.fullscreen
 	music_slider.value = DataManager.settings.music_volume
 	sfx_slider.value = DataManager.settings.sfx_volume
-	back_button.pressed.connect(close_settings)
+	back_button.pressed.connect(on_back_button_pressed)
 	
 	# 2. 连接所有信号
-	back_button.pressed.connect(queue_free) # 最简单的返回，就是销毁自己
+	back_button.pressed.connect(on_back_button_pressed)
 	tutorial_button.pressed.connect(on_tutorial_button_pressed)
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
 	fullscreen_button.toggled.connect(on_fullscreen_button_pressed)
@@ -29,6 +29,13 @@ func _ready() -> void:
 	chinese_button.pressed.connect(func(): set_language("zh"))
 	music_slider.value_changed.connect(on_music_volume_changed)
 	sfx_slider.value_changed.connect(on_sfx_volume_changed)
+
+	# --- Add buttons to group ---
+	back_button.add_to_group("buttons")
+	fullscreen_button.add_to_group("buttons")
+	tutorial_button.add_to_group("buttons")
+	english_button.add_to_group("buttons")
+	chinese_button.add_to_group("buttons")
 
 	# --- 【新增】在所有数据都准备好后，开始播放背景动画 ---
 	if is_instance_valid(background_animation):
@@ -56,6 +63,7 @@ func set_language(lang_code: String):
 	DataManager.apply_all_settings()
 	DataManager.save_data()
 	# 切换语言后，可能需要重启游戏或重新加载场景才能让所有文本生效
+	get_tree().reload_current_scene()
 	
 
 # --- 【补全】当“音乐音量”滑块的值改变时，这个函数会被调用 ---
@@ -90,8 +98,5 @@ func on_sfx_volume_changed(value: float):
 	#    if not test_sfx_player.playing:
 	#        test_sfx_player.play()
 	
-func close_settings():
-	# 1. 恢复游戏
-	get_tree().paused = false
-	# 2. 销毁自己
-	queue_free()
+func on_back_button_pressed():
+	hide()
