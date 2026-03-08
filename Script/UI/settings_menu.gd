@@ -24,7 +24,7 @@ func _ready() -> void:
 	back_button.pressed.connect(on_back_button_pressed)
 	tutorial_button.pressed.connect(on_tutorial_button_pressed)
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
-	fullscreen_button.toggled.connect(on_fullscreen_button_pressed)
+	fullscreen_button.pressed.connect(on_fullscreen_button_pressed)
 	english_button.pressed.connect(func(): set_language("en"))
 	chinese_button.pressed.connect(func(): set_language("zh"))
 	music_slider.value_changed.connect(on_music_volume_changed)
@@ -50,12 +50,16 @@ func on_tutorial_image_clicked(event: InputEvent):
 		tutorial_image.hide()
 
 func on_fullscreen_button_pressed():
-	# 全屏的逻辑可以自己处理，也可以调用 Main 的，自己处理更简单
+	# 1. 获取当前模式
 	var current_mode = DisplayServer.window_get_mode()
+	
+	# 2. 切换模式
 	if current_mode == DisplayServer.WINDOW_MODE_FULLSCREEN:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		
+	var new_mode = DisplayServer.window_get_mode()
 
 
 func set_language(lang_code: String):

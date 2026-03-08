@@ -113,3 +113,15 @@ func set_played_before():
 	if not has_played_before:
 		has_played_before = true
 		save_data()
+
+
+# --- 一个全局的、可被任何地方调用的“切换全屏”函数 ---
+func toggle_fullscreen():
+	# 1. 直接反转设置中记录的全屏状态
+	settings.fullscreen = not settings.fullscreen
+	
+	# 2. 立刻应用这个新的设置
+	apply_all_settings()
+	
+	# 3. 保存新的设置
+	save_data()

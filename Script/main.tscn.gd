@@ -55,6 +55,7 @@ func _input(event: InputEvent):
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().paused = not get_tree().paused
 
+
 func _process(delta: float):
 	# --- 【核心修正】在这里加入状态检查 ---
 	# 只有在【不是】死亡暂停的情况下，才根据 paused 状态显示菜单

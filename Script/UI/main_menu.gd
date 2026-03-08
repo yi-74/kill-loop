@@ -22,6 +22,7 @@ func _ready() -> void:
 	stats_button.pressed.connect(on_stats_button_pressed)
 	quit_button.pressed.connect(on_quit_button_pressed)
 	
+	
 	# 游戏开始时，让教程图片可以接收输入
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
 
