@@ -46,16 +46,39 @@ func _ready() -> void:
 
 
 
-# --- 【新】一个专门用于调试的、只重置分数的函数 ---
+# --- 终极调试：初始化所有信息 ---
 func debug_reset_all_data():
-	print("--- DEBUG: 正在执行分数重置 ---")
+	print("--- DEBUG: 正在执行【核弹级】完全重置 ---")
 	
-	# 只重置分数
-	high_score = 0	
-	# 将重置后的分数，保存到存档文件中
+	# 1. 重置核心分数
+	high_score = 0
+	
+	# 2. 重置所有统计数据
+	total_play_time = 0.0
+	total_kills = 0
+	max_kills_per_run = 0
+	max_combo_per_run = 0
+	max_survival_time = 0.0
+	
+	# 3. 重置设置字典 (恢复到您的初始默认状态)
+	settings = {
+		"fullscreen": false,
+		"language": "en",        # 您之前说默认语言是英文
+		"music_volume": 50.0,   # 假设默认音量是最大 (100)
+		"sfx_volume": 50.0
+	}
+	
+	# 4. 立即应用这些默认设置 (比如瞬间退出全屏、恢复英文)
+	if has_method("apply_all_settings"):
+		apply_all_settings()
+	
+	# 5. 将这些“干净”的数据覆盖保存到本地存档文件
 	save_data()
 	
-	print("--- DEBUG: 分数已重置为 0 并保存。---")
+	# 6. 强制重新加载当前所在的任何场景，刷新UI显示
+	get_tree().reload_current_scene()
+	
+	print("--- DEBUG: 所有数据已彻底初始化，场景已重载！ ---")
 
 
 
@@ -125,3 +148,8 @@ func toggle_fullscreen():
 	
 	# 3. 保存新的设置
 	save_data()
+
+func _input(event: InputEvent) -> void:
+	# 无论在游戏的哪个角落，只要按下 P 键 (debug_reset)
+	if Input.is_action_just_pressed("debug_reset"):
+		debug_reset_all_data()
