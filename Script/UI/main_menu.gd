@@ -1,6 +1,7 @@
 extends Control
 
 const DataStatsScene = preload("res://game/UI/data_stats.tscn")
+const MENU_BGM = preload("res://assets/Audio/Music/Cyber.wav")
 
 # --- 节点引用 ---
 @onready var start_button: Button = $VBoxContainer/StartButton
@@ -25,6 +26,8 @@ func _ready() -> void:
 	
 	# 游戏开始时，让教程图片可以接收输入
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
+	# 告诉全局管理器：用 1.5 秒的时间平滑过渡到菜单音乐
+	MusicManager.crossfade_to(MENU_BGM, 1.5)
 
 
 # --- 按下“开始游戏”按钮 (V2.0 - 基于分数判断) ---

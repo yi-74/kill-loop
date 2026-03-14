@@ -1,5 +1,7 @@
 extends Node
 
+const BATTLE_BGM = preload("res://assets/Audio/Music/Neon Ghosts.mp3")
+
 var time_scale_before_pause: float = 1.0
 var is_paused: bool = false
 var is_death_pause_active: bool = false
@@ -17,8 +19,8 @@ var is_death_pause_active: bool = false
 
 
 func _ready() -> void:
-	if MusicManager:
-		MusicManager.play()
+	#if MusicManager:
+		#MusicManager.play()
 	reset_crt_shader_parameters()
 		
 	# 连接信号！
@@ -40,6 +42,9 @@ func _ready() -> void:
 	player.enemy_killed.connect(bounce_counter_manager.on_player_killed_enemy)
 	player.combo_lost.connect(bounce_counter_manager.on_player_combo_lost)
 	player.player_died.connect(on_player_died)
+
+	# 告诉全局管理器：平滑过渡到战斗音乐
+	MusicManager.crossfade_to(BATTLE_BGM, 1.5)
 
 
 

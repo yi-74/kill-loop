@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbx8ggn4au46s"]
+[gd_scene format=3 uid="uid://cbx8ggn4au46s"]
 
-[ext_resource type="AudioStream" uid="uid://csg2fggnhxfnh" path="res://assets/Audio/Music/Neon Ghosts.mp3" id="1_jlc8f"]
 [ext_resource type="Script" uid="uid://dkk2k8k2s7iue" path="res://Script/audio/music_manager.gd" id="2_etxhc"]
 
-[node name="MusicManager" type="AudioStreamPlayer"]
-stream = ExtResource("1_jlc8f")
-bus = &"Music"
+[node name="MusicManager" type="Node" unique_id=1059248840]
 script = ExtResource("2_etxhc")
+
+[node name="Track1" type="AudioStreamPlayer" parent="." unique_id=500214897]
+bus = &"Music"
+
+[node name="Track2" type="AudioStreamPlayer" parent="." unique_id=1342051731]
+bus = &"Music"
