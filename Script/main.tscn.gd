@@ -7,6 +7,7 @@ var is_paused: bool = false
 var is_death_pause_active: bool = false
 
 # 用 @onready 获取节点引用
+@onready var crt_effect: ColorRect = GlobalEffects.get_node("CRTEffect")
 @onready var player: RigidBody2D = $PlayerBall
 @onready var game_ui: Control = $GameUI
 @onready var spawner: Node = $EnemySpawner
@@ -71,34 +72,35 @@ func toggle_pause_menu():
 
 
 
-# --- 当玩家连击数更新时，这个函数会被调用 ---
+# --- 当玩家连击数更新时，动态修改 CRT 的色差 ---
 func on_player_combo_updated(combo_count: int):
-	if not is_instance_valid(crt_effect_rect) or not crt_effect_rect.material:
+	# 1. 唯一的安全检查（只用新的 crt_effect 变量）
+	if not is_instance_valid(crt_effect) or not crt_effect.material:
+		print("【警告】找不到 CRT 特效节点或材质！请检查 GlobalEffects！")
 		return
 
 	var target_aberration_strength: float = 0.002
 	
-	if combo_count >= 35:
+	if combo_count >= 30:
 		target_aberration_strength = 0.02
+		print("连击 >= 30: 色差拉满！")
 	elif combo_count >= 20:
 		target_aberration_strength = 0.012
+		print("连击 >= 20: 色差中等！")
 	elif combo_count >= 10:
 		target_aberration_strength = 0.007
+		print("连击 >= 10: 色差初级！")
 	
-	# --- 使用 Tween 实现平滑过渡 ---
+	# 2. 获取当前的色差值（注意：这里去掉了 _rect）
+	var current_aberration = crt_effect.material.get_shader_parameter("chromatic_abberation")
 	
-	# 1. 获取当前的色差值
-	var current_aberration = crt_effect_rect.material.get_shader_parameter("chromatic_abberation")
-	
-	# 2. 创建一个 Tween
+	# 3. 创建 Tween 并平滑过渡
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	
-	# 3. 编排动画：
-	#    让 crt_effect_rect.material 的 "shader_parameter/chromatic_abberation" 属性，
-	#    在 0.3 秒内，从当前值平滑地变化到目标值
+	# 4. 动态设置参数（注意：这里也去掉了 _rect）
 	tween.tween_method(
-		func(value): crt_effect_rect.material.set_shader_parameter("chromatic_abberation", value),
+		func(value): crt_effect.material.set_shader_parameter("chromatic_abberation", value),
 		current_aberration,
 		target_aberration_strength,
 		0.3
