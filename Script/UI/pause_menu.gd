@@ -16,7 +16,7 @@ func _ready() -> void:
 	fullscreen_button.pressed.connect(on_fullscreen_button_pressed)
 	main_menu_button.pressed.connect(on_main_menu_button_pressed)
 	tutorial_image.gui_input.connect(on_tutorial_image_clicked)
-	
+	visibility_changed.connect(_on_visibility_changed)
 		# --- 【新增】在所有数据都准备好后，开始播放背景动画 ---
 	if is_instance_valid(background_animation):
 		background_animation.play("default")
@@ -47,3 +47,12 @@ func on_main_menu_button_pressed():
 func on_tutorial_image_clicked(event: InputEvent):
 	if event is InputEventMouseButton and event.is_pressed():
 		tutorial_image.hide()
+
+# --- 【新增】当暂停菜单的显示/隐藏状态发生改变时，自动调用 ---
+func _on_visibility_changed() -> void:
+	# 如果菜单变成了【隐藏】状态（即玩家继续游戏了）
+	if not visible:
+		# 强制把教程图片也藏起来！
+		# 这样下次再按 Esc 打开菜单时，一定是一个干净的初始状态。
+		if is_instance_valid(tutorial_image):
+			tutorial_image.hide()
