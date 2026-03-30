@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dxb2ihg5s7iiy"]
 
 [ext_resource type="Script" uid="uid://djg3frqlupki3" path="res://Script/UI/game_ui.gd" id="1_wevqw"]
-[ext_resource type="Texture2D" uid="uid://dtg1geh3b4smt" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00000.png" id="2_2wy20"]
+[ext_resource type="Texture2D" uid="uid://cghma5vv4surh" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00000.png" id="2_2wy20"]
 [ext_resource type="Texture2D" uid="uid://glkrsxf4v2jh" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00000.png" id="2_hdsvf"]
 [ext_resource type="PackedScene" uid="uid://b2w2xgarrueib" path="res://game/UI/energy_bar1.tscn" id="2_igryo"]
 [ext_resource type="Texture2D" uid="uid://b2y2w0q5646ab" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00001.png" id="3_7iike"]
@@ -18,7 +18,6 @@
 [ext_resource type="Texture2D" uid="uid://w6j0cgarf8nu" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00005.png" id="7_s5ruu"]
 [ext_resource type="Texture2D" uid="uid://box2yo84v2qll" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00006.png" id="8_7424c"]
 [ext_resource type="Texture2D" uid="uid://ba3yxlr7feljo" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00006.png" id="8_mjotj"]
-[ext_resource type="Texture2D" uid="uid://cw4n5g1f7dpa2" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00007.png" id="9_sw2mo"]
 [ext_resource type="Texture2D" uid="uid://dtw5ff3247qmg" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00007.png" id="9_tx40p"]
 [ext_resource type="Texture2D" uid="uid://d0f1bs7ykwxm4" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00008.png" id="10_7mlbu"]
 [ext_resource type="Texture2D" uid="uid://cc7wr22x1l7pa" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00008.png" id="10_vgkdy"]
@@ -28,62 +27,6 @@
 [ext_resource type="Texture2D" uid="uid://co3ji8tbrthyk" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00010.png" id="12_m5gub"]
 [ext_resource type="Texture2D" uid="uid://c2apo1327mei8" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00011.png" id="13_7v5pt"]
 [ext_resource type="Texture2D" uid="uid://ddq5k6gotgif2" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00011.png" id="13_vhs3u"]
-[ext_resource type="Texture2D" uid="uid://ckvvdf0i0ddf8" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00012.png" id="14_uoxfk"]
-[ext_resource type="Texture2D" uid="uid://cv3842mebww3y" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00013.png" id="15_w8g5f"]
-[ext_resource type="Texture2D" uid="uid://b142x3xtkhslf" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00014.png" id="16_lpy7a"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_4y4wl"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_2wy20")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_7vs3t")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_5serl")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_edhmh")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_tixaf")
-}, {
-"duration": 1.0,
-"texture": ExtResource("7_e2ijd")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_7424c")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_sw2mo")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_vgkdy")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_njn60")
-}, {
-"duration": 1.0,
-"texture": ExtResource("12_i46p6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("13_vhs3u")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_uoxfk")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_w8g5f")
-}, {
-"duration": 1.0,
-"texture": ExtResource("16_lpy7a")
-}],
-"loop": false,
-"name": &"flash",
-"speed": 40.0
-}]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_53mlu"]
 animations = [{
@@ -129,6 +72,77 @@ animations = [{
 "speed": 30.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_4y4wl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_2wy20")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_7vs3t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_5serl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_edhmh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_tixaf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_e2ijd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7424c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vgkdy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_njn60")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_i46p6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_vhs3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_5serl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_edhmh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_tixaf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_e2ijd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7424c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_vgkdy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_njn60")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_i46p6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_vhs3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_2wy20")
+}],
+"loop": false,
+"name": &"flash",
+"speed": 30.0
+}]
+
 [node name="GameUI" type="Control" unique_id=1595452720]
 process_mode = 1
 layout_mode = 3
@@ -152,12 +166,6 @@ offset_right = 959.0
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
-
-[node name="LaunchFailEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1154053665]
-visible = false
-position = Vector2(659, 13)
-sprite_frames = SubResource("SpriteFrames_4y4wl")
-animation = &"flash"
 
 [node name="EnergyBar1_FullEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1322686864]
 visible = false
@@ -189,6 +197,13 @@ layout_mode = 2
 
 [node name="EnergyBar3" parent="BoxContainer" unique_id=239746978 instance=ExtResource("4_hedtu")]
 layout_mode = 2
+
+[node name="LaunchFailEffect" type="AnimatedSprite2D" parent="BoxContainer" unique_id=1154053665]
+position = Vector2(659, 13)
+sprite_frames = SubResource("SpriteFrames_4y4wl")
+animation = &"flash"
+frame = 20
+frame_progress = 1.0
 
 [node name="SpeedLabel" type="Label" parent="." unique_id=1071767584]
 layout_mode = 0

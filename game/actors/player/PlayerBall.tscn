@@ -10,7 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://b5xdyakhov6he" path="res://assets/Audio/Sound Effects/CancelAim.wav" id="8_8oxga"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_46ku3"]
-bounce = 0.62
+bounce = 0.61
 
 [sub_resource type="Gradient" id="Gradient_8oxga"]
 interpolation_color_space = 2

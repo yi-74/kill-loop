@@ -9,8 +9,8 @@ var has_played_before: bool = false
 var settings: Dictionary = {
 	"fullscreen": false,
 	"language": "en",
-	"music_volume": 0.0,
-	"sfx_volume": 0.0
+	"music_volume": 50.0,
+	"sfx_volume": 50.0
 }
 
 # --- 【新增】统计数据 ---
