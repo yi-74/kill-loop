@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://co3ji8tbrthyk" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00010.png" id="12_m5gub"]
 [ext_resource type="Texture2D" uid="uid://c2apo1327mei8" path="res://assets/SpecialEffects/energybar/EnergyFull/energy_00011.png" id="13_7v5pt"]
 [ext_resource type="Texture2D" uid="uid://ddq5k6gotgif2" path="res://assets/SpecialEffects/energybar/EnergyDepleted/EnergyDepleted_00011.png" id="13_vhs3u"]
+[ext_resource type="Shader" uid="uid://b8je5gaxvluwm" path="res://Script/shader/DangerFlash.gdshader" id="28_53mlu"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_53mlu"]
 animations = [{
@@ -142,6 +143,10 @@ animations = [{
 "name": &"flash",
 "speed": 30.0
 }]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_74uo5"]
+shader = ExtResource("28_53mlu")
+shader_parameter/flash_color = Color(1, 0.1, 0.1, 1)
 
 [node name="GameUI" type="Control" unique_id=1595452720]
 process_mode = 1
@@ -267,3 +272,10 @@ grow_horizontal = 2
 theme_override_font_sizes/font_size = 65
 text = "0"
 horizontal_alignment = 1
+
+[node name="DangerFlash" type="ColorRect" parent="." unique_id=435327450]
+material = SubResource("ShaderMaterial_74uo5")
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2

@@ -13,7 +13,7 @@ signal energy_bar_3_filled()
 signal player_died()
 
 @export_group("Launch Power", "launch_")
-@export var launch_multiplier: float = 8.0 #发射力度
+@export var launch_multiplier: float = 10.0 #发射力度
 @export var kill_threshold: float = 1500.0 #击杀速度
 @export var default_max_speed: float = 4000.0 # 记录初始速度上限
 @export var slow_mo_scale: float = 0.1 #子弹时间
@@ -50,7 +50,7 @@ var has_killed_in_combo: bool = false
 var current_max_speed: float = 0.0
 var line_color_normal: Color = Color.WHITE
 var line_color_low_energy: Color = Color("ff3b30") # 这是我们之前用过的那个红色
-var line_color_tween: Tween # 用来控制颜色过渡的 Tween```
+var line_color_tween: Tween # 用来控制颜色过渡的 Tween
 
 
 func _ready() -> void:
@@ -138,9 +138,6 @@ func _process(delta: float) -> void:
 		line_2d.set_point_position(1, local_mouse_pos)
 		# 【新增】持续消耗能量
 		var energy_before_drain = current_energy
-		_update_energy(current_energy - (energy_drain_per_second * delta))
-		
-		# 【新增】持续消耗能量
 		#    用我们之前创建的 _update_energy 函数，来安全地减少能量
 		#    消耗的量 = 每秒消耗量 * 这一帧所经过的时间(delta)
 		_update_energy(current_energy - (energy_drain_per_second * delta))

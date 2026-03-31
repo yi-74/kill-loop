@@ -2,10 +2,8 @@ extends Control
 
 @onready var score_label: Label = $ScoreLabel
 @onready var high_score_label: Label = $HighScoreLabel
-# 获取 Label 节点的引用
 @onready var speed_label: Label = $SpeedLabel
 @onready var combo_lost_anim: AnimationPlayer = $ComboLostAnimationPlayer
-# ... (您现有的 speed_label 的代码) ...
 @onready var energy_bar_1: TextureProgressBar = $BoxContainer/EnergyBar
 @onready var energy_bar_2: TextureProgressBar = $BoxContainer/EnergyBar2
 @onready var energy_bar_3: TextureProgressBar = $BoxContainer/EnergyBar3
@@ -16,7 +14,10 @@ extends Control
 # 注意：为了能正确获取，您可能需要手动给场景树里的三个能量条改名
 @onready var combo_label: Label = $ComboLabel
 @onready var game_timer_label: Label = $GameTimerLabel
+@onready var danger_flash: ColorRect = $DangerFlash # 前提是您已经在 GameUI 下建了这个节点
 
+var was_speed_safe: bool = false # 记录上一帧的速度状态
+var danger_tween: Tween # 用来管理动画，防止连续撞墙时动画冲突
 var is_high_score_broken: bool = false
 var displayed_score: float = 0.0
 var combo_label_initial_scale: Vector2 = Vector2.ONE
@@ -27,7 +28,6 @@ var combo_color_tween: Tween # 用于控制连击中断时的颜色动画
 func _ready():
 	# 游戏开始时，显示历史最高分
 	high_score_label.text = "High: " + str(DataManager.high_score)
-	return
 	
 	if is_instance_valid(combo_label):
 		combo_label_initial_scale = combo_label.scale
@@ -44,7 +44,9 @@ func _ready():
 		
 	if is_instance_valid(launch_fail_effect):
 		launch_fail_effect.animation_finished.connect(func(): launch_fail_effect.hide())
-
+		
+	if is_instance_valid(danger_flash):
+		danger_flash.modulate.a = 0.0
 
 
 func _process(delta: float) -> void:
@@ -98,10 +100,22 @@ func update_game_timer(new_time_float: float) -> void:
 
 
 
+# --- 您的原版函数（一字未改），只在末尾追加了判断 ---
 func update_speed_label(new_speed: float) -> void:
 	var scaled_speed = new_speed / 10.0  # 1. 将浮点数速度值除以 10
 	var final_speed_int = int(scaled_speed)  # 2. 使用 int() 函数将结果转换为整数（它会自动去掉所有小数）
 	speed_label.text = "Speed: " + str(final_speed_int)  # 3. 更新 Label 的文本
+	
+	# --- 【新增】极简的边缘闪红逻辑 ---
+	# 判断当前速度是否安全 (是否 >= 1500)
+	var is_currently_safe = (new_speed >= 1500.0)
+	
+	# 只有在“上一刻还安全，这一刻突然跌破1500”的瞬间，才触发闪烁
+	if was_speed_safe and not is_currently_safe:
+		play_danger_flash()
+		
+	# 更新状态，供下一帧对比
+	was_speed_safe = is_currently_safe
 
 
 
@@ -227,3 +241,21 @@ func play_combo_lost_color_effect():
 	# Color.WHITE (即 Color(1,1,1,1)) 在这里的含义是“不进行任何颜色混合”，即恢复原始颜色。
 	# 这个动画会独立运行，即使 combo 数值再次变化，颜色也会在1秒后恢复。
 	combo_color_tween.tween_property(combo_label, "self_modulate", Color.WHITE, 1.0)
+
+
+# --- 播放闪红过渡动画的函数 ---
+func play_danger_flash():
+	if not is_instance_valid(danger_flash): return
+	
+	# 如果上一次闪烁还没结束，立刻停止
+	if is_instance_valid(danger_tween):
+		danger_tween.kill()
+		
+	danger_tween = create_tween()
+	
+	# 【核心修正 2】让手感更柔和：
+	# a) 淡入时间稍微拉长一点 (0.25秒)，并且目标透明度不要太刺眼 (比如 0.75 而不是 1.0)
+	danger_tween.tween_property(danger_flash, "modulate:a", 0.75, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	
+	# b) 消散时间拉长 (0.6秒)，像呼吸一样慢慢褪去
+	danger_tween.tween_property(danger_flash, "modulate:a", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
