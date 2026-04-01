@@ -2,7 +2,6 @@ extends Control
 
 @onready var score_label: Label = $ScoreLabel
 @onready var high_score_label: Label = $HighScoreLabel
-@onready var speed_label: Label = $SpeedLabel
 @onready var combo_lost_anim: AnimationPlayer = $ComboLostAnimationPlayer
 @onready var energy_bar_1: TextureProgressBar = $BoxContainer/EnergyBar
 @onready var energy_bar_2: TextureProgressBar = $BoxContainer/EnergyBar2
@@ -11,6 +10,7 @@ extends Control
 @onready var effect_bar2_full: AnimatedSprite2D = $BoxContainer/EnergyBar2_FullEffect
 @onready var effect_bar3_full: AnimatedSprite2D = $BoxContainer/EnergyBar3_FullEffect
 @onready var launch_fail_effect: AnimatedSprite2D = $BoxContainer/LaunchFailEffect
+@onready var speed_value_label: Label = $HBoxContainer/SpeedValue
 # 注意：为了能正确获取，您可能需要手动给场景树里的三个能量条改名
 @onready var combo_label: Label = $ComboLabel
 @onready var game_timer_label: Label = $GameTimerLabel
@@ -100,21 +100,41 @@ func update_game_timer(new_time_float: float) -> void:
 
 
 
-# --- 您的原版函数（一字未改），只在末尾追加了判断 ---
 func update_speed_label(new_speed: float) -> void:
-	var scaled_speed = new_speed / 10.0  # 1. 将浮点数速度值除以 10
-	var final_speed_int = int(scaled_speed)  # 2. 使用 int() 函数将结果转换为整数（它会自动去掉所有小数）
-	speed_label.text = "Speed: " + str(final_speed_int)  # 3. 更新 Label 的文本
+	# 1. 基础数值计算 (保持不变)
+	var scaled_speed = new_speed / 10.0
+	var final_speed_int = int(scaled_speed)
 	
-	# --- 【新增】极简的边缘闪红逻辑 ---
-	# 判断当前速度是否安全 (是否 >= 1500)
+	# 2. 【核心修改】现在只更新数字 Label 的文本
+	speed_value_label.text = str(final_speed_int)
+	
+	# --- 3. 计算“危险渐变”动画 (2000 -> 1500) ---
+	# 计算当前速度在 2000 到 1500 之间的“危险进度” (0.0 到 1.0)
+	# 速度 >= 2000 时，progress = 0.0
+	# 速度 <= 1500 时，progress = 1.0
+	var progress = clamp((2000.0 - new_speed) / 500.0, 0.0, 1.0)
+	
+	# 【完美实现您的需求】使用 3 次方公式，制造“越靠近 1500 效果越大”的曲线
+	# progress 如果是 0.5 (即 1750)，0.5 的 3次方只有 0.125，变化很微弱
+	# progress 如果是 0.9 (即 1550)，0.9 的 3次方是 0.729，变化急剧加深！
+	var curve_progress = pow(progress, 3.0)
+	
+	# a) 颜色插值：从纯白平滑过渡到危险红
+	var safe_color = Color("ffffff")
+	var danger_color = Color("ff3b30")
+	var current_color = safe_color.lerp(danger_color, curve_progress)
+	speed_value_label.add_theme_color_override("font_color", current_color)
+	
+	# b) 缩放插值：从 1.0 倍平滑放大到 1.5 倍 (倍数您可以自己调)
+	var current_scale = lerp(1.0, 1.5, curve_progress)
+	speed_value_label.scale = Vector2(current_scale, current_scale)
+	
+	# --- 4. 原来的边缘闪红逻辑 (一字未改，保持原样) ---
 	var is_currently_safe = (new_speed >= 1500.0)
 	
-	# 只有在“上一刻还安全，这一刻突然跌破1500”的瞬间，才触发闪烁
 	if was_speed_safe and not is_currently_safe:
 		play_danger_flash()
 		
-	# 更新状态，供下一帧对比
 	was_speed_safe = is_currently_safe
 
 

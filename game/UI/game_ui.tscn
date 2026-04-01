@@ -219,6 +219,27 @@ offset_bottom = 94.0
 theme_override_font_sizes/font_size = 40
 text = "Speed:"
 
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1101479313]
+layout_mode = 0
+offset_left = 75.0
+offset_top = 36.0
+offset_right = 231.0
+offset_bottom = 91.0
+alignment = 1
+
+[node name="SpeedText" type="Label" parent="HBoxContainer" unique_id=614771914]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Speed:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpeedValue" type="Label" parent="HBoxContainer" unique_id=535699459]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "0"
+vertical_alignment = 1
+
 [node name="ComboLabel" type="Label" parent="." unique_id=230386039]
 custom_minimum_size = Vector2(960, 540)
 layout_mode = 0
