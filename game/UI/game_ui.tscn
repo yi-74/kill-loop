@@ -225,6 +225,7 @@ offset_left = 75.0
 offset_top = 36.0
 offset_right = 231.0
 offset_bottom = 91.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
 alignment = 1
 
 [node name="SpeedText" type="Label" parent="HBoxContainer" unique_id=614771914]
@@ -236,6 +237,8 @@ vertical_alignment = 1
 
 [node name="SpeedValue" type="Label" parent="HBoxContainer" unique_id=535699459]
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_stretch_ratio = 0.0
 theme_override_font_sizes/font_size = 40
 text = "0"
 vertical_alignment = 1

@@ -125,11 +125,17 @@ func update_speed_label(new_speed: float) -> void:
 	var current_color = safe_color.lerp(danger_color, curve_progress)
 	speed_value_label.add_theme_color_override("font_color", current_color)
 	
-	# b) 缩放插值：从 1.0 倍平滑放大到 1.5 倍 (倍数您可以自己调)
-	var current_scale = lerp(1.0, 1.5, curve_progress)
-	speed_value_label.scale = Vector2(current_scale, current_scale)
+	speed_value_label.add_theme_color_override("font_color", current_color)
 	
-	# --- 4. 原来的边缘闪红逻辑 (一字未改，保持原样) ---
+	# b) 动态计算轴心点，破解容器限制！
+	var current_scale = lerp(1.0, 1.5, curve_progress)
+	
+	# 强制将“图钉”钉在 Label 的：X=0(最左边), Y=高度的一半(垂直正中间)
+	speed_value_label.pivot_offset = Vector2(0, speed_value_label.size.y / 2.0)
+	
+	# 现在再应用缩放，它就会完美地向右侧和上下均匀膨胀了！
+	speed_value_label.scale = Vector2(current_scale, current_scale)
+	# --- 4. 原来的边缘闪红逻辑
 	var is_currently_safe = (new_speed >= 1500.0)
 	
 	if was_speed_safe and not is_currently_safe:
@@ -275,7 +281,7 @@ func play_danger_flash():
 	
 	# 【核心修正 2】让手感更柔和：
 	# a) 淡入时间稍微拉长一点 (0.25秒)，并且目标透明度不要太刺眼 (比如 0.75 而不是 1.0)
-	danger_tween.tween_property(danger_flash, "modulate:a", 0.75, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	danger_tween.tween_property(danger_flash, "modulate:a", 0.3, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	
 	# b) 消散时间拉长 (0.6秒)，像呼吸一样慢慢褪去
 	danger_tween.tween_property(danger_flash, "modulate:a", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
