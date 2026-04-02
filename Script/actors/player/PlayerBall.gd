@@ -51,6 +51,7 @@ var current_max_speed: float = 0.0
 var line_color_normal: Color = Color.WHITE
 var line_color_low_energy: Color = Color("ff3b30") # 这是我们之前用过的那个红色
 var line_color_tween: Tween # 用来控制颜色过渡的 Tween
+var camera_zoom_tween: Tween
 
 
 func _ready() -> void:
@@ -90,6 +91,11 @@ func _input(event: InputEvent) -> void:
 					slow_mo_audio.play()
 				if has_method("fade_slow_mo_filter"):
 					fade_slow_mo_filter(true)
+					
+				# -------------------------------------------------------------
+				# --- 【新增】进入子弹时间，镜头平滑拉近到 1.15 倍！ ---
+				tween_camera_zoom(Vector2(1.05, 1.15), 0.2)
+				# -------------------------------------------------------------
 		
 		else: # --- 鼠标松开 ---
 			if is_aiming:
@@ -101,6 +107,11 @@ func _input(event: InputEvent) -> void:
 					slow_mo_audio.stop()
 				if has_method("fade_slow_mo_filter"):
 					fade_slow_mo_filter(false)
+
+				# -------------------------------------------------------------
+				# --- 【新增】退出子弹时间，镜头平滑恢复到 1.0 倍！ ---
+				tween_camera_zoom(Vector2(1.0, 1.0), 0.2)
+				# -------------------------------------------------------------
 
 				# --- 【门禁被移动到了这里】---
 				# 只有在尝试发射时，才检查能量
@@ -127,6 +138,25 @@ func _input(event: InputEvent) -> void:
 					set_collision_mask_value(2, false)
 				else:
 					set_collision_mask_value(2, true)
+
+
+
+# --- 【新增】平滑控制镜头缩放的函数 ---
+func tween_camera_zoom(target_zoom: Vector2, duration: float = 0.2):
+	# 确保之前我们获取过摄像机 (如果您代码里叫别的名字，请替换这里的 camera)
+	if not is_instance_valid(camera): 
+		return
+		
+	# 杀死旧动画，防止冲突
+	if is_instance_valid(camera_zoom_tween):
+		camera_zoom_tween.kill()
+		
+	camera_zoom_tween = create_tween()
+	# 使用 SINE 曲线，既平滑又有略微的弹性加速感
+	camera_zoom_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	
+	# 动态改变摄像机的 zoom 属性
+	camera_zoom_tween.tween_property(camera, "zoom", target_zoom, duration)
 
 
 
@@ -185,6 +215,9 @@ func _cancel_aiming():
 	if is_instance_valid(slow_mo_audio): slow_mo_audio.stop()
 	if is_instance_valid(cancel_audio): cancel_audio.play()
 	if has_method("fade_slow_mo_filter"): fade_slow_mo_filter(false)
+	# --- 【新增】右键取消时，镜头也平滑恢复！ ---
+	if has_method("tween_camera_zoom"):
+		tween_camera_zoom(Vector2(1.0, 1.0), 0.2)
 
 
 

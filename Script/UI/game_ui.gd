@@ -104,43 +104,28 @@ func update_speed_label(new_speed: float) -> void:
 	# 1. 基础数值计算 (保持不变)
 	var scaled_speed = new_speed / 10.0
 	var final_speed_int = int(scaled_speed)
-	
-	# 2. 【核心修改】现在只更新数字 Label 的文本
 	speed_value_label.text = str(final_speed_int)
 	
-	# --- 3. 计算“危险渐变”动画 (2000 -> 1500) ---
-	# 计算当前速度在 2000 到 1500 之间的“危险进度” (0.0 到 1.0)
-	# 速度 >= 2000 时，progress = 0.0
-	# 速度 <= 1500 时，progress = 1.0
 	var progress = clamp((2000.0 - new_speed) / 500.0, 0.0, 1.0)
-	
-	# 【完美实现您的需求】使用 3 次方公式，制造“越靠近 1500 效果越大”的曲线
-	# progress 如果是 0.5 (即 1750)，0.5 的 3次方只有 0.125，变化很微弱
-	# progress 如果是 0.9 (即 1550)，0.9 的 3次方是 0.729，变化急剧加深！
 	var curve_progress = pow(progress, 3.0)
-	
-	# a) 颜色插值：从纯白平滑过渡到危险红
 	var safe_color = Color("ffffff")
 	var danger_color = Color("ff3b30")
 	var current_color = safe_color.lerp(danger_color, curve_progress)
 	speed_value_label.add_theme_color_override("font_color", current_color)
-	
-	speed_value_label.add_theme_color_override("font_color", current_color)
-	
-	# b) 动态计算轴心点，破解容器限制！
 	var current_scale = lerp(1.0, 1.5, curve_progress)
-	
-	# 强制将“图钉”钉在 Label 的：X=0(最左边), Y=高度的一半(垂直正中间)
 	speed_value_label.pivot_offset = Vector2(0, speed_value_label.size.y / 2.0)
-	
-	# 现在再应用缩放，它就会完美地向右侧和上下均匀膨胀了！
 	speed_value_label.scale = Vector2(current_scale, current_scale)
-	# --- 4. 原来的边缘闪红逻辑
+	
+	# -------------------------------------------------------------
+	# --- 【核心修正】持续性边缘红光逻辑 ---
+	# -------------------------------------------------------------
 	var is_currently_safe = (new_speed >= 1500.0)
 	
-	if was_speed_safe and not is_currently_safe:
-		play_danger_flash()
+	# 只要“当前状态”和“上一刻状态”不一样，就触发状态切换
+	if was_speed_safe != is_currently_safe:
+		toggle_danger_overlay(not is_currently_safe) # 传入 true 代表危险，false 代表安全
 		
+	# 更新状态，供下一帧对比
 	was_speed_safe = is_currently_safe
 
 
@@ -269,19 +254,20 @@ func play_combo_lost_color_effect():
 	combo_color_tween.tween_property(combo_label, "self_modulate", Color.WHITE, 1.0)
 
 
-# --- 播放闪红过渡动画的函数 ---
-func play_danger_flash():
+# --- 2. 【全新】状态切换动画函数，替换掉原来的 play_danger_flash ---
+func toggle_danger_overlay(is_dangerous: bool):
 	if not is_instance_valid(danger_flash): return
 	
-	# 如果上一次闪烁还没结束，立刻停止
+	# 如果有正在播放的动画，立刻停止，以新状态为准
 	if is_instance_valid(danger_tween):
 		danger_tween.kill()
 		
 	danger_tween = create_tween()
 	
-	# 【核心修正 2】让手感更柔和：
-	# a) 淡入时间稍微拉长一点 (0.25秒)，并且目标透明度不要太刺眼 (比如 0.75 而不是 1.0)
-	danger_tween.tween_property(danger_flash, "modulate:a", 0.3, 0.25).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	
-	# b) 消散时间拉长 (0.6秒)，像呼吸一样慢慢褪去
-	danger_tween.tween_property(danger_flash, "modulate:a", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	if is_dangerous:
+		# 【进入危险】：平滑淡入到 0.3 的透明度，并【保持住】
+		# (0.3 这个值您可以根据喜好调，推荐在 0.2~0.4 之间，不要太刺眼)
+		danger_tween.tween_property(danger_flash, "modulate:a", 0.3, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	else:
+		# 【恢复安全】：平滑淡出到 0.0，彻底隐藏
+		danger_tween.tween_property(danger_flash, "modulate:a", 0.0, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
