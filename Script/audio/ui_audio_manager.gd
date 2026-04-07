@@ -40,7 +40,6 @@ func connect_button_sounds(button: Button):
 	
 	if not button.pressed.is_connected(play_click_sound):
 		button.pressed.connect(play_click_sound)
-		print("  -> 已为按钮 '", button.name, "' 连接音效。")
 
 # --- 播放函数 (保持不变) ---
 func play_hover_sound():

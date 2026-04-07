@@ -41,8 +41,22 @@ func apply_all_settings():
 
 
 func _ready() -> void:
+	# --- 【新增】在读取存档之前，先探测玩家电脑操作系统的语言！ ---
+	# OS.get_locale_language() 会返回语言的两位简写，比如中文是 "zh"，英文是 "en"，日语是 "ja"
+	var os_lang = OS.get_locale_language() 
+	
+	if os_lang == "zh":
+		settings["language"] = "zh_CN" # 如果是中文系统，默认语言设为中文
+	else:
+		settings["language"] = "en"    # 其他所有系统，默认语言设为英文
+	# -------------------------------------------------------------
+	
+	# 然后再执行原本的加载数据逻辑
 	load_data()
-	apply_all_settings()
+	
+	# --- 【新增】加载完数据后，立刻把语言（以及音量、全屏）应用到游戏中！ ---
+	if has_method("apply_all_settings"):
+		apply_all_settings()
 
 
 
@@ -59,16 +73,22 @@ func debug_reset_all_data():
 	max_kills_per_run = 0
 	max_combo_per_run = 0
 	max_survival_time = 0.0
+	has_played_before = false
 	
-	# 3. 重置设置字典 (恢复到您的初始默认状态)
+	# --- 【核心修正】在重置设置时，动态判断默认语言 ---
+	var default_lang = "en"
+	if OS.get_locale_language() == "zh":
+		default_lang = "zh_CN"
+	
+	# 3. 重置设置字典
 	settings = {
 		"fullscreen": false,
-		"language": "en",        # 您之前说默认语言是英文
-		"music_volume": 50.0,   # 假设默认音量是最大 (100)
+		"language": default_lang, # <--- 现在它会根据您的系统自动恢复成正确语言！
+		"music_volume": 50.0,
 		"sfx_volume": 50.0
 	}
 	
-	# 4. 立即应用这些默认设置 (比如瞬间退出全屏、恢复英文)
+	# 4. 立即应用这些默认设置
 	if has_method("apply_all_settings"):
 		apply_all_settings()
 	
@@ -89,7 +109,15 @@ func load_data() -> void:
 		file.close()
 		if data is Dictionary:
 			high_score = data.get("high_score", 0)
-			settings = data.get("settings", settings)
+			
+			# 【重点在这里】：
+			# 如果玩家之前手动改过设置并保存了，这里的 data.get("settings") 
+			# 就会覆盖掉我们在 _ready 里根据系统探测出的默认 settings！
+			# 这完美实现了“尊重玩家自定义设置”！
+			var saved_settings = data.get("settings", {})
+			for key in saved_settings:
+				settings[key] = saved_settings[key]
+			
 			# --- 【新增】加载“是否玩过”的记录 ---
 			has_played_before = data.get("has_played_before", false)
 			# 【新增】加载统计数据，如果不存在，则默认为 0
@@ -99,7 +127,7 @@ func load_data() -> void:
 			max_combo_per_run = data.get("max_combo_per_run", 0)
 			max_survival_time = data.get("max_survival_time", 0.0)
 			
-	print("DataManager: 已加载数据。最高分: ", high_score, " | 是否玩过: ", has_played_before)
+	print("DataManager: 已加载数据。最高分: ", high_score, " | 是否玩过: ", has_played_before, " | 当前语言: ", settings["language"])
 
 
 
