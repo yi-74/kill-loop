@@ -25,6 +25,9 @@ func _ready() -> void:
 	# --- 【新增】在所有数据都准备好后，开始播放背景动画 ---
 	if is_instance_valid(background_animation):
 		background_animation.play("default")
+		
+	# 触发成就：这是你的成就！还有谢谢你玩我的游戏！
+	SteamManager.unlock_achievement("ACH_MISC_OPEN_STATS")
 
 
 # 一个格式化时间的辅助函数

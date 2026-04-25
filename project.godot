@@ -27,12 +27,17 @@ DataManager="*res://Script/Other/data_manager.gd"
 MusicManager="*res://game/music/music_manager.tscn"
 GlobalEffects="*res://game/effect/global_effects.tscn"
 UiAudioManager="*res://game/music/ui_audio_manager.tscn"
+SteamManager="*uid://b3f7riehfas4g"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg")
 
 [global_group]
 
@@ -89,3 +94,10 @@ locale/test="en"
 [physics]
 
 common/physics_ticks_per_second=120
+
+[steam]
+
+initialization/app_id=4546900
+initialization/initialize_on_startup=true
+initialization/embed_callbacks=false
+multiplayer_peer/max_channels=4

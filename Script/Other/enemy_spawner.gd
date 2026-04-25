@@ -87,12 +87,20 @@ func add_score(base_score: int, combo: int, position: Vector2):
 	# 3. 检查是否打破最高分
 	if current_score > DataManager.high_score and old_score <= DataManager.high_score:
 		print("打破最高分记录！")
-	
+		
 	# 4. 更新并保存最高分
 	DataManager.report_new_score(current_score)
 	
 	# 在发出信号前，我们再确认一次
 	score_updated.emit(current_score)
+	
+	# 触发分数成就
+	if current_score >= 1000:   SteamManager.unlock_achievement("ACH_SCORE_1000")
+	if current_score >= 10000:  SteamManager.unlock_achievement("ACH_SCORE_10000")
+	if current_score >= 20000:  SteamManager.unlock_achievement("ACH_SCORE_20000")
+	# 触发单局击杀成就
+	if kills_this_run >= 100:
+		SteamManager.unlock_achievement("ACH_KILL_100_RUN")
 	
 	# 6. 生成飘字
 	var ft = FloatingText.instantiate()
@@ -264,6 +272,17 @@ func _unhandled_input(event: InputEvent) -> void:
 func on_player_died():
 	print("GameManager: 玩家已死亡，正在结算本局数据...")
 	
+	# 增加累计死亡次数
+	DataManager.total_deaths += 1
+	
+	# 触发死得太快成就
+	if game_time <= 5.0:
+		SteamManager.unlock_achievement("ACH_MISC_DIE_5S")
+		
+	# 触发活得很久成就
+	if game_time >= 60.0:
+		SteamManager.unlock_achievement("ACH_SURVIVE_60S_RUN")
+		
 	# 1. 将本局存活时间，累加到历史总时长
 	DataManager.total_play_time += game_time
 	
@@ -278,5 +297,9 @@ func on_player_died():
 	if game_time > DataManager.max_survival_time:
 		DataManager.max_survival_time = game_time
 		
+	
 	# 4. 最终，保存所有更新后的数据
 	DataManager.save_data()
+
+	# 【最后，调用刚才写好的累计成就检查】
+	DataManager.check_cumulative_achievements()

@@ -120,6 +120,11 @@ func _input(event: InputEvent) -> void:
 					if is_instance_valid(cancel_audio):
 						cancel_audio.play()
 					launch_failed.emit()
+					
+					# --- 【新增】触发成就！只要发射失败就给成就 ---
+					if SteamManager.is_steam_initialized:
+						SteamManager.unlock_achievement("ACH_MISC_ENERGY_EMPTY")
+						
 					return # 能量不足，发射失败并结束
 
 				# --- 如果能量足够，则执行发射 ---
@@ -174,6 +179,10 @@ func _process(delta: float) -> void:
 		# 【新增】检查能量是否耗尽
 		if current_energy <= 0:
 			print("能量耗尽，强制退出子弹时间！")
+			
+			# 触发成就：你的能量好像不够了哦~
+			SteamManager.unlock_achievement("ACH_MISC_ENERGY_EMPTY")
+			
 			# 我们可以创建一个新的函数来处理“取消瞄准”的逻辑，避免代码重复
 			_cancel_aiming()
 			return
@@ -301,6 +310,10 @@ func _on_kill_area_entered(area: Area2D):
 			# --- 增加 Combo ---
 			current_combo += 1
 			combo_updated.emit(current_combo)
+			
+			# 触发成就：根本停不下来！
+			if current_combo >= 30:
+				SteamManager.unlock_achievement("ACH_COMBO_30")
 
 			current_max_speed = default_max_speed + (current_combo * combo_speed_bonus)
 			# -----------------------------------------------------------------

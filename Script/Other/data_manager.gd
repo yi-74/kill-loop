@@ -4,6 +4,7 @@ extends Node
 const SAVE_FILE_PATH = "user://savegame.dat"
 
 var high_score: int = 0
+var total_deaths: int = 0
 # --- 【新增】记录玩家是否玩过的变量 ---
 var has_played_before: bool = false
 var settings: Dictionary = {
@@ -64,8 +65,9 @@ func _ready() -> void:
 func debug_reset_all_data():
 	print("--- DEBUG: 正在执行【核弹级】完全重置 ---")
 	
-	# 1. 重置核心分数
+	# 1. 重置核心分数和死亡次数
 	high_score = 0
+	total_deaths = 0
 	
 	# 2. 重置所有统计数据
 	total_play_time = 0.0
@@ -109,6 +111,7 @@ func load_data() -> void:
 		file.close()
 		if data is Dictionary:
 			high_score = data.get("high_score", 0)
+			total_deaths = data.get("total_deaths", 0)
 			
 			# 【重点在这里】：
 			# 如果玩家之前手动改过设置并保存了，这里的 data.get("settings") 
@@ -139,6 +142,7 @@ func save_data() -> void:
 		"high_score": high_score,
 		"settings": settings,
 		"has_played_before": has_played_before,
+		"total_deaths": total_deaths,
 		# 【新增】保存所有统计数据
 		"total_play_time": total_play_time,
 		"total_kills": total_kills,
@@ -181,3 +185,13 @@ func _input(event: InputEvent) -> void:
 	# 无论在游戏的哪个角落，只要按下 P 键 (debug_reset)
 	if Input.is_action_just_pressed("debug_reset"):
 		debug_reset_all_data()
+
+
+# --- 新增一个专门检查累计成就的函数 ---
+func check_cumulative_achievements():
+	if total_kills >= 1000:
+		SteamManager.unlock_achievement("ACH_KILL_1000_TOTAL")
+	if total_play_time >= 600.0:
+		SteamManager.unlock_achievement("ACH_SURVIVE_600S_TOTAL")
+	if total_deaths >= 30:
+		SteamManager.unlock_achievement("ACH_MISC_DIE_30_TOTAL")
