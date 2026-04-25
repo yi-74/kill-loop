@@ -34,3 +34,18 @@ func unlock_achievement(api_name: String) -> void:
 		# 【极其重要】这行代码是把数据上传到 Steam 服务器，不写这行成就不跳！
 		Steam.storeStats() 
 		print("恭喜！解锁 Steam 成就: ", api_name)
+
+func reset_all_achievements() -> void:
+	if not is_steam_initialized:
+		return
+		
+	# Steam.resetAllStats(true) 是一个底层 API
+	# 括号里的 true 代表：不仅重置统计数据(Stats)，连成就(Achievements)也一起重置！
+	var success = Steam.resetAllStats(true)
+	
+	if success:
+		# 【必须有这一步】把“全部清零”的指令强制同步给 Steam 服务器
+		Steam.storeStats()
+		print("🛑 Steam 状态：所有成就已被系统强行重置！")
+	else:
+		print("❌ Steam 状态：重置成就失败，请确认 Steam 是否正常运行。")

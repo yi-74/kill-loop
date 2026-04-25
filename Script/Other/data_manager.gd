@@ -97,6 +97,10 @@ func debug_reset_all_data():
 	# 5. 将这些“干净”的数据覆盖保存到本地存档文件
 	save_data()
 	
+	# --- 【核心新增】呼叫 SteamManager，把 Steam 成就也核弹清零 ---
+	if ClassDB.class_exists("SteamManager") or has_node("/root/SteamManager"):
+		SteamManager.reset_all_achievements()
+	
 	# 6. 强制重新加载当前所在的任何场景，刷新UI显示
 	get_tree().reload_current_scene()
 	
