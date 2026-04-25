@@ -1,4 +1,4 @@
-# ShaShaSha
+# KILL LOOP
 基于 Godot 4.x 的快节奏街机游戏 / A Fast-paced Arcade Game made with Godot
 
 简介
