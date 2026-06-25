@@ -25,6 +25,9 @@ signal player_died()
 @export var combo_max_bounces: int = 4       # 最大反弹容忍次数
 @export var combo_speed_bonus: float = 250.0  # 每次连击成功，速度上限增加值
 @export var combo_energy_bonus: float = 12.0 # 每次连击成功，额外能量奖励
+@export_group("Aiming Camera Zoom")
+@export var aim_zoom_x: float = 1.06  # 瞄准时，水平方向(左右)的拉伸放大倍数
+@export var aim_zoom_y: float = 1.04  # 瞄准时，垂直方向(上下)的拉伸放大倍数
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
@@ -94,7 +97,7 @@ func _input(event: InputEvent) -> void:
 					
 				# -------------------------------------------------------------
 				# --- 【新增】进入子弹时间，镜头平滑拉近到 1.15 倍！ ---
-				tween_camera_zoom(Vector2(1.05, 1.15), 0.2)
+				tween_camera_zoom(Vector2(aim_zoom_x, aim_zoom_y), 0.2)
 				# -------------------------------------------------------------
 		
 		else: # --- 鼠标松开 ---
