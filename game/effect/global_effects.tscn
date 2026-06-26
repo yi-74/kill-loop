@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c16hih2x81328"]
 
 [ext_resource type="Shader" uid="uid://bcime6o6emfsa" path="res://Script/shader/CanvasLayer.gdshader" id="1_ecqdp"]
+[ext_resource type="Shader" uid="uid://ccpa7oshvneuy" path="res://Script/shader/RadialBlurEffect.gdshader" id="1_pq544"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pq544"]
 shader = ExtResource("1_ecqdp")
@@ -15,6 +16,12 @@ shader_parameter/contrast = 1.2
 shader_parameter/vignette_intensity = 0.0
 shader_parameter/vignette_smoothness = 0.1
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3xd07"]
+shader = ExtResource("1_pq544")
+shader_parameter/blur_strength = 0.0
+shader_parameter/blur_center = Vector2(0.5, 0.5)
+shader_parameter/samples = 15
+
 [node name="GlobalEffects" type="CanvasLayer" unique_id=631257314]
 layer = 128
 
@@ -27,3 +34,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 metadata/_edit_use_anchors_ = true
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=1732161194]
+position = Vector2(960, 540)
+scale = Vector2(9.6, 5.3599997)
+copy_mode = 2
+
+[node name="RadialBlurEffect" type="ColorRect" parent="." unique_id=329973627]
+material = SubResource("ShaderMaterial_3xd07")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

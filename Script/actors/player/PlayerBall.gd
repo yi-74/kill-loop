@@ -26,8 +26,11 @@ signal player_died()
 @export var combo_speed_bonus: float = 250.0  # 每次连击成功，速度上限增加值
 @export var combo_energy_bonus: float = 12.0 # 每次连击成功，额外能量奖励
 @export_group("Aiming Camera Zoom")
-@export var aim_zoom_x: float = 1.06  # 瞄准时，水平方向(左右)的拉伸放大倍数
-@export var aim_zoom_y: float = 1.04  # 瞄准时，垂直方向(上下)的拉伸放大倍数
+@export var aim_zoom_x: float = 1.062  # 瞄准时，水平方向(左右)的拉伸放大倍数
+@export var aim_zoom_y: float = 1.049  # 瞄准时，垂直方向(上下)的拉伸放大倍数
+@export_group("Aiming Blur Effect")
+@export var max_blur_strength: float = 0.03  # 最大模糊程度
+@export var blur_charge_time: float = 3    # 达到最大模糊需要的时间(秒)
 
 @onready var line_2d: Line2D = $Line2D
 @onready var kill_area: Area2D = $Area2D
@@ -41,6 +44,7 @@ signal player_died()
 @onready var spawner = get_node("/root/Main_tscn/EnemySpawner") 
 @onready var camera: Camera2D = get_node("/root/Main_tscn/Camera2D")
 @onready var crt_effect: ColorRect = get_node("/root/GlobalEffects/ColorRect") # 获取 CRT 特效
+@onready var radial_blur_effect: ColorRect = get_node("/root/GlobalEffects/RadialBlurEffect")
 
 var is_dead: bool = false
 var is_aiming: bool = false
@@ -55,6 +59,7 @@ var line_color_normal: Color = Color.WHITE
 var line_color_low_energy: Color = Color("ff3b30") # 这是我们之前用过的那个红色
 var line_color_tween: Tween # 用来控制颜色过渡的 Tween
 var camera_zoom_tween: Tween
+var blur_tween: Tween
 
 
 func _ready() -> void:
@@ -98,6 +103,7 @@ func _input(event: InputEvent) -> void:
 				# -------------------------------------------------------------
 				# --- 【新增】进入子弹时间，镜头平滑拉近到 1.15 倍！ ---
 				tween_camera_zoom(Vector2(aim_zoom_x, aim_zoom_y), 0.2)
+				fade_radial_blur(true)  # 【新增这一行！开始慢慢模糊】
 				# -------------------------------------------------------------
 		
 		else: # --- 鼠标松开 ---
@@ -114,6 +120,7 @@ func _input(event: InputEvent) -> void:
 				# -------------------------------------------------------------
 				# --- 【新增】退出子弹时间，镜头平滑恢复到 1.0 倍！ ---
 				tween_camera_zoom(Vector2(1.0, 1.0), 0.2)
+				fade_radial_blur(false) # 【新增这一行！迅速恢复清晰】
 				# -------------------------------------------------------------
 
 				# --- 【门禁被移动到了这里】---
@@ -230,6 +237,7 @@ func _cancel_aiming():
 	# --- 【新增】右键取消时，镜头也平滑恢复！ ---
 	if has_method("tween_camera_zoom"):
 		tween_camera_zoom(Vector2(1.0, 1.0), 0.2)
+	fade_radial_blur(false) # 取消时也要恢复清晰
 
 
 
@@ -441,10 +449,54 @@ func fade_slow_mo_filter(turn_on: bool):
 	)
 
 
+func fade_radial_blur(turn_on: bool):
+	if not is_instance_valid(radial_blur_effect) or not radial_blur_effect.material: 
+		return
+		
+	if is_instance_valid(blur_tween):
+		blur_tween.kill()
+		
+	blur_tween = create_tween()
+	var current_blur = radial_blur_effect.material.get_shader_parameter("blur_strength")
+	
+	if turn_on:
+		blur_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		
+		# --- 【核心修复】真实时间换算 ---
+		# 无论现在的慢动作是多少倍，我们都保证玩家在现实中按住 blur_charge_time (1.5秒) 就拉满
+		var real_duration = blur_charge_time * Engine.time_scale
+		
+		blur_tween.tween_method(
+			func(v): radial_blur_effect.material.set_shader_parameter("blur_strength", v),
+			current_blur,
+			max_blur_strength,
+			real_duration 
+		)
+	else:
+		blur_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		
+		# 恢复清晰同理：确保在现实的 0.2 秒内迅速收回
+		var real_duration = 0.2 * Engine.time_scale
+		
+		blur_tween.tween_method(
+			func(v): radial_blur_effect.material.set_shader_parameter("blur_strength", v),
+			current_blur,
+			0.0,
+			real_duration 
+		)
+
 
 func _player_death_sequence():
 	if is_dead: return
 	is_dead = true
+	
+	# 1. 掐死可能还在跑的模糊动画
+	if is_instance_valid(blur_tween):
+		blur_tween.kill()
+		
+	# 2. 强行将径向模糊的强度重置为 0
+	if is_instance_valid(radial_blur_effect) and radial_blur_effect.material:
+		radial_blur_effect.material.set_shader_parameter("blur_strength", 0.0)
 	
 	# 【核心修正】调用新的瞬间停止函数
 	if MusicManager:
